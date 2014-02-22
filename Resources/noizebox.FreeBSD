@@ -1,0 +1,53 @@
+#!/bin/sh
+#
+# $Id$
+#
+export TERM="tinyVT"
+HOST=$(uname -s)
+ARCH=$(uname -p)
+PLATFORM="${HOST}/${ARCH}"
+APP=$(basename $0)
+NZAPP=$(readlink -f $0)
+NZDIR=$(dirname $NZAPP)
+NZBIN="${NZDIR}/Contents/${PLATFORM}/${APP}"
+MIDI="/dev/umidi0.0"
+NZTTY="/dev/cuaU0"
+export NZDIR
+
+#
+# Source specifics parameters
+if [ -f ${NZBIN}.env ] ; then
+  . ${NZBIN}.env
+fi
+
+if [ ! -c $NZTTY -o -z $NZTTY ] ; then
+    printf "Fatal error: cannot open ${APP} Terminal ($NZTTY).\n"
+    exit 1
+elif [ -f ${NZDIR}/Contents/${PLATFORM}/termcap.db ] ; then
+    export TERMCAP=${NZDIR}/Contents/${PLATFORM}/termcap
+fi
+
+if [ ! -c $MIDI -o -z $MIDI ] ; then
+    printf "Fatal error: cannot open MIDI device ($MIDI).\n"
+    exit 1
+fi
+
+#
+# Set embbeded library path
+LD_LIBRARY_PATH="${NZDIR}/Frameworks/${PLATFORM}"
+export LD_LIBRARY_PATH
+
+#
+# Run application
+RT="/usr/sbin/rtprio"
+if [ -c ${NZTTY} -a -x ${NZBIN} ] ; then
+    if [ -x ${RT} ] ; then
+	exec ${RT} 0 ${NZBIN} ${MIDI} < ${NZTTY} > ${NZTTY} 2>/dev/null
+    else
+	exec ${NZBIN} ${MIDI} < ${NZTTY} > ${NZTTY} 2>/dev/null
+    fi
+else
+    printf "ECannot load ${APP}\nPlease, call Support\n" > ${NZTTY}
+    exit 1
+fi
+exit 0
