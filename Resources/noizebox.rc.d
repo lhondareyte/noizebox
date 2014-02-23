@@ -34,7 +34,7 @@ noizebox_start()
 		return 1
 	fi
 	echo "Starting ${name}."
-	$name
+	$name &
 	rc_pid=$(getPID)
 	printf $rc_pid > /var/run/${name}.pid
 }
