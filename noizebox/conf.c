@@ -104,6 +104,7 @@ int noizebox_save_synth_config(void)
 		sqlite3_step(stmt);
 	}
 	else fprintf (stderr, "Error: cannot update synth information: %s\n", sqlite3_errmsg(db));
+	sqlite3_finalize(stmt);
 	
 	sprintf (sql, "update mixer set val=%d where param=\'right\'",r);
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
@@ -111,6 +112,7 @@ int noizebox_save_synth_config(void)
 		sqlite3_step(stmt);
 	}
 	else fprintf (stderr, "Error: cannot update synth information: %s\n", sqlite3_errmsg(db));
+	sqlite3_finalize(stmt);
 	
 	/*
 	 * Update SoundFont information
@@ -121,6 +123,7 @@ int noizebox_save_synth_config(void)
 		sqlite3_step(stmt);
 	}
 	else fprintf (stderr, "Error: cannot update synth information: %s\n", sqlite3_errmsg(db));
+	sqlite3_finalize(stmt);
 
 	/*
 	 * Update MIDI information
@@ -131,6 +134,7 @@ int noizebox_save_synth_config(void)
 		sqlite3_step(stmt);
 	}
 	else fprintf (stderr, "Error: cannot update synth information: %s\n", sqlite3_errmsg(db));
+	sqlite3_finalize(stmt);
 
 	/*
 	 * Update Synth parameters
