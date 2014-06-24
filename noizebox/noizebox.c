@@ -21,7 +21,7 @@ struct sigaction shutdown_action;
 #ifndef __FLUIDSYNTH_MIDI_DRIVER__
 
 extern void *noizebox_midi_read();
-pthread_t threads[1];
+pthread_t threads[2];
 
 void  noizebox_shutdown(int signum)
 {
@@ -77,26 +77,27 @@ int main(void)
 #endif
 
 	setpriority(PRIO_PROCESS, getpid(), PRIO_MAX);
-
 	if ( noizebox_load_synth_config() == -1) 
 	{
 		exit (1);
 	}
 
+	prev_v=noizebox_get_pcm_volume;
+
 	noizebox_font_pitch_offset = noizebox_user_pitch_offset = 0;
 
 #ifndef __FLUIDSYNTH_MIDI_DRIVER__
 
-	if (pthread_create(&threads[1], NULL, noizebox_midi_read, argv[1]))
+	if (pthread_create(&threads[0], NULL, noizebox_midi_read, argv[1]))
 	{
 		perror("Error: Cannot create MIDI thread");
 		exit (-1);
 	}
-	if ( argc == 2 )
+	if ( argc == 3 )
 	{
 		if (pthread_create(&threads[1], NULL, noizebox_midi_read, argv[2]))
 		{
-			perror("Error: Cannot create second MIDI thread");
+			fprintf(stderr,"Error: Cannot create second MIDI thread");
 			exit (-1);
 		}
 	}

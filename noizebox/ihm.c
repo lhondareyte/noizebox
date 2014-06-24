@@ -15,23 +15,33 @@
 static WINDOW *screen;
 int key;
 
-void noizebox_terminate_menu(void)
+void NZ_refresh(void)
 {
-	clear();
-        mvprintw(0,0,"Shutdown in progress\n    Please wait...  ");
-        refresh();
-        endwin();
-}
-
-void noizebox_refresh_volume(void)
-{
-	int16_t v;
-	v=noizebox_get_pcm_volume();
-	mvprintw(0,17,"%03d:%03d", (v & 0xFF), (v >> 8));
+	/* Rustine pour fonctionnement avec tinyVT */
+	usleep (25000);
 	refresh();
 }
 
-void noizebox_refresh_midi_mode(void)
+void noizebox_terminate_menu(void)
+{
+	clear();
+        mvprintw(0,0,"  Shutdown in progress\n      Please wait...  ");
+        NZ_refresh();
+        endwin();
+}
+
+void NZ_refresh_volume(void)
+{
+	int16_t v;
+	v=noizebox_get_pcm_volume();
+	if ( prev_v != v ) 
+	{
+		mvprintw(0,15,"V=%03d:%03d", (v & 0xFF), (v >> 8));
+		NZ_refresh();
+	}
+}
+
+void NZ_refresh_midi_mode(void)
 {
 	switch (NZ_midi_mode)
 	{
@@ -45,23 +55,44 @@ void noizebox_refresh_midi_mode(void)
 			current_midi_mode_name="WX5";
 			break;
 	}
-	mvprintw(1,15,"%3s",current_midi_mode_name);
-	refresh();
+	mvprintw(1,13,"M=%-3s",current_midi_mode_name);
+	NZ_refresh();
 }
 
-void noizebox_refresh_main_menu(void)
+void NZ_refresh_font_name(void)
 {
-	mvprintw(0,0,"Prg=%8s Vol=---:---", current_font_name);
-	mvprintw(1,0,"S=%02d  T=-0-  M=---  Info",
- 		noizebox_noteon_minimum);
-	refresh();
-	noizebox_refresh_midi_mode();
-	noizebox_refresh_volume();
+	mvprintw(0,0,"P=%-13s", current_font_name);
+	NZ_refresh();
+}
+
+void NZ_refresh_sensitivity()
+{
+	mvprintw(1,0,"S=%02d", noizebox_noteon_minimum);
+	move(1,3);
+	NZ_refresh();
+}
+
+void NZ_refresh_transpose()
+{
+	mvprintw(1,6,"T=000");
+	NZ_refresh();
+}
+
+void NZ_refresh_main_menu(void)
+{
+	clear();
+	NZ_refresh_font_name();
+	NZ_refresh_volume();
+	NZ_refresh_sensitivity();
+	NZ_refresh_transpose();
+	NZ_refresh_midi_mode();
+	mvprintw(1,20,"Info");
+	NZ_refresh();
 }
 
 
 
-void noizebox_set_sensitivity(void)
+void NZ_set_sensitivity(void)
 {
 	move(1,3);
 	curs_set(1);
@@ -86,13 +117,11 @@ void noizebox_set_sensitivity(void)
 				noizebox_control_volume(key);
 				break;
 		}
-		mvprintw(1,2,"%02d",noizebox_noteon_minimum);
-		move(1,3);
-		refresh();
+		NZ_refresh_sensitivity();
 	}
 }
 
-void noizebox_set_transpose(void)
+void NZ_set_transpose(void)
 {
 	move(1,9);
 	curs_set(1);
@@ -115,13 +144,11 @@ void noizebox_set_transpose(void)
 				noizebox_control_volume(key);
 				break;
 		}
-		mvprintw(1,8,"%02d",noizebox_noteon_minimum);
-		move(1,9);
-		refresh();
+		NZ_refresh_transpose();
 	}
 }
 
-void noizebox_set_midi_mode(void)
+void NZ_set_midi_mode(void)
 {
 	move(1,16);
 	curs_set(1);
@@ -137,16 +164,18 @@ void noizebox_set_midi_mode(void)
 				if ( NZ_midi_mode < NZ_MAX_MIDI_MODE ) NZ_midi_mode++;
 				break;
 			case '3': 
+				NZ_refresh_midi_mode();
 				curs_set(0);
+				NZ_refresh();
 				return;
 				break;
 			default:
 				noizebox_control_volume(key);
 				break;
 		}
-		noizebox_refresh_midi_mode();
+		NZ_refresh_midi_mode();
 		move(1,16);
-		refresh();
+		NZ_refresh();
 	}
 }
 
@@ -155,24 +184,24 @@ void noizebox_control_volume(int k)
 	switch (k)
 	{
 		/* Volume general */
-		case KEY_UP:
+		case 'A':
 			noizebox_increment_pcm_volume();
 			break;
-		case KEY_DOWN:
+		case 'B':
 			noizebox_decrement_pcm_volume();
 			break;
 		/* Balance */
-		case KEY_LEFT:
+		case 'D':
 			noizebox_increment_right_pcm_volume();
 			break;
-		case KEY_RIGHT:
+		case 'C':
 			noizebox_increment_left_pcm_volume();
 			break;
 	}
-	noizebox_refresh_volume();
+	NZ_refresh_volume();
 }
 
-void noizebox_info_menu(void)
+void NZ_info_menu(void)
 {
 	/*
          * Pas d'attente du clavier pour permettre le raffraichissement
@@ -189,11 +218,12 @@ void noizebox_info_menu(void)
 		mem=noizebox_get_free_memory();
 		load=fluid_synth_get_cpu_load(synth);
 		mvprintw(0,0,"Idle=%02.2f%%   Temp=%02.1fC", 100 - load, temp);
+		NZ_refresh();
 		mvprintw(1,0,"Free=%dK",mem); clrtoeol();
 		mvprintw(1,20,"Exit");
+		NZ_refresh();
+		usleep (450000);
 		
-		refresh();
-		usleep(500000);
 		key=getch();
 		switch (key) 
 		{
@@ -212,21 +242,20 @@ int *noizebox_main_menu (void)
 	noecho();
 	keypad(stdscr, TRUE);
 	raw();
-	curs_set(0);
 	cbreak();
+	curs_set(0);
 	clear();
+	NZ_refresh();
 
 	/* Splash screen */
-	mvprintw(0,0,"   Noizebox V0.8    \n(c)2013 L Hondareyte");
-	refresh();
+	mvprintw(0,0,"     Noizebox v0.8a     \n  (c)2013 L Hondareyte");
+	NZ_refresh();
 	sleep(1);
-	clear();
-	refresh();
 
 	/*
 	 * Menu principal
 	 */
-	noizebox_refresh_main_menu();
+	NZ_refresh_main_menu();
 
 	/* 
 	 * Boucle d'attente utilisateur 
@@ -237,24 +266,27 @@ int *noizebox_main_menu (void)
 		switch (key)
 		{
 			case '1':
-				noizebox_set_sensitivity();
+				NZ_set_sensitivity();
 				break;
 			case '2':
-				noizebox_set_transpose();
+				NZ_set_transpose();
 				break;
 			case '3':
-				noizebox_set_midi_mode();
+				NZ_set_midi_mode();
 				break;
 			case '4':
-				noizebox_info_menu();
+				NZ_info_menu();
+				NZ_refresh_main_menu();
 				break;
 			case '-':
-				mvprintw(0,4,"Loading ");refresh();
+				mvprintw(0,2,"Loading     ");NZ_refresh();
 				noizebox_load_font(current_font--);
+				NZ_refresh_font_name();
 				break;
 			case '+':
-				mvprintw(0,4,"Loading ");refresh();
+				mvprintw(0,2,"Loading     ");NZ_refresh();
 				noizebox_load_font(current_font++);
+				NZ_refresh_font_name();
 				break;
 #ifdef __NOIZEBOX_DEBUG__
 			case 'V':
@@ -272,7 +304,6 @@ int *noizebox_main_menu (void)
 				noizebox_control_volume(key);
 				break;
 		}
-		noizebox_refresh_main_menu();
 	}
 	return 0;
 }

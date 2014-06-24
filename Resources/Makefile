@@ -17,3 +17,5 @@ conf:
 
 clean:
 	@rm -f $(CFG)
+install:
+	

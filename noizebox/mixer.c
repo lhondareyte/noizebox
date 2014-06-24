@@ -58,6 +58,7 @@ void noizebox_increment_pcm_volume(void)
 	r = v >> 8;
 	if (l < NOIZEBOX_MAX_LEVEL && r < NOIZEBOX_MAX_LEVEL )
 	{
+		prev_v=v;
 		v+= 0x0101;
 		ioctl(noizebox_mixer, MIXER_WRITE(SOUND_MIXER_PCM),&v);
 	}
@@ -71,6 +72,7 @@ void noizebox_decrement_pcm_volume(void)
 	r = v >> 8;
 	if (l > NOIZEBOX_MIN_LEVEL && r > NOIZEBOX_MIN_LEVEL )
 	{
+		prev_v=v;
 		v-= 0x0101;
 		ioctl(noizebox_mixer, MIXER_WRITE(SOUND_MIXER_PCM),&v);
 	}
