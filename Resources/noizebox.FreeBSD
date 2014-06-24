@@ -10,10 +10,13 @@ APP=$(basename $0)
 NZAPP=$(readlink -f $0)
 NZDIR=$(dirname $NZAPP)
 NZBIN="${NZDIR}/Contents/${PLATFORM}/${APP}"
-MIDI="/dev/umidi0.0"
+MIDI1="/dev/umidi0.0"
+MIDI2="/dev/umidi1.0"
+MIDI="${MIDI1} ${MIDI2}"
 NZTTY="/dev/cuaU0"
 export NZDIR
 
+echo 1
 #
 # Source specifics parameters
 if [ -f ${NZBIN}.env ] ; then
@@ -27,10 +30,10 @@ elif [ -f ${NZDIR}/Contents/${PLATFORM}/termcap.db ] ; then
     export TERMCAP=${NZDIR}/Contents/${PLATFORM}/termcap
 fi
 
-if [ ! -c $MIDI -o -z $MIDI ] ; then
-    printf "Fatal error: cannot open MIDI device ($MIDI).\n"
-    exit 1
-fi
+#if [ ! -c $MIDI1 -o -z $MIDI1 ] ; then
+#    printf "Fatal error: cannot open MIDI device ($MIDI1).\n"
+#    exit 1
+#fi
 
 #
 # Set embbeded library path
@@ -40,10 +43,14 @@ export LD_LIBRARY_PATH
 #
 # Run application
 RT="/usr/sbin/rtprio"
+echo 2
 if [ -c ${NZTTY} -a -x ${NZBIN} ] ; then
+	echo 3
     if [ -x ${RT} ] ; then
+	echo to
 	exec ${RT} 0 ${NZBIN} ${MIDI} < ${NZTTY} > ${NZTTY} 2>/dev/null
     else
+	echo tu
 	exec ${NZBIN} ${MIDI} < ${NZTTY} > ${NZTTY} 2>/dev/null
     fi
 else
