@@ -38,3 +38,5 @@ clean:
 	@printf "Compiling $<:"
 	@$(CC) $(CFLAGS) -Os -c $< -o $@
 	@printf "\tdone.\n"
+install:
+	install -m 755 noizebox ../nanobsd/Noizebox/Contents/FreeBSD/amd64/

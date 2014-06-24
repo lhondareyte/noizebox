@@ -11,3 +11,5 @@ clean:
 	for dir in $(MODULES); do \
 		(cd $$dir; ${MAKE} clean); \
 	done
+flash:
+	dd if=

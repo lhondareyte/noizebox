@@ -18,7 +18,7 @@ world:
 
 kernel:
 	@cp ${KERNEL} /usr/src/sys/${MACHINE}/conf/NOIZEBOX
-	@/sbin/sh $(NANOSCRIPT) -w -i -c $(NANOCFG)
+	@/bin/sh $(NANOSCRIPT) -w -i -c $(NANOCFG)
 
 install: 
 	@printf "Add loopback device ..."
@@ -40,3 +40,5 @@ install:
 	@printf "Writing image to disk..."
 	@dd if=$(DISKIMAGE) of=$(DEVICE) bs=64k > /dev/null 2>&1
 	@echo "done."
+clean:
+	rm -rf Noizebox/*

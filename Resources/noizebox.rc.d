@@ -1,5 +1,6 @@
 #!/bin/sh
-
+#
+#
 . /etc/rc.subr
 
 # KEYWORD: shutdown
@@ -46,15 +47,23 @@ noizebox_stop()
 		_run_rc_notrunning
 		return 1
 	fi
-	echo "Stopping ${name}."
+	printf "Stopping ${name}..."
 	kill $rc_pid 
+	echo "0" > /dev/cuaU0
+	sleep 2
 	sync;sync;sync
+	echo " done."
 	if [ -d /cfg ] ; then
+		printf "Saving ${name} configuration..."
 		sync;sync;sync
 		mount /cfg
-		mv /cfg/noizebox.conf /cfg/noizebox.old
-		cp /etc/noizebox.conf /cfg/noizebox.conf
-		umount_cfg
+		if [ $? -eq 0 ] ; then
+			cp /etc/noizebox.conf /cfg/noizebox.conf
+			umount_cfg
+			echo " done."
+		else
+			echo " failed!"
+		fi
 	fi
 	rm -f /var/run/${name}.pid
 }

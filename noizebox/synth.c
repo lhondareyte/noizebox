@@ -84,6 +84,7 @@ void noizebox_create_synth(void)
 #ifdef __FLUIDSYNTH_MIDI_DRIVER__
     fluid_settings_setstr(synth_settings, "midi.driver", "oss");
     fluid_settings_setstr(synth_settings, "midi.oss.device", "/dev/umidi0.0");
+    fluid_settings_setstr(synth_settings, "midi.oss.device", "/dev/umidi0.0");
     synth_midi_driver = new_fluid_midi_driver(synth_settings, fluid_send_midi_event, NULL);
 #endif
 #ifndef __WITH_SQLITE__
