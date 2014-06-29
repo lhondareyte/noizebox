@@ -71,8 +71,6 @@ void noizebox_delete_synth(void)
 
 void noizebox_create_synth(void)
 {
-
-	NZ_current_pitch_detune=0;
 	noizebox_pitch=0;
 	synth_settings = new_fluid_settings();
 	synth = new_fluid_synth(synth_settings);
@@ -101,10 +99,10 @@ void noizebox_synth_detune(int p)
 {
 	int key;
 	double pitch;
-	NZ_current_pitch_detune += p;
+	NZ_pitch_detune += p;
 	for (key=0; key<=127; key++)
 	{
-		pitch = ((key * 10) + (double)NZ_current_pitch_detune ) * 10;
+		pitch = ((key * 10) + (double)NZ_pitch_detune ) * 10;
 		fluid_synth_tune_notes(synth,1,1,1,&key,&pitch,TRUE);
 	}
 }

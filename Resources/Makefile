@@ -12,6 +12,8 @@ conf:
 	@sqlite3 $(CFG) "insert into midi values('sensitivity',0);"
 	@sqlite3 $(CFG) "insert into midi values('transpose',0);"
 	@sqlite3 $(CFG) "insert into midi values('mode',1);"
+	@sqlite3 $(CFG) "create table synth (param varchar(12), val smallint);"
+	@sqlite3 $(CFG) "insert into synth values('detune',0);"
 	@sqlite3 $(CFG) "create table soundfont (param varchar(12), val smallint);"
 	@sqlite3 $(CFG) "insert into soundfont values('last_id',1);"
 
