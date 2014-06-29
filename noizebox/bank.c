@@ -4,32 +4,7 @@
  */
 
 #include "noizebox.h"
-
-#ifndef __WITH_SQLITE__
-void noizebox_load_next_font(void)
-{
-	if ( current_font_id != 0 ) fluid_synth_sfunload(synth,current_font_id,1);
-	int f=current_font;
-	f++;
-	if ( noizebox_bank[f].name ==  NULL ) f=0;
-	current_font_id=fluid_synth_sfload(synth,noizebox_bank[f].file,1);
-	current_font=f;
-}
-
-void noizebox_load_prev_font(void)
-{
-	if ( current_font_id != 0 ) fluid_synth_sfunload(synth,current_font_id,1);
-	int f=current_font;
-	if (f == 0) f=max_font_in_bank;
-	else f--;
-	current_font_id=fluid_synth_sfload(synth,noizebox_bank[f].file,1);
-	current_font=f;
-}
-
-#else
-
 #include <sqlite3.h>
-
 
 void noizebox_load_bank(void)
 {
@@ -62,10 +37,17 @@ void noizebox_load_bank(void)
 
 void noizebox_load_font(int font)
 {
-	int previous_offset=noizebox_font_pitch_offset;
+	int previous_offset=noizebox_font_pitch_offset, i;
         char sql[80];
         sqlite3 *bank;
         sqlite3_stmt *stmt;
+
+	/* Reset du tuning pour tous les canaux */
+	for ( i=0; i<= 15; i++ )
+	{
+		fluid_synth_reset_tuning(synth, i);
+	}
+
 	if ( current_font_id != 0 ) fluid_synth_sfunload(synth,current_font_id,1);
 	if (current_font == 0 ) current_font=max_font_in_bank;
 	if (current_font == max_font_in_bank + 1) current_font=1;
@@ -97,8 +79,13 @@ void noizebox_load_font(int font)
 
 	if ( previous_offset != noizebox_font_pitch_offset ) fluid_synth_system_reset(synth);
 
-	fprintf (stderr,"Loading SF2 %s\n",current_font_path);
 	current_font_id=fluid_synth_sfload(synth,current_font_path,1);
+	fprintf (stderr,"Loading SF2 %s (%d)\n",current_font_path, current_font_id);
+
+	/* Actication du tuning pour tous les canaux */
+	for ( i=0; i<= 15; i++)
+	{
+		fluid_synth_select_tuning(synth, i, 1, 1);
+	}
 }
 
-#endif
