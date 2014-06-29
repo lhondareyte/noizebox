@@ -76,10 +76,10 @@ void NZ_refresh_sensitivity()
 void NZ_refresh_transpose()
 {
 	float f;
-	if ( NZ_current_pitch_detune == 0) mvprintw(1,6,"T=000.0");
+	if ( NZ_pitch_detune == 0) mvprintw(1,6,"T=000.0");
 	else
 	{
-		f= (float)NZ_current_pitch_detune /10;
+		f= (float)NZ_pitch_detune /10;
 		if ( f < 0.0 ) mvprintw(1,6,"T=-%04.1f", fabs(f));
 		else mvprintw(1,6,"T=+%04.1f", f);
 	}
@@ -140,11 +140,11 @@ void NZ_set_transpose(void)
 		switch (key)
 		{
 			case '-':
-				if ( NZ_current_pitch_detune > -120 )
+				if ( NZ_pitch_detune > -120 )
 				noizebox_synth_detune(-1);
 				break;
 			case '+':
-				if ( NZ_current_pitch_detune < 120 )
+				if ( NZ_pitch_detune < 120 )
 				noizebox_synth_detune(1);
 				break;
 			case '2': 
