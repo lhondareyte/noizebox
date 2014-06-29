@@ -8,6 +8,7 @@
 #include <sys/sysctl.h>
 #include <unistd.h>
 #include <fluidsynth.h>
+#include <math.h>
 
 #include "noizebox.h"
 #include "functions.h"
@@ -55,13 +56,13 @@ void NZ_refresh_midi_mode(void)
 			current_midi_mode_name="WX5";
 			break;
 	}
-	mvprintw(1,13,"M=%-3s",current_midi_mode_name);
+	mvprintw(1,14,"M=%-3s",current_midi_mode_name);
 	NZ_refresh();
 }
 
 void NZ_refresh_font_name(void)
 {
-	mvprintw(0,0,"P=%-13s", current_font_name);
+	mvprintw(0,0,"P=%-10s", current_font_name);
 	NZ_refresh();
 }
 
@@ -74,7 +75,15 @@ void NZ_refresh_sensitivity()
 
 void NZ_refresh_transpose()
 {
-	mvprintw(1,6,"T=000");
+	float f;
+	if ( NZ_current_pitch_detune == 0) mvprintw(1,6,"T=000.0");
+	else
+	{
+		f= (float)NZ_current_pitch_detune /10;
+		if ( f < 0.0 ) mvprintw(1,6,"T=-%04.1f", fabs(f));
+		else mvprintw(1,6,"T=+%04.1f", f);
+	}
+	move(1,10);
 	NZ_refresh();
 }
 
@@ -123,7 +132,7 @@ void NZ_set_sensitivity(void)
 
 void NZ_set_transpose(void)
 {
-	move(1,9);
+	move(1,10);
 	curs_set(1);
 	while (1)
 	{
@@ -131,10 +140,12 @@ void NZ_set_transpose(void)
 		switch (key)
 		{
 			case '-':
-				noizebox_synth_detune(-100);
+				if ( NZ_current_pitch_detune > -120 )
+				noizebox_synth_detune(-1);
 				break;
 			case '+':
-				noizebox_synth_detune(100);
+				if ( NZ_current_pitch_detune < 120 )
+				noizebox_synth_detune(1);
 				break;
 			case '2': 
 				curs_set(0);
@@ -174,7 +185,7 @@ void NZ_set_midi_mode(void)
 				break;
 		}
 		NZ_refresh_midi_mode();
-		move(1,16);
+		move(1,17);
 		NZ_refresh();
 	}
 }
@@ -279,12 +290,12 @@ int *noizebox_main_menu (void)
 				NZ_refresh_main_menu();
 				break;
 			case '-':
-				mvprintw(0,2,"Loading     ");NZ_refresh();
+				mvprintw(0,2,"Loading      ");NZ_refresh();
 				noizebox_load_font(current_font--);
 				NZ_refresh_font_name();
 				break;
 			case '+':
-				mvprintw(0,2,"Loading     ");NZ_refresh();
+				mvprintw(0,2,"Loading      ");NZ_refresh();
 				noizebox_load_font(current_font++);
 				NZ_refresh_font_name();
 				break;
