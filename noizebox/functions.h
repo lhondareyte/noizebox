@@ -40,6 +40,8 @@ void noizebox_load_prev_font(void);
 void noizebox_pitch_up(void);
 void noizebox_pitch_down(void);
 
+void noizebox_synth_detune(int);
+
 /*
  * mixer.c
  */

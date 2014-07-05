@@ -19,7 +19,7 @@ int key;
 void NZ_refresh(void)
 {
 	/* Rustine pour fonctionnement avec tinyVT */
-	usleep (25000);
+	//usleep (25000);
 	refresh();
 }
 
@@ -62,28 +62,27 @@ void NZ_refresh_midi_mode(void)
 
 void NZ_refresh_font_name(void)
 {
-	mvprintw(0,0,"P=%-10s", current_font_name);
+	mvprintw(0,0,"P=%-13s", current_font_name);
 	NZ_refresh();
 }
 
 void NZ_refresh_sensitivity()
 {
 	mvprintw(1,0,"S=%02d", noizebox_noteon_minimum);
-	move(1,3);
 	NZ_refresh();
 }
 
 void NZ_refresh_transpose()
 {
 	float f;
-	if ( NZ_pitch_detune == 0) mvprintw(1,6,"T=000.0");
+	if ( NZ_pitch_detune == 0) mvprintw(1,5,"T=000.0");
 	else
 	{
 		f= (float)NZ_pitch_detune /10;
-		if ( f < 0.0 ) mvprintw(1,6,"T=-%04.1f", fabs(f));
-		else mvprintw(1,6,"T=+%04.1f", f);
+		if ( f < 0.0 ) mvprintw(1,5,"T=-%04.1f", fabs(f));
+		else mvprintw(1,5,"T=+%04.1f", f);
 	}
-	move(1,10);
+	move(1,9);
 	NZ_refresh();
 }
 
@@ -92,6 +91,7 @@ void NZ_refresh_main_menu(void)
 	clear();
 	NZ_refresh_font_name();
 	NZ_refresh_volume();
+	NZ_refresh();
 	NZ_refresh_sensitivity();
 	NZ_refresh_transpose();
 	NZ_refresh_midi_mode();
@@ -132,7 +132,7 @@ void NZ_set_sensitivity(void)
 
 void NZ_set_transpose(void)
 {
-	move(1,10);
+	move(1,9);
 	curs_set(1);
 	while (1)
 	{
@@ -161,7 +161,7 @@ void NZ_set_transpose(void)
 
 void NZ_set_midi_mode(void)
 {
-	move(1,16);
+	move(1,17);
 	curs_set(1);
 	while (1)
 	{
@@ -223,17 +223,17 @@ void NZ_info_menu(void)
 	uint64_t mem;
 	extern fluid_synth_t* synth;
 
+	clear();
+	mvprintw(1,20,"Exit");
 	while (1)
 	{
 		temp=noizebox_get_cpu_temperature();
 		mem=noizebox_get_free_memory();
 		load=fluid_synth_get_cpu_load(synth);
 		mvprintw(0,0,"Idle=%02.2f%%   Temp=%02.1fC", 100 - load, temp);
+		mvprintw(1,0,"Free=%dK",mem); 
 		NZ_refresh();
-		mvprintw(1,0,"Free=%dK",mem); clrtoeol();
-		mvprintw(1,20,"Exit");
-		NZ_refresh();
-		usleep (450000);
+		usleep (400000);
 		
 		key=getch();
 		switch (key) 
@@ -259,9 +259,10 @@ int *noizebox_main_menu (void)
 	NZ_refresh();
 
 	/* Splash screen */
-	mvprintw(0,0,"     Noizebox v0.8a     \n  (c)2013 L Hondareyte");
+
+	mvprintw(0,0,"     Noizebox v0.8a     \n  (c)2013 L Hondareyte  ");
 	NZ_refresh();
-	sleep(1);
+	sleep(2);
 
 	/*
 	 * Menu principal
