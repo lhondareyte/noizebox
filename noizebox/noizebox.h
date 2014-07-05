@@ -30,7 +30,7 @@ int noizebox_user_pitch_offset;
 const double * noizebox_pitch;
 int current_font;
 int current_font_id;
-char current_font_name[14];
+char current_font_name[12];
 char current_font_path[256];
 char *current_midi_mode_name;
 int max_font_in_bank;

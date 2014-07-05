@@ -1,7 +1,7 @@
 # Termcap entry for AVR tinyVT, from Luc Hondareyte
 # see http://lhondareyte.free.fr/tinyVT/ for details
 tinyVT|tinyVTa|Standard AVR tinyVT Terminal:\
-        :am:mi:co#24:li#2:pd#2400:\
+        :am:mi:co#25:li#2:xn:\
         :pc=\040:cl=\EE:ho=\EH:\
         :cm=\EY%+ %+ :ve=\EC:vi=\Ec:\
         :k1=\E[1~:k2=\E[2~:k3=\E[3~:\
