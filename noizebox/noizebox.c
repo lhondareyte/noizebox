@@ -82,7 +82,7 @@ int main(void)
 		exit (1);
 	}
 
-	prev_v=noizebox_get_pcm_volume;
+	prev_v=noizebox_get_pcm_volume();
 
 	noizebox_font_pitch_offset = noizebox_user_pitch_offset = 0;
 

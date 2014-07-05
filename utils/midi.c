@@ -7,6 +7,7 @@
  * $Id: midi.c,v 0.4 2011/03/11 10:12:06 luc Exp luc $
  */
 #include <stdio.h>
+#include <stdlib.h>
 #include "midi.h"
 
 #ifndef __AVR__

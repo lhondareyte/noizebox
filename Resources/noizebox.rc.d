@@ -49,7 +49,9 @@ noizebox_stop()
 	fi
 	printf "Stopping ${name}..."
 	kill $rc_pid 
-	echo "0" > /dev/cuaU0
+	#
+	# Effacement du curseur
+	echo "c" > /dev/cuaU0
 	sleep 2
 	sync;sync;sync
 	echo " done."

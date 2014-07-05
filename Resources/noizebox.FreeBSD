@@ -16,7 +16,6 @@ MIDI="${MIDI1} ${MIDI2}"
 NZTTY="/dev/cuaU0"
 export NZDIR
 
-echo 1
 #
 # Source specifics parameters
 if [ -f ${NZBIN}.env ] ; then
@@ -45,12 +44,9 @@ export LD_LIBRARY_PATH
 RT="/usr/sbin/rtprio"
 echo 2
 if [ -c ${NZTTY} -a -x ${NZBIN} ] ; then
-	echo 3
     if [ -x ${RT} ] ; then
-	echo to
 	exec ${RT} 0 ${NZBIN} ${MIDI} < ${NZTTY} > ${NZTTY} 2>/dev/null
     else
-	echo tu
 	exec ${NZBIN} ${MIDI} < ${NZTTY} > ${NZTTY} 2>/dev/null
     fi
 else
