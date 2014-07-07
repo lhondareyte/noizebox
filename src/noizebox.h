@@ -25,12 +25,18 @@ int noizebox_mixer;
 int noizebox_master_volume;
 int noizebox_pcm_volume;
 int noizebox_noteon_minimum;
+int noizebox_font_pitch_offset;
+int noizebox_user_pitch_offset;
 const double * noizebox_pitch;
 int current_font;
 int current_font_id;
-char current_font_name[256];
+char current_font_name[12];
 char current_font_path[256];
+char *current_midi_mode_name;
 int max_font_in_bank;
+int prev_v;			// previous volume
+
+int NZ_pitch_detune;
 
 char * NZDIR;
 char FONT_DB[256];
@@ -38,7 +44,17 @@ char CONF_DB[256];
 
 int channel_preset;
 int vol,NZ_pcm_volume_left,NZ_pcm_volume_right;
+/*
+	Gestion des windcontrollers
+*/
+int NZ_midi_mode;
+#define STD			0x01
+#define EWI			0x02
+#define WX5			0x03
+#define NZ_MAX_MIDI_MODE	3
+
 fluid_synth_t* synth;
+fluid_midi_router_t* router;
 fluid_settings_t* synth_settings;
 fluid_audio_driver_t* synth_audio_driver;
 

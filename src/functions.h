@@ -11,6 +11,9 @@
  */
 int *noizebox_main_menu(void);
 void noizebox_terminate_menu(void);
+void noizebox_set_sensitivity(void);
+void noizebox_set_transpose(void);
+void noizebox_set_midi_mode(void);
 
 /*
  *  conf.c
@@ -36,6 +39,8 @@ void noizebox_load_prev_font(void);
 
 void noizebox_pitch_up(void);
 void noizebox_pitch_down(void);
+
+void noizebox_synth_detune(int);
 
 /*
  * mixer.c
