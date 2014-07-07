@@ -21,7 +21,7 @@ struct sigaction shutdown_action;
 #ifndef __FLUIDSYNTH_MIDI_DRIVER__
 
 extern void *noizebox_midi_read();
-pthread_t threads[1];
+pthread_t threads[2];
 
 void  noizebox_shutdown(int signum)
 {
@@ -39,19 +39,25 @@ void  noizebox_shutdown(int signum)
 
 int main(int argc, char *argv[])
 {
-	FILE * conf;
+	FILE *conf;
 	noizebox_noteon_minimum=0;
 	NZDIR=getenv("NZDIR");
+	NZ_midi_mode=0x01;
 	if ( ! NZDIR ) 
 	{
 		printf ("Error; NZDIR is not set!\n");
 		exit (1);
 	}
 	sprintf(CONF_DB,"%s/Resources/noizebox.conf",NZDIR);
-	if ( conf = fopen (CONF_DB, "r" ) ) fclose(conf);
-	else sprintf(CONF_DB,"/etc/noizebox.conf");
-	
+	conf = fopen (CONF_DB, "r" ) ;
+	if ( conf == NULL ) 
+	{
+		sprintf(CONF_DB,"/etc/noizebox.conf");
+	}
+	else fclose(conf);
+
 	sprintf(FONT_DB,"%s/Resources/soundfont.conf",NZDIR);
+
 	if ( argc <= 1 ) 
 	{
 		printf("Error: You must specify a OSS midi device.\n");
@@ -62,7 +68,7 @@ int main(int argc, char *argv[])
 	shutdown_action.sa_flags = 0;
 	sigemptyset(&shutdown_action.sa_mask);
 	sigaction(SIGTERM, &shutdown_action,(struct sigaction *)0);
-	sigaction(SIGQUIT, &shutdown_action,(struct sigaction *)0);
+	//sigaction(SIGQUIT, &shutdown_action,(struct sigaction *)0);
 
 #else
 
@@ -71,23 +77,29 @@ int main(void)
 #endif
 
 	setpriority(PRIO_PROCESS, getpid(), PRIO_MAX);
-
 	if ( noizebox_load_synth_config() == -1) 
 	{
 		exit (1);
 	}
 
+	prev_v=noizebox_get_pcm_volume();
+
+	noizebox_font_pitch_offset = noizebox_user_pitch_offset = 0;
+
 #ifndef __FLUIDSYNTH_MIDI_DRIVER__
 
-	if (pthread_create(&threads[1], NULL, noizebox_midi_read, argv[1]))
+	if (pthread_create(&threads[0], NULL, noizebox_midi_read, argv[1]))
 	{
 		perror("Error: Cannot create MIDI thread");
 		exit (-1);
 	}
-	if (pthread_create(&threads[1], NULL, noizebox_midi_read, argv[2]))
+	if ( argc == 3 )
 	{
-		perror("Error: Cannot create MIDI thread");
-		exit (-1);
+		if (pthread_create(&threads[1], NULL, noizebox_midi_read, argv[2]))
+		{
+			fprintf(stderr,"Error: Cannot create second MIDI thread");
+			exit (-1);
+		}
 	}
 #endif
 	noizebox_create_synth();

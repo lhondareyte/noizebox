@@ -126,11 +126,17 @@ void noizebox_midi_analyze(uint8_t v)
 				switch (status)
 				{
 					case MIDI_NOTEON_MSG : 
-						fluid_synth_noteon(synth, channel, data1, data2);
+						if ( NZ_midi_mode == WX5 ) 
+						{
+							if ( data2 >= 1 ) data2=100;
+						}
+						fluid_synth_noteon(synth, channel, 
+								data1 + noizebox_font_pitch_offset + noizebox_user_pitch_offset , data2);
 						break;
 
 					case MIDI_NOTOFF_MSG : 
-						fluid_synth_noteoff(synth, channel, data1);
+						fluid_synth_noteoff(synth, channel, 
+								data1 + noizebox_font_pitch_offset + noizebox_user_pitch_offset);
 						break;
 
 					case MIDI_POLYAF_MSG : 
@@ -143,6 +149,10 @@ void noizebox_midi_analyze(uint8_t v)
 						break;
 
 					case MIDI_CTRLCHG_MSG : 
+						if ( NZ_midi_mode == EWI || NZ_midi_mode == WX5 ) 
+						{
+							if ( data1 == 2  || data1 == 34) data1+=5;
+						}
 						fluid_synth_cc(synth, channel, data1, data2);
 						break;
 
@@ -207,9 +217,10 @@ int *noizebox_midi_read( char *dev )
 	uint8_t c;
 	while (( fp=fopen(dev,"r")) == NULL ) 
 	{
-		// fprintf(stderr,"Error: %s: %s (will trying later)\n",dev,strerror(errno));
+		fprintf(stderr,"Error: %s: %s (will trying later)\n",dev,strerror(errno));
 		sleep(2);
 	}
+	fprintf(stderr,"Opening %s OK\n", dev);
 	while (!feof(fp))
 	{
 		c = fgetc(fp);
