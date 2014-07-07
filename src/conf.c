@@ -57,6 +57,40 @@ int noizebox_load_synth_config(void)
 	}
 	else fprintf (stderr, "Failed to prepare database: %s\n",sqlite3_errmsg(db));
 
+	sql = "SELECT val FROM midi WHERE param='mode'";
+	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
+	{
+		if (  sqlite3_step(stmt) == SQLITE_ROW )
+		{
+			NZ_midi_mode=sqlite3_column_int(stmt,0);
+		}
+		else 
+		{
+			NZ_midi_mode=1;
+			sqlite3_reset(stmt);
+		}
+		sqlite3_finalize(stmt);
+	}
+	else fprintf (stderr, "Failed to prepare database: %s\n",sqlite3_errmsg(db));
+
+
+	sql = "SELECT val FROM synth WHERE param='detune'";
+	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
+	{
+		if (  sqlite3_step(stmt) == SQLITE_ROW )
+		{
+			NZ_pitch_detune=sqlite3_column_int(stmt,0);
+		}
+		else 
+		{
+			NZ_midi_mode=1;
+			sqlite3_reset(stmt);
+		}
+		sqlite3_finalize(stmt);
+	}
+	else fprintf (stderr, "Failed to prepare database: %s\n",sqlite3_errmsg(db));
+
+
 	sqlite3_close(db);
 
 	return (0);
@@ -87,6 +121,7 @@ int noizebox_save_synth_config(void)
 		sqlite3_step(stmt);
 	}
 	else fprintf (stderr, "Error: cannot update synth information: %s\n", sqlite3_errmsg(db));
+	sqlite3_finalize(stmt);
 	
 	sprintf (sql, "update mixer set val=%d where param=\'right\'",r);
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
@@ -94,6 +129,7 @@ int noizebox_save_synth_config(void)
 		sqlite3_step(stmt);
 	}
 	else fprintf (stderr, "Error: cannot update synth information: %s\n", sqlite3_errmsg(db));
+	sqlite3_finalize(stmt);
 	
 	/*
 	 * Update SoundFont information
@@ -104,13 +140,34 @@ int noizebox_save_synth_config(void)
 		sqlite3_step(stmt);
 	}
 	else fprintf (stderr, "Error: cannot update synth information: %s\n", sqlite3_errmsg(db));
+	sqlite3_finalize(stmt);
+
+	/*
+	 * Update MIDI information
+   	 */
+	sprintf (sql, "update midi set val=%d where param=\'mode\'",NZ_midi_mode);
+	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
+	{
+		sqlite3_step(stmt);
+	}
+	else fprintf (stderr, "Error: cannot update synth information: %s\n", sqlite3_errmsg(db));
+	sqlite3_finalize(stmt);
+
+	/*
+	 * Update SYNTH information
+   	 */
+	sprintf (sql, "update synth set val=%d where param=\'detune\'",NZ_pitch_detune);
+	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
+	{
+		sqlite3_step(stmt);
+	}
+	else fprintf (stderr, "Error: cannot update synth information: %s\n", sqlite3_errmsg(db));
+	sqlite3_finalize(stmt);
 
 	/*
 	 * Update Synth parameters
    	 */
-
 	sqlite3_finalize(stmt);
-	sqlite3_reset(stmt);
 	rc=sqlite3_close(db);
 
 	if ( rc != SQLITE_OK )

@@ -30,7 +30,7 @@ int noizebox_init_mixer(void)
 		fprintf(stderr,"Error while opening Mixer device: /dev/mixer: %s\n",strerror(errno));
 		return -1;
 	}
-	(ioctl(noizebox_mixer, SOUND_MIXER_WRITE_VOLUME,&v));
+	ioctl(noizebox_mixer, SOUND_MIXER_WRITE_VOLUME,&v);
 	v = NZ_pcm_volume_left;
 	v = (v << 8 ) + NZ_pcm_volume_right;
 	return ioctl(noizebox_mixer, MIXER_WRITE(SOUND_MIXER_PCM),&v);
@@ -58,6 +58,7 @@ void noizebox_increment_pcm_volume(void)
 	r = v >> 8;
 	if (l < NOIZEBOX_MAX_LEVEL && r < NOIZEBOX_MAX_LEVEL )
 	{
+		prev_v=v;
 		v+= 0x0101;
 		ioctl(noizebox_mixer, MIXER_WRITE(SOUND_MIXER_PCM),&v);
 	}
@@ -71,6 +72,7 @@ void noizebox_decrement_pcm_volume(void)
 	r = v >> 8;
 	if (l > NOIZEBOX_MIN_LEVEL && r > NOIZEBOX_MIN_LEVEL )
 	{
+		prev_v=v;
 		v-= 0x0101;
 		ioctl(noizebox_mixer, MIXER_WRITE(SOUND_MIXER_PCM),&v);
 	}

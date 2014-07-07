@@ -4,32 +4,7 @@
  */
 
 #include "noizebox.h"
-
-#ifndef __WITH_SQLITE__
-void noizebox_load_next_font(void)
-{
-	fluid_synth_sfunload(synth,current_font_id,1);
-	int f=current_font;
-	f++;
-	if ( noizebox_bank[f].name ==  NULL ) f=0;
-	current_font_id=fluid_synth_sfload(synth,noizebox_bank[f].file,1);
-	current_font=f;
-}
-
-void noizebox_load_prev_font(void)
-{
-	fluid_synth_sfunload(synth,current_font_id,1);
-	int f=current_font;
-	if (f == 0) f=max_font_in_bank;
-	else f--;
-	current_font_id=fluid_synth_sfload(synth,noizebox_bank[f].file,1);
-	current_font=f;
-}
-
-#else
-
 #include <sqlite3.h>
-
 
 void noizebox_load_bank(void)
 {
@@ -62,10 +37,18 @@ void noizebox_load_bank(void)
 
 void noizebox_load_font(int font)
 {
+	int previous_offset=noizebox_font_pitch_offset, i;
         char sql[80];
         sqlite3 *bank;
         sqlite3_stmt *stmt;
-	fluid_synth_sfunload(synth,current_font_id,1);
+
+	/* Reset du tuning pour tous les canaux */
+	for ( i=0; i<= 15; i++ )
+	{
+		fluid_synth_reset_tuning(synth, i);
+	}
+
+	if ( current_font_id != 0 ) fluid_synth_sfunload(synth,current_font_id,1);
 	if (current_font == 0 ) current_font=max_font_in_bank;
 	if (current_font == max_font_in_bank + 1) current_font=1;
         
@@ -76,13 +59,14 @@ void noizebox_load_font(int font)
                 exit (1);
         }
 	
-	sprintf (sql, "select name, file from bank where id='%d'", current_font);
+	sprintf (sql, "select name, file, offset from bank where id='%d'", current_font);
         if ( sqlite3_prepare_v2(bank,sql,strlen(sql),&stmt,NULL) == SQLITE_OK )
         {
 		if ( sqlite3_step(stmt) == SQLITE_ROW ) 
 		{
 			sprintf(current_font_name,"%s",sqlite3_column_text(stmt,0));
 			sprintf(current_font_path,"%s/Resources/SF2/%s",NZDIR,sqlite3_column_text(stmt,1));
+			noizebox_font_pitch_offset=sqlite3_column_int(stmt,2);
                 	sqlite3_finalize(stmt);
 		}
         }
@@ -93,8 +77,15 @@ void noizebox_load_font(int font)
         sqlite3_close(bank);
         sqlite3_shutdown();
 
-	fprintf (stderr,"Loading SF2 %s\n",current_font_path);
+	if ( previous_offset != noizebox_font_pitch_offset ) fluid_synth_system_reset(synth);
+
 	current_font_id=fluid_synth_sfload(synth,current_font_path,1);
+	fprintf (stderr,"Loading SF2 %s (%d)\n",current_font_path, current_font_id);
+
+	/* Actication du tuning pour tous les canaux */
+	for ( i=0; i<= 15; i++)
+	{
+		fluid_synth_select_tuning(synth, i, 1, 1);
+	}
 }
 
-#endif
