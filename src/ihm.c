@@ -260,7 +260,7 @@ int *noizebox_main_menu (void)
 
 	/* Splash screen */
 
-	mvprintw(0,0,"     Noizebox v0.8a     \n  (c)2013 L Hondareyte  ");
+	mvprintw(0,0,"     Noizebox %s     \n  (c)2013 L Hondareyte  ", VERSION);
 	NZ_refresh();
 	sleep(2);
 

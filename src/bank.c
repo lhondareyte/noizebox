@@ -37,7 +37,7 @@ void noizebox_load_bank(void)
 
 void noizebox_load_font(int font)
 {
-	int previous_offset=noizebox_font_pitch_offset, i;
+	int  i;
         char sql[80];
         sqlite3 *bank;
         sqlite3_stmt *stmt;
@@ -59,14 +59,13 @@ void noizebox_load_font(int font)
                 exit (1);
         }
 	
-	sprintf (sql, "select name, file, offset from bank where id='%d'", current_font);
+	sprintf (sql, "select name, file from bank where id='%d'", current_font);
         if ( sqlite3_prepare_v2(bank,sql,strlen(sql),&stmt,NULL) == SQLITE_OK )
         {
 		if ( sqlite3_step(stmt) == SQLITE_ROW ) 
 		{
 			sprintf(current_font_name,"%s",sqlite3_column_text(stmt,0));
 			sprintf(current_font_path,"%s/Resources/SF2/%s",NZDIR,sqlite3_column_text(stmt,1));
-			noizebox_font_pitch_offset=sqlite3_column_int(stmt,2);
                 	sqlite3_finalize(stmt);
 		}
         }
@@ -77,7 +76,7 @@ void noizebox_load_font(int font)
         sqlite3_close(bank);
         sqlite3_shutdown();
 
-	if ( previous_offset != noizebox_font_pitch_offset ) fluid_synth_system_reset(synth);
+	fluid_synth_system_reset(synth);
 
 	current_font_id=fluid_synth_sfload(synth,current_font_path,1);
 	fprintf (stderr,"Loading SF2 %s (%d)\n",current_font_path, current_font_id);

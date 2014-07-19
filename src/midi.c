@@ -130,13 +130,11 @@ void noizebox_midi_analyze(uint8_t v)
 						{
 							if ( data2 >= 1 ) data2=100;
 						}
-						fluid_synth_noteon(synth, channel, 
-								data1 + noizebox_font_pitch_offset + noizebox_user_pitch_offset , data2);
+						fluid_synth_noteon(synth, channel, data1, data2);
 						break;
 
 					case MIDI_NOTOFF_MSG : 
-						fluid_synth_noteoff(synth, channel, 
-								data1 + noizebox_font_pitch_offset + noizebox_user_pitch_offset);
+						fluid_synth_noteoff(synth, channel, data1);
 						break;
 
 					case MIDI_POLYAF_MSG : 
@@ -151,6 +149,7 @@ void noizebox_midi_analyze(uint8_t v)
 					case MIDI_CTRLCHG_MSG : 
 						if ( NZ_midi_mode == EWI || NZ_midi_mode == WX5 ) 
 						{
+							/* Mappage du breath control sur le volume */
 							if ( data1 == 2  || data1 == 34) data1+=5;
 						}
 						fluid_synth_cc(synth, channel, data1, data2);

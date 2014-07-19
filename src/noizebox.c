@@ -84,8 +84,6 @@ int main(void)
 
 	prev_v=noizebox_get_pcm_volume();
 
-	noizebox_font_pitch_offset = noizebox_user_pitch_offset = 0;
-
 #ifndef __FLUIDSYNTH_MIDI_DRIVER__
 
 	if (pthread_create(&threads[0], NULL, noizebox_midi_read, argv[1]))

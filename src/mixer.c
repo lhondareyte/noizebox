@@ -22,7 +22,7 @@ int noizebox_get_pcm_volume(void)
 
 int noizebox_init_mixer(void)
 {
-	int v;
+	int16_t v;
 	v = NOIZEBOX_MAX_LEVEL;
 	v = (v << 8) + NOIZEBOX_MAX_LEVEL;
 	if ((noizebox_mixer = open("/dev/mixer",O_RDWR|O_NONBLOCK)) == -1) 
