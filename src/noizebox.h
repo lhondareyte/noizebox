@@ -25,8 +25,6 @@ int noizebox_mixer;
 int noizebox_master_volume;
 int noizebox_pcm_volume;
 int noizebox_noteon_minimum;
-int noizebox_font_pitch_offset;
-int noizebox_user_pitch_offset;
 const double * noizebox_pitch;
 int current_font;
 int current_font_id;
