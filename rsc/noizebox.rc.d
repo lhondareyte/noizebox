@@ -51,7 +51,10 @@ noizebox_stop()
 	kill $rc_pid 
 	#
 	# Effacement du curseur
-	echo "c" > /dev/cuaU0
+	for i in 1 2
+	do
+		printf "c" > /dev/cuaU0
+	done
 	sleep 2
 	sync;sync;sync
 	echo " done."

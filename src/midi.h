@@ -96,9 +96,6 @@ volatile uint8_t data1;
 volatile uint8_t data2;
 volatile uint8_t ready;		// Message prêt ou non 
 volatile uint8_t rsbuff;	// Buffer pour Running status
-#ifdef __MIDI_OCTAVEDOWN_ENABLE__
- volatile uint8_t offsetOctave; // Decalage d'octave en demi ton : 0, 12 ou 24
-#endif
 uint8_t activechannel;		// Canal MIDI actif
 
 

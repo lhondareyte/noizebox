@@ -2,7 +2,7 @@
 #  $Id$
 # 
 MAKE=gmake
-MODULES = fluidsynth noizebox Resources SF2 utils nanobsd
+MODULES = fluidsynth src rsc sf2 utils nanobsd
 all:
 	for dir in $(MODULES); do \
 		(cd $$dir; ${MAKE} ); \

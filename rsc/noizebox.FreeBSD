@@ -6,51 +6,42 @@ export TERM="tinyVT"
 HOST=$(uname -s)
 ARCH=$(uname -p)
 PLATFORM="${HOST}/${ARCH}"
+APP=$(readlink -f $0)
+DIR=$(dirname $APP)
 APP=$(basename $0)
-NZAPP=$(readlink -f $0)
-NZDIR=$(dirname $NZAPP)
-NZBIN="${NZDIR}/Contents/${PLATFORM}/${APP}"
+BIN="${DIR}/Contents/${PLATFORM}/${APP}"
 MIDI1="/dev/umidi0.0"
 MIDI2="/dev/umidi1.0"
 MIDI="${MIDI1} ${MIDI2}"
-NZTTY="/dev/cuaU0"
-export NZDIR
+TTY="/dev/cuaU0"
+export NZDIR=$DIR
 
-#
-# Source specifics parameters
-if [ -f ${NZBIN}.env ] ; then
-  . ${NZBIN}.env
-fi
-
-if [ ! -c $NZTTY -o -z $NZTTY ] ; then
-    printf "Fatal error: cannot open ${APP} Terminal ($NZTTY).\n"
+if [ ! -c $TTY -o -z $TTY ] ; then
+    printf "Fatal error: cannot open ${APP} Terminal ($TTY).\n"
     exit 1
-elif [ -f ${NZDIR}/Contents/${PLATFORM}/termcap.db ] ; then
-    export TERMCAP=${NZDIR}/Contents/${PLATFORM}/termcap
 fi
 
-#if [ ! -c $MIDI1 -o -z $MIDI1 ] ; then
-#    printf "Fatal error: cannot open MIDI device ($MIDI1).\n"
-#    exit 1
-#fi
+if [ ! -c $MIDI1 ] ; then
+    printf "    Fatal error: \ncannot open MIDI device." > $TTY
+    exit 1
+fi
 
 #
 # Set embbeded library path
-LD_LIBRARY_PATH="${NZDIR}/Frameworks/${PLATFORM}"
+LD_LIBRARY_PATH="${DIR}/Frameworks/${PLATFORM}"
 export LD_LIBRARY_PATH
 
 #
 # Run application
 RT="/usr/sbin/rtprio"
-echo 2
-if [ -c ${NZTTY} -a -x ${NZBIN} ] ; then
+if [ -c ${TTY} -a -x ${BIN} ] ; then
     if [ -x ${RT} ] ; then
-	exec ${RT} 0 ${NZBIN} ${MIDI} < ${NZTTY} > ${NZTTY} 2>/dev/null
+	exec ${RT} 0 ${BIN} ${MIDI} < ${TTY} > ${TTY} 2>/dev/null
     else
-	exec ${NZBIN} ${MIDI} < ${NZTTY} > ${NZTTY} 2>/dev/null
+	exec ${BIN} ${MIDI} < ${TTY} > ${TTY} 2>/dev/null
     fi
 else
-    printf "ECannot load ${APP}\nPlease, call Support\n" > ${NZTTY}
+    printf "ECannot load ${APP}\nPlease, call Support\n" > ${TTY}
     exit 1
 fi
 exit 0

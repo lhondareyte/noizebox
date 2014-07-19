@@ -31,8 +31,14 @@ install:
 	@echo "done."
 	@printf "Populating configuration slice..."
 	@mount /dev/$(MD)s3 /mnt
-	@cp ../Resources/noizebox.conf /mnt
-	@cp ../Resources/noizebox.conf /mnt/noizebox.conf.safe
+	@cp ../rsc/noizebox.conf /mnt
+	@cp ../rsc/noizebox.conf /mnt/noizebox.conf.safe
+	@sync;sync;sync
+	@echo "done."
+	@umount /mnt
+	@printf "Populating configuration slice..."
+	@mount /dev/$(MD)s4 /mnt
+	@find Noizebox | cpio -pdvmu /mnt
 	@sync;sync;sync
 	@umount /mnt
 	@mdconfig -d -u $(MD)
