@@ -39,6 +39,7 @@ void  noizebox_shutdown(int signum)
 
 int main(int argc, char *argv[])
 {
+	int c=1; 	/* Arg count */
 	FILE *conf;
 	noizebox_noteon_minimum=0;
 	NZDIR=getenv("NZDIR");
@@ -85,16 +86,12 @@ int main(void)
 
 #ifndef __FLUIDSYNTH_MIDI_DRIVER__
 
-	if (pthread_create(&threads[0], NULL, noizebox_midi_read, argv[1]))
+	/* Creation d'un thread par device MIDI passe en argument */
+	while ( c < argc ) 
 	{
-		perror("Error: Cannot create MIDI thread");
-		exit (-1);
-	}
-	if ( argc == 3 )
-	{
-		if (pthread_create(&threads[1], NULL, noizebox_midi_read, argv[2]))
+		if (pthread_create(&threads[c-1], NULL, noizebox_midi_read, argv[c]))
 		{
-			fprintf(stderr,"Error: Cannot create second MIDI thread");
+			perror("Error: Cannot create MIDI thread");
 			exit (-1);
 		}
 	}
