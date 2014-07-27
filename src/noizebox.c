@@ -94,6 +94,7 @@ int main(void)
 			perror("Error: Cannot create MIDI thread");
 			exit (-1);
 		}
+		c++;
 	}
 #endif
 	noizebox_create_synth();
