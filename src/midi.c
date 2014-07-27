@@ -215,7 +215,7 @@ int *noizebox_midi_read( char *dev )
 	while (( fp=fopen(dev,"r")) == NULL ) 
 	{
 		fprintf(stderr,"Error: %s: %s (will trying later)\n",dev,strerror(errno));
-		sleep(2);
+		sleep(5);
 	}
 	fprintf(stderr,"Opening %s OK\n", dev);
 	while (!feof(fp))
