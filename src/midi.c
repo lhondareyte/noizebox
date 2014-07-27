@@ -126,11 +126,15 @@ void noizebox_midi_analyze(uint8_t v)
 				switch (status)
 				{
 					case MIDI_NOTEON_MSG : 
-						if ( NZ_midi_mode == WX5 ) 
+						if ( data2 == 0 ) 
 						{
-							if ( data2 >= 1 ) data2=100;
+							fluid_synth_noteoff(synth, channel, data1);
 						}
-						fluid_synth_noteon(synth, channel, data1, data2);
+						else
+						{
+							if ( NZ_midi_mode == WX5 ) data2=100;
+							fluid_synth_noteon(synth, channel, data1, data2);
+						}
 						break;
 
 					case MIDI_NOTOFF_MSG : 
@@ -138,18 +142,14 @@ void noizebox_midi_analyze(uint8_t v)
 						break;
 
 					case MIDI_POLYAF_MSG : 
-						#ifndef __AVR__ 
-						#ifdef __DEBUG__
-						printf("Message Pol. AF note: 0x%2x velo: 0x%2x\n", 
-									data1, data2);
-						#endif
-						#endif
 						break;
 
 					case MIDI_CTRLCHG_MSG : 
 						if ( NZ_midi_mode == EWI || NZ_midi_mode == WX5 ) 
 						{
-							/* Mappage du breath control sur le volume */
+							/* 
+							   Mappage du breath control sur le volume pour les EWIs
+							 */
 							if ( data1 == 2  || data1 == 34) data1+=5;
 						}
 						fluid_synth_cc(synth, channel, data1, data2);
@@ -168,9 +168,7 @@ void noizebox_midi_analyze(uint8_t v)
 						status=MIDI_UNKNOW_MSG;
 						next=MIDI_UNKNOW_MSG;
 						ready=FALSE;
-						#if defined (__MIDI_RESET_ON_ERROR__)
-						exit (0);
-						#endif
+						fluid_synth_system_reset(synth);
 						break;
 				}
 				next=MIDI_UNKNOW_MSG;

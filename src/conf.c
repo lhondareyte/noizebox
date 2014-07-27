@@ -73,7 +73,6 @@ int noizebox_load_synth_config(void)
 	}
 	else fprintf (stderr, "Failed to prepare database: %s\n",sqlite3_errmsg(db));
 
-
 	sql = "SELECT val FROM synth WHERE param='detune'";
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
 	{
@@ -83,7 +82,7 @@ int noizebox_load_synth_config(void)
 		}
 		else 
 		{
-			NZ_midi_mode=1;
+			NZ_pitch_detune=0;
 			sqlite3_reset(stmt);
 		}
 		sqlite3_finalize(stmt);
