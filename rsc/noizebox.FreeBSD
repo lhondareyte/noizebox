@@ -10,9 +10,8 @@ APP=$(readlink -f $0)
 DIR=$(dirname $APP)
 APP=$(basename $0)
 BIN="${DIR}/Contents/${PLATFORM}/${APP}"
-MIDI1="/dev/umidi0.0"
-MIDI2="/dev/umidi1.0"
-MIDI="${MIDI1} ${MIDI2}"
+MIDI="/dev/umidi0.0"
+MIDI_ADD="/dev/umidi1.0 /dev/umidi2.0"
 TTY="/dev/cuaU0"
 export NZDIR=$DIR
 
@@ -24,6 +23,8 @@ fi
 if [ ! -c $MIDI1 ] ; then
     printf "    Fatal error: \ncannot open MIDI device." > $TTY
     exit 1
+else
+	MIDI="${MIDI} ${MIDI_ADD}"
 fi
 
 #
