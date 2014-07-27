@@ -48,7 +48,10 @@ void noizebox_load_font(int font)
 		fluid_synth_reset_tuning(synth, i);
 	}
 
-	if ( current_font_id != 0 ) fluid_synth_sfunload(synth,current_font_id,1);
+	if ( current_font_id != 0 ) 
+	{
+		fluid_synth_sfunload(synth,current_font_id,1);
+	}
 	if (current_font == 0 ) current_font=max_font_in_bank;
 	if (current_font == max_font_in_bank + 1) current_font=1;
         
@@ -68,11 +71,13 @@ void noizebox_load_font(int font)
 			sprintf(current_font_path,"%s/Resources/SF2/%s",NZDIR,sqlite3_column_text(stmt,1));
                 	sqlite3_finalize(stmt);
 		}
+		
         }
         else
         {
                 fprintf (stderr, "Failed to prepare database: %s\n",sqlite3_errmsg(bank));
         }
+//
         sqlite3_close(bank);
         sqlite3_shutdown();
 
@@ -87,4 +92,3 @@ void noizebox_load_font(int font)
 		fluid_synth_select_tuning(synth, i, 1, 1);
 	}
 }
-

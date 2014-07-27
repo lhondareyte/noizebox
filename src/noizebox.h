@@ -27,8 +27,8 @@ int noizebox_pcm_volume;
 int noizebox_noteon_minimum;
 const double * noizebox_pitch;
 int current_font;
-int current_font_id;
-char current_font_name[12];
+volatile int current_font_id;
+char current_font_name[14];
 char current_font_path[256];
 char *current_midi_mode_name;
 int max_font_in_bank;
@@ -45,7 +45,7 @@ int vol,NZ_pcm_volume_left,NZ_pcm_volume_right;
 /*
 	Gestion des windcontrollers
 */
-int NZ_midi_mode;
+volatile int NZ_midi_mode;
 #define STD			0x01
 #define EWI			0x02
 #define WX5			0x03
