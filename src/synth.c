@@ -90,8 +90,8 @@ void noizebox_create_synth(void)
 	current_font_id=fluid_synth_sfload(synth, noizebox_bank[current_font].file, 1);
 #else
 	noizebox_load_bank();
-	//	noizebox_load_font(current_font);
-	current_font_id=noizebox_load_font(current_font);
+	current_font_id=0;
+	noizebox_load_font(current_font);
 #endif
 }
 

@@ -42,7 +42,6 @@ int main(int argc, char *argv[])
 	FILE *conf;
 	noizebox_noteon_minimum=0;
 	NZDIR=getenv("NZDIR");
-	NZ_midi_mode=0x01;
 	if ( ! NZDIR ) 
 	{
 		printf ("Error; NZDIR is not set!\n");
