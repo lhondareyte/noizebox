@@ -40,6 +40,18 @@ Exec ()
 	fi
 }
 
+PostExec ()
+{
+	r=0
+	post="/Upgrade/postexec.sh"
+	if [ -x $post ] ;  then
+		$post
+		r=$?
+		rm -f $post
+	fi
+	sync ; sync; sync
+	return $r
+}
 
 mount -t msdosfs -o ro $device $mnt
 if [ $? -ne 0 ] ; then
@@ -63,13 +75,13 @@ printf "0" > $tty
 
 Ask_user  "Confirmer la mise a jour" "Oui                  Non"
 if [ $? -ne 0 ] ; then
-	printf  "E   Mise a jour annulee\n  Redemarrage en cours" > $tty
+	printf  "E  Mise a jour annulee\n  Redemarrage en cours" > $tty
 	sleep 2
 	_exit 0
 fi
 
 
-printf "E  Mise a jour en cours, \n Veuillez patientez..." > $tty
+printf "E  Mise a jour en cours  \n  Veuillez patientez... " > $tty
 
 #
 # Demontage de /Applications read-only
@@ -80,8 +92,7 @@ Exec umount /Applications
 Exec mount /Upgrade
 cd /Upgrade
 mv Noizebox Noizebox.sav
-tar xzf ${mnt}/noizebox.tgz
-sync;sync;sync
+tar xzf ${mnt}/noizebox.tgz && PostExec
 if [ $? -ne 0 ] ; then
 	rm -rf Noizebox
 	mv Noizebox.sav Noizebox
