@@ -99,10 +99,9 @@ void noizebox_synth_detune(int p)
 {
 	int key;
 	double pitch;
-	NZ_pitch_detune += p;
 	for (key=0; key<=127; key++)
 	{
-		pitch = ((key * 10) + (double)NZ_pitch_detune ) * 10;
+		pitch = ((key * 10) + (double)p ) * 10;
 		fluid_synth_tune_notes(synth,1,1,1,&key,&pitch,TRUE);
 	}
 }

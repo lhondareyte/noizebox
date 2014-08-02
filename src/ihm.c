@@ -141,11 +141,17 @@ void NZ_set_transpose(void)
 		{
 			case '-':
 				if ( NZ_pitch_detune > -120 )
-				noizebox_synth_detune(-1);
+				{
+					NZ_pitch_detune--;
+					noizebox_synth_detune(NZ_pitch_detune);
+				}
 				break;
 			case '+':
 				if ( NZ_pitch_detune < 120 )
-				noizebox_synth_detune(1);
+				{
+					NZ_pitch_detune++;
+					noizebox_synth_detune(NZ_pitch_detune);
+				}
 				break;
 			case '2': 
 				curs_set(0);
