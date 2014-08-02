@@ -26,7 +26,7 @@ int noizebox_save_synth_config(void);
  */
 
 void noizebox_load_bank(void);
-int noizebox_load_font(int);
+void noizebox_load_font(int);
 
 /*
  * synth.c

@@ -30,6 +30,7 @@ int current_font;
 volatile int current_font_id;
 char current_font_name[14];
 char current_font_path[256];
+char ramdisk_font_path[256];
 char *current_midi_mode_name;
 int max_font_in_bank;
 int prev_v;			// previous volume
