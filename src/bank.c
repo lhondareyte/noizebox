@@ -91,4 +91,6 @@ void noizebox_load_font(int font)
 	{
 		fluid_synth_select_tuning(synth, i, 1, 1);
 	}
+	/* Retablissement du tuning courant */
+	noizebox_synth_detune(NZ_pitch_detune);
 }
