@@ -31,6 +31,10 @@ install:
 	@echo "done."
 	@printf "Populating configuration slice..."
 	@mount /dev/$(MD)s3 /mnt
+	@mkdir -p /mnt/rc.d
+	@install -m 755 ../rsc/noizebox.rc.d /mnt/rc.d/noizebox
+	@cp ../rsc/rc.conf /mnt
+	@cp ../rsc/sysctl.conf /mnt
 	@cp ../rsc/noizebox.conf /mnt
 	@cp ../rsc/noizebox.conf /mnt/noizebox.conf.safe
 	@cp ../rsc/ramdisk.conf /mnt
