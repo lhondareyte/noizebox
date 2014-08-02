@@ -10,21 +10,13 @@ APP=$(readlink -f $0)
 DIR=$(dirname $APP)
 APP=$(basename $0)
 BIN="${DIR}/Contents/${PLATFORM}/${APP}"
-MIDI="/dev/umidi0.0"
-MIDI_ADD="/dev/umidi1.0 /dev/umidi2.0"
+MIDI="/dev/umidi0.0 /dev/umidi1.0 /dev/umidi2.0"
 TTY="/dev/cuaU0"
 export NZDIR=$DIR
 
 if [ ! -c $TTY -o -z $TTY ] ; then
-    printf "Fatal error: cannot open ${APP} Terminal ($TTY).\n"
-    exit 1
-fi
-
-if [ ! -c $MIDI1 ] ; then
-    printf "    Fatal error: \ncannot open MIDI device." > $TTY
-    exit 1
-else
-	MIDI="${MIDI} ${MIDI_ADD}"
+	printf "Fatal error: cannot open ${APP} Terminal ($TTY).\n"
+	exit 1
 fi
 
 #
@@ -35,14 +27,14 @@ export LD_LIBRARY_PATH
 #
 # Run application
 RT="/usr/sbin/rtprio"
-if [ -c ${TTY} -a -x ${BIN} ] ; then
-    if [ -x ${RT} ] ; then
-	exec ${RT} 0 ${BIN} ${MIDI} < ${TTY} > ${TTY} 2>/dev/null
-    else
-	exec ${BIN} ${MIDI} < ${TTY} > ${TTY} 2>/dev/null
-    fi
+if [ -x ${BIN} ] ; then
+	if [ -x ${RT} ] ; then
+		exec ${RT} 0 ${BIN} ${MIDI} < ${TTY} > ${TTY} 2>/dev/null
+	else
+		exec ${BIN} ${MIDI} < ${TTY} > ${TTY} 2>/dev/null
+	fi
 else
-    printf "ECannot load ${APP}\nPlease, call Support\n" > ${TTY}
-    exit 1
+	printf "ECannot load ${APP}\nPlease, call Support\n" > ${TTY}
+	exit 1
 fi
 exit 0

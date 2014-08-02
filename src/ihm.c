@@ -262,7 +262,7 @@ int *noizebox_main_menu (void)
 
 	mvprintw(0,0,"     Noizebox %s     \n  (c)2013 L Hondareyte  ", VERSION);
 	NZ_refresh();
-	sleep(2);
+	sleep(1);
 
 	/*
 	 * Menu principal
