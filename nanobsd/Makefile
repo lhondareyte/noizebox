@@ -33,6 +33,7 @@ install:
 	@mount /dev/$(MD)s3 /mnt
 	@cp ../rsc/noizebox.conf /mnt
 	@cp ../rsc/noizebox.conf /mnt/noizebox.conf.safe
+	@cp ../rsc/ramdisk.conf /mnt
 	@sync;sync;sync
 	@echo "done."
 	@umount /mnt
