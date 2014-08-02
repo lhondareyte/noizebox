@@ -70,7 +70,7 @@ void noizebox_load_font(int font)
 		{
 			sprintf(current_font_name,"%s",sqlite3_column_text(stmt,0));
 			sprintf(current_font_path,"%s/Resources/SF2/%s",NZDIR,sqlite3_column_text(stmt,1));
-			sprintf(ramdisk_font_path,"/Ramdisk/%s",sqlite3_column_text(stmt,1));
+			sprintf(ramdisk_font_path,"/Ramdisk/SF2/%s",sqlite3_column_text(stmt,1));
                 	sqlite3_finalize(stmt);
 		}
 		
