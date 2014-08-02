@@ -68,6 +68,7 @@ noizebox_start()
 	done
 	printf "done.\nStarting ${name}.\n"
 	$name &
+	mkramdisk
 	rc_pid=$(getPID)
 	printf $rc_pid > /var/run/${name}.pid
 }
@@ -95,13 +96,8 @@ noizebox_stop()
 		sync;sync;sync
 		mount /cfg
 		if [ $? -eq 0 ] ; then
-			for f in /cfg/*.conf
-			do
-				_f=${basename "$f"}
-				if [ -f "/etc/${_f}" ] ; then
-					cp "/etc/${_f}" /cfg
-				fi
-			done
+			cp /etc/noizebox.conf /cfg
+			sync;sync;sync
 			umount_cfg
 			echo " done."
 		else
