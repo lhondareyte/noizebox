@@ -27,6 +27,25 @@ umount_cfg ()
 	[ "$m" == "/cfg" ] && umount /cfg
 }
 
+mkramdisk ()
+{
+	printf "Building RAMDISK ..."
+	mdconfig -a -t swap -s 5m -u 3
+	newfs -U md3
+	mount -t ufs /dev/md3 /SF2
+	echo " done!"
+	printf "Copying SF2 fonts ..."
+	for f in ${nzdir}/Resources/SF2/*.sf2
+	do
+		_f=$(basename $f)
+       		cp $f /SF2/${_f}.$$
+		if [ $? -eq 0 ] ; then
+			mv /SF2/$(_f).$$ /SF2/${_f}
+		fi
+	done	
+	echo " done!"
+}
+
 
 noizebox_start()
 {

@@ -69,6 +69,7 @@ void noizebox_load_font(int font)
 		{
 			sprintf(current_font_name,"%s",sqlite3_column_text(stmt,0));
 			sprintf(current_font_path,"%s/Resources/SF2/%s",NZDIR,sqlite3_column_text(stmt,1));
+			sprintf(ramdisk_font_path,"/SF2/%s",NZDIR,sqlite3_column_text(stmt,1));
                 	sqlite3_finalize(stmt);
 		}
 		
@@ -83,7 +84,11 @@ void noizebox_load_font(int font)
 
 	fluid_synth_system_reset(synth);
 
-	current_font_id=fluid_synth_sfload(synth,current_font_path,1);
+	current_font_id=fluid_synth_sfload(synth,ramdisk_font_path,1);
+	if ( current_font_id == FLUID_FAILED ) 
+	{
+		current_font_id=fluid_synth_sfload(synth,current_font_path,1);
+	}
 	fprintf (stderr,"Loading SF2 %s (%d)\n",current_font_path, current_font_id);
 
 	/* Actication du tuning pour tous les canaux */
