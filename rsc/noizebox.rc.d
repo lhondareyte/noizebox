@@ -30,17 +30,24 @@ umount_cfg ()
 mkramdisk ()
 {
 	printf "Building RAMDISK ..."
-	mdconfig -a -t swap -s 5m -u 3
-	newfs -U md3
-	mount -t ufs /dev/md3 /Ramdisk
+	if [ -f /etc/ramdisk.conf ] ; then
+		. /etc/ramdisk.conf
+	else
+		RAMDISK_SIZE=512m
+		RAMDISK_LUN=3
+	fi
+	mdconfig -a -t swap -s ${RAMDISK_SIZE} -u ${RAMDISK_LUN}
+	newfs -U md${RAMDISK_LUN} > /dev/null 2>&1
+	mount -t ufs /dev/md${RAMDISK_LUN} /Ramdisk
 	echo " done!"
 	printf "Copying SF2 fonts ..."
+	mkdir -p /Ramdisk/SF2
 	for f in ${nzdir}/Resources/SF2/*.sf2
 	do
 		_f=$(basename $f)
-       		cp $f /Ramdisk/SF2/${_f}.$$
+       		cp "$f" "/Ramdisk/SF2/${_f}.$$"
 		if [ $? -eq 0 ] ; then
-			mv /Ramdisk/$(_f).$$ /Ramdisk/${_f}
+			mv "/Ramdisk/SF2/${_f}.$$" "/Ramdisk/SF2/${_f}"
 		fi
 	done	
 	echo " done!"
@@ -88,13 +95,21 @@ noizebox_stop()
 		sync;sync;sync
 		mount /cfg
 		if [ $? -eq 0 ] ; then
-			cp /etc/noizebox.conf /cfg/noizebox.conf
+			for f in /cfg/*.conf
+			do
+				_f=${basename "$f"}
+				if [ -f "/etc/${_f}" ] ; then
+					cp "/etc/${_f}" /cfg
+				fi
+			done
 			umount_cfg
 			echo " done."
 		else
 			echo " failed!"
 		fi
 	fi
+	umount /Ramdisk
+	mdconfig -d -u ${RAMDISK_LUN} > /dev/null 2>&1
 	rm -f /var/run/${name}.pid
 }
 
