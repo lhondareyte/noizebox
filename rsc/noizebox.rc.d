@@ -12,6 +12,7 @@ start_cmd="${name}_start"
 stop_cmd="${name}_stop"
 
 nzdir="/Applications/Noizebox"
+nztty="/dev/cuaU0"
 nz=$(basename $nzdir)
 PATH=$nzdir:$PATH
 
@@ -29,12 +30,17 @@ umount_cfg ()
 
 noizebox_start()
 {
-	rc_pid=$(getPID)
+	RC_PID=$(getPID)
 	if [ ! -z "$rc_pid" ] ; then
 		echo "$name already running? ($rc_pid)"
 		return 1
 	fi
-	echo "Starting ${name}."
+	printf "Waiting for $nztty to be ready ..."
+	while [ ! -c $nztty ] 
+	do
+		:	
+	done
+	printf "done.\nStarting ${name}.\n"
 	$name &
 	rc_pid=$(getPID)
 	printf $rc_pid > /var/run/${name}.pid
@@ -53,7 +59,7 @@ noizebox_stop()
 	# Effacement du curseur
 	for i in 1 2
 	do
-		printf "c" > /dev/cuaU0
+		printf "c" > $nztty
 	done
 	sleep 2
 	sync;sync;sync
