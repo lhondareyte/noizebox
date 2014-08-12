@@ -18,9 +18,10 @@ ASMSRCS       := $(wildcard *.s)
 OBJECTS       := $(patsubst %.c,%.o,$(SOURCES))
 OBJECTS       += $(patsubst %.s,%.o,$(ASMSRCS))
 
-GIT_VERSION   := $(shell git describe --tags)
+GIT_VERSION   = $(shell git describe --tags)
+GIT_YEAR      = $(shell git log -1 --format=%cd | cut -d' ' -f5)
 CFLAGS	      += -DVERSION=\"$(GIT_VERSION)\"
-
+CFLAGS	      += -DYEAR=\"$(GIT_YEAR)\"
 
 PRG=noizebox
 

@@ -1,2 +1,2 @@
 all:
-	cc -l ncurses NZ_dialog.c -o NZ_dialog
+	cc -l ncurses tinyvt.c -o tinyvt

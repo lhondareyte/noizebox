@@ -12,6 +12,7 @@
 
 #include "noizebox.h"
 #include "midi.h"
+#include "breath.h"
 
 #ifndef FALSE
  #define FALSE 0
@@ -126,6 +127,7 @@ void noizebox_midi_analyze(uint8_t v)
 				switch (status)
 				{
 					case MIDI_NOTEON_MSG : 
+						data1 += font_key_offset;
 						if ( data2 == 0 ) 
 						{
 							fluid_synth_noteoff(synth, channel, data1);
@@ -133,11 +135,12 @@ void noizebox_midi_analyze(uint8_t v)
 						else
 						{
 							if ( NZ_midi_mode == WX5 ) data2=100;
-							fluid_synth_noteon(synth, channel, data1, data2);
+							fluid_synth_noteon(synth, channel, data1,  data2);
 						}
 						break;
 
 					case MIDI_NOTOFF_MSG : 
+						data1 += font_key_offset;
 						fluid_synth_noteoff(synth, channel, data1);
 						break;
 
@@ -145,6 +148,7 @@ void noizebox_midi_analyze(uint8_t v)
 						break;
 
 					case MIDI_CTRLCHG_MSG : 
+						data2= *(p_current_curve + data2);
 						if ( NZ_midi_mode == EWI || NZ_midi_mode == WX5 ) 
 						{
 							/* 

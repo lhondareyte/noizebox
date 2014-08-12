@@ -5,7 +5,7 @@
 #ifndef __BREATH_H__
 #define TABLE_SIZE	128
 /* courbe pseudo exponentielle */
-static const uint8_t a_curve[TABLE_SIZE] = 
+static const int a_curve[TABLE_SIZE] = 
 {
 	0, 15, 22, 27, 31, 35, 38, 41, 
 	44, 46, 49, 51, 53, 55, 57, 59, 
@@ -26,7 +26,7 @@ static const uint8_t a_curve[TABLE_SIZE] =
 };
 
 /* courbe lineaire */
-static const uint8_t b_curve[TABLE_SIZE] = 
+static const int b_curve[TABLE_SIZE] = 
 {
 	0, 1, 2, 3, 4, 5, 6, 7, 
 	8, 9, 10, 11, 12, 13, 14, 15, 
@@ -43,11 +43,11 @@ static const uint8_t b_curve[TABLE_SIZE] =
 	96, 97, 98, 99, 100, 101, 102, 103, 
 	104, 105, 106, 107, 108, 109, 110, 111, 
 	112, 113, 114, 115, 116, 117, 118, 119, 
-	120, 121, 122, 123, 124, 125, 126, 127,
+	120, 121, 122, 123, 124, 125, 126, 127
 };
 
 /* Voir doc */
-static const uint8_t c_curve[TABLE_SIZE] = 
+static const int c_curve[TABLE_SIZE] = 
 {
 	0, 3, 6, 9, 12, 15, 18, 21, 
 	24, 27, 30, 33, 36, 39, 42, 45, 
@@ -64,11 +64,11 @@ static const uint8_t c_curve[TABLE_SIZE] =
 	117, 117, 118, 118, 118, 118, 119, 119, 
 	119, 120, 120, 120, 120, 121, 121, 121, 
 	122, 122, 122, 122, 123, 123, 123, 124, 
-	124, 124, 124, 125, 125, 125, 126, 126,
+	124, 124, 124, 125, 125, 125, 126, 126
 };
 
 /* Voir doc */
-static const uint8_t d_curve[TABLE_SIZE] = 
+static const int d_curve[TABLE_SIZE] = 
 {
 	0, 3, 6, 9, 12, 15, 18, 21, 
 	24, 27, 30, 33, 36, 39, 42, 45, 
@@ -88,7 +88,7 @@ static const uint8_t d_curve[TABLE_SIZE] =
 	124, 125, 125, 125, 126, 126, 127, 127
 };
 
-static const uint8_t e_curve[TABLE_SIZE] = 
+static const int e_curve[TABLE_SIZE] = 
 {
 	0, 0, 0, 1, 1, 2, 2, 3, 
 	3, 3, 4, 4, 5, 5, 6, 6, 
@@ -108,7 +108,7 @@ static const uint8_t e_curve[TABLE_SIZE] =
 	112, 114, 116, 118, 120, 122, 124, 127 
 };
 
-static const uint8_t f_curve[TABLE_SIZE] = 
+static const int f_curve[TABLE_SIZE] = 
 {
 	0, 0, 0, 1, 1, 2, 2, 3, 
 	3, 3, 4, 4, 5, 5, 6, 6, 
