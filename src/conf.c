@@ -17,7 +17,7 @@ int noizebox_load_synth_config(void)
 		fprintf (stderr, "Error: cannot open configuration file (%s)\n", CONF_DB);
 		return (1);
 	}
-	sql = "SELECT val FROM mixer WHERE param='left'";
+	sql = "select val from mixer where param='left'";
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
 	{
 		if (  sqlite3_step(stmt) == SQLITE_ROW ) 
@@ -29,7 +29,7 @@ int noizebox_load_synth_config(void)
 	}
 	else fprintf (stderr, "Failed to prepare database: %s\n",sqlite3_errmsg(db));
 
-	sql = "SELECT val FROM mixer WHERE param='right'";
+	sql = "select val from mixer where param='right'";
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
 	{
 		if (  sqlite3_step(stmt) == SQLITE_ROW )
@@ -41,7 +41,7 @@ int noizebox_load_synth_config(void)
 	}
 	else fprintf (stderr, "Failed to prepare database: %s\n",sqlite3_errmsg(db));
 
-	sql = "SELECT val FROM soundfont WHERE param='last_id'";
+	sql = "select val from soundfont where param='last_id'";
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
 	{
 		if (  sqlite3_step(stmt) == SQLITE_ROW )
@@ -57,7 +57,7 @@ int noizebox_load_synth_config(void)
 	}
 	else fprintf (stderr, "Failed to prepare database: %s\n",sqlite3_errmsg(db));
 
-	sql = "SELECT val FROM midi WHERE param='mode'";
+	sql = "select val from midi where param='mode'";
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
 	{
 		if (  sqlite3_step(stmt) == SQLITE_ROW )
@@ -73,7 +73,23 @@ int noizebox_load_synth_config(void)
 	}
 	else fprintf (stderr, "Failed to prepare database: %s\n",sqlite3_errmsg(db));
 
-	sql = "SELECT val FROM synth WHERE param='detune'";
+        sql = "select val from midi where param='breath_curve'";
+        if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK )
+        {
+                if (  sqlite3_step(stmt) == SQLITE_ROW )
+                {
+                        NZ_breath_curve=sqlite3_column_int(stmt,0);
+                }
+                else
+                {
+                        NZ_breath_curve=1;
+                        sqlite3_reset(stmt);
+                }
+                sqlite3_finalize(stmt);
+        }
+        else fprintf (stderr, "Failed to prepare database: %s\n",sqlite3_errmsg(db));
+
+	sql = "select val from synth where param='detune'";
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
 	{
 		if (  sqlite3_step(stmt) == SQLITE_ROW )
@@ -152,6 +168,14 @@ int noizebox_save_synth_config(void)
 	else fprintf (stderr, "Error: cannot update synth information: %s\n", sqlite3_errmsg(db));
 	sqlite3_finalize(stmt);
 
+        sprintf (sql, "update midi set val=%d where param=\'breath_curve\'",NZ_breath_curve);
+        if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK )
+        {
+                sqlite3_step(stmt);
+        }
+        else fprintf (stderr, "Error: cannot update synth information: %s\n", sqlite3_errmsg(db));
+        sqlite3_finalize(stmt);
+        
 	/*
 	 * Update SYNTH information
    	 */
