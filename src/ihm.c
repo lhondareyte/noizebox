@@ -12,6 +12,7 @@
 
 #include "noizebox.h"
 #include "functions.h"
+#include "breath.h"
 
 static WINDOW *screen;
 int key;
@@ -66,9 +67,31 @@ void NZ_refresh_font_name(void)
 	NZ_refresh();
 }
 
-void NZ_refresh_sensitivity()
+void NZ_refresh_breath_curve()
 {
-	mvprintw(1,0,"S=%02d", noizebox_noteon_minimum);
+	switch (NZ_breath_curve)
+	{
+		case 0x01:
+			p_current_curve = a_curve;
+			break;
+		case 0x02:
+			p_current_curve = b_curve;
+			break;
+		case 0x03:
+			p_current_curve = c_curve;
+			break;
+		case 0x04:
+			p_current_curve = d_curve;
+			break;
+		case 0x05:
+			p_current_curve = e_curve;
+			break;
+		case 0x06:
+			p_current_curve = f_curve;
+			break;
+	}
+	mvprintw(1,0,"S=%02d", NZ_breath_curve);
+	move (1,3);
 	NZ_refresh();
 }
 
@@ -92,7 +115,7 @@ void NZ_refresh_main_menu(void)
 	NZ_refresh_font_name();
 	NZ_refresh_volume();
 	NZ_refresh();
-	NZ_refresh_sensitivity();
+	NZ_refresh_breath_curve();
 	NZ_refresh_transpose();
 	NZ_refresh_midi_mode();
 	mvprintw(1,20,"Info");
@@ -101,7 +124,7 @@ void NZ_refresh_main_menu(void)
 
 
 
-void NZ_set_sensitivity(void)
+void NZ_set_breath_curve(void)
 {
 	move(1,3);
 	curs_set(1);
@@ -111,22 +134,24 @@ void NZ_set_sensitivity(void)
 		switch (key)
 		{
 			case '-':
-				if (noizebox_noteon_minimum >= 1 ) 
-					noizebox_noteon_minimum--;
+				if (NZ_breath_curve > 1 ) 
+					NZ_breath_curve--;
 				break;
 			case '+':
-				if (noizebox_noteon_minimum <= 98 ) 
-					noizebox_noteon_minimum++;
+				if (NZ_breath_curve < MAX_BREATH_MODE ) 
+					NZ_breath_curve++;
 				break;
 			case '1': 
 				curs_set(0);
+				NZ_refresh_breath_curve();
+				NZ_refresh();
 				return;
 				break;
 			default:
 				noizebox_control_volume(key);
 				break;
 		}
-		NZ_refresh_sensitivity();
+		NZ_refresh_breath_curve();
 	}
 }
 
@@ -178,7 +203,7 @@ void NZ_set_midi_mode(void)
 				if ( NZ_midi_mode > 1 ) NZ_midi_mode--;
 				break;
 			case '+':
-				if ( NZ_midi_mode < NZ_MAX_MIDI_MODE ) NZ_midi_mode++;
+				if ( NZ_midi_mode < MAX_MIDI_MODE ) NZ_midi_mode++;
 				break;
 			case '3': 
 				NZ_refresh_midi_mode();
@@ -266,7 +291,7 @@ int *noizebox_main_menu (void)
 
 	/* Splash screen */
 
-	mvprintw(0,0,"     Noizebox %s     \n  (c)2013 L Hondareyte  ", VERSION);
+	mvprintw(0,0,"     Noizebox %s     \n  (c)%s L Hondareyte  ", VERSION, YEAR);
 	NZ_refresh();
 	sleep(1);
 
@@ -284,7 +309,7 @@ int *noizebox_main_menu (void)
 		switch (key)
 		{
 			case '1':
-				NZ_set_sensitivity();
+				NZ_set_breath_curve();
 				break;
 			case '2':
 				NZ_set_transpose();

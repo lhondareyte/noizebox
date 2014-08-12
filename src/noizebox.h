@@ -31,6 +31,7 @@ volatile int current_font_id;
 char current_font_name[14];
 char current_font_path[256];
 char ramdisk_font_path[256];
+int font_key_offset;
 char *current_midi_mode_name;
 int max_font_in_bank;
 int prev_v;			// previous volume
@@ -50,7 +51,17 @@ volatile int NZ_midi_mode;
 #define STD			0x01
 #define EWI			0x02
 #define WX5			0x03
-#define NZ_MAX_MIDI_MODE	3
+#define MAX_MIDI_MODE	3
+
+volatile int NZ_breath_curve;
+const int * p_current_curve;
+#define BREATH_A		0x01
+#define BREATH_B		0x02
+#define BREATH_C		0x03
+#define BREATH_D		0x04
+#define BREATH_E		0x05
+#define BREATH_F		0x06
+#define MAX_BREATH_MODE		6
 
 fluid_synth_t* synth;
 fluid_midi_router_t* router;

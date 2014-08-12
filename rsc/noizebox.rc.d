@@ -7,9 +7,15 @@
 
 name=noizebox
 rcvar=noizebox_enable
-
 start_cmd="${name}_start"
 stop_cmd="${name}_stop"
+
+if [ -f /etc/ramdisk.conf ] ; then
+	. /etc/ramdisk.conf
+else
+	RAMDISK_SIZE=512m
+	RAMDISK_LUN=3
+fi
 
 nzdir="/Applications/Noizebox"
 nztty="/dev/cuaU0"
@@ -30,12 +36,6 @@ umount_cfg ()
 mkramdisk ()
 {
 	printf "Building RAMDISK ..."
-	if [ -f /etc/ramdisk.conf ] ; then
-		. /etc/ramdisk.conf
-	else
-		RAMDISK_SIZE=512m
-		RAMDISK_LUN=3
-	fi
 	mdconfig -a -t swap -s ${RAMDISK_SIZE} -u ${RAMDISK_LUN}
 	newfs -U md${RAMDISK_LUN} > /dev/null 2>&1
 	mount -t ufs /dev/md${RAMDISK_LUN} /Ramdisk
@@ -56,7 +56,7 @@ mkramdisk ()
 
 noizebox_start()
 {
-	RC_PID=$(getPID)
+	rc_pid=$(getPID)
 	if [ ! -z "$rc_pid" ] ; then
 		echo "$name already running? ($rc_pid)"
 		return 1
@@ -70,7 +70,7 @@ noizebox_start()
 	$name &
 	mkramdisk
 	rc_pid=$(getPID)
-	printf $rc_pid > /var/run/${name}.pid
+	echo $rc_pid > /var/run/${name}.pid
 }
 
 noizebox_stop()
@@ -105,7 +105,7 @@ noizebox_stop()
 		fi
 	fi
 	umount /Ramdisk
-	mdconfig -d -u ${RAMDISK_LUN} > /dev/null 2>&1
+	mdconfig -d -u${RAMDISK_LUN} > /dev/null 2>&1
 	rm -f /var/run/${name}.pid
 }
 

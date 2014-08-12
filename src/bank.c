@@ -63,7 +63,7 @@ void noizebox_load_font(int font)
                 exit (1);
         }
 	
-	sprintf (sql, "select name, file from bank where id='%d'", current_font);
+	sprintf (sql, "select name, file, key_offset from bank where id='%d'", current_font);
         if ( sqlite3_prepare_v2(bank,sql,strlen(sql),&stmt,NULL) == SQLITE_OK )
         {
 		if ( sqlite3_step(stmt) == SQLITE_ROW ) 
@@ -71,6 +71,7 @@ void noizebox_load_font(int font)
 			sprintf(current_font_name,"%s",sqlite3_column_text(stmt,0));
 			sprintf(current_font_path,"%s/Resources/SF2/%s",NZDIR,sqlite3_column_text(stmt,1));
 			sprintf(ramdisk_font_path,"/Ramdisk/SF2/%s",sqlite3_column_text(stmt,1));
+			font_key_offset=sqlite3_column_int(stmt,2);
                 	sqlite3_finalize(stmt);
 		}
 		
