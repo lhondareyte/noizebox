@@ -14,6 +14,16 @@ if [ -f /usr/share/nanobsd/nano_upgrade.msg ] ; then
 	. /usr/share/nanobsd/nano_upgrade.msg
 fi
 
+_startapp ()
+{
+	a=$1
+	sleep 3
+	if [ -x /etc/rc.d/$a ] ; then
+		/usr/sbin/service $a start
+	fi
+	exit 0
+}
+
 _print_vt () 
 { 
 	printf "E" > $tty 
@@ -47,8 +57,13 @@ _pkg () {
 	d=$(echo $a | cut -c2- )
 	d="${f}${d}"
 
+	echo "Install mode : $m"
+	echo "Application  : $a"
+	echo "Directory    : $d"
+
 	cd /Upgrade
 	if [ -d $d -a $m == "-update" ] ; then
+		echo "Sauvegarde de l'ancienne version"
 		mv ${d} ${d}.sav
 	fi
 	_runscript preexec.sh && tar xzf ${mnt}/${a}.pkg && _runscript postexec.sh
@@ -156,8 +171,17 @@ _print_vt "$WAIT_MSG"
 
 #
 # Demontage de /Applications read-only
-_exec umount /Applications
-_exec mount /Upgrade
+umount /Applications
+if [ $? -ne 0 ] ; then
+	_print_vt "$UMOUNT_FAILED"
+	_startapp $app
+fi
+mount /Upgrade
+if [ $? -ne 0 ] ; then
+	_print_vt "$MOUNT_FAILED"
+	mount /Applications
+	_startapp $app
+fi
 
 case mode in 
 	'update')
@@ -177,9 +201,10 @@ if [ $r -ne 0 ] ; then
 else
 	_print_vt "$SUCCESS_MSG"
 fi
+fin:
 sleep 3
 if [ -x /etc/rc.d/$app ] ; then
 	/usr/sbin/service $app start
 fi
 
-exit 0
+_startapp $app
