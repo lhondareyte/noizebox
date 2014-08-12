@@ -26,7 +26,7 @@ UPDATE_WAIT="  Mise a jour en cours  \n   Veuillez patientez.  "
 MOUNT_FAILED="   Erreur de montage    \n     ***Abandon!***     " 
 UMOUNT_FAILED=" Erreur de demontage    \n     ***Abandon!***     " 
 fi
-if [ LANC == 'C" ] ; then
+if [ $LANG == "C" ] ; then
 YES_NO="Yes                   No"
 INSTALL_FAILED="  Installation errors   \n       Giving-up!       " 
 INSTALL_SUCCESS="    Installation Ok.    \n       Giving-up!       "
