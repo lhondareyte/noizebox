@@ -4,11 +4,11 @@
 DEVICE     = /dev/ada1
 MAKE       = /usr/local/bin/gmake
 NANOSCRIPT = /usr/src/tools/tools/nanobsd/nanobsd.sh
-MACHINE    = $(shell (uname -m))
+MACHINE    = $(shell uname -m)
 KERNEL     = kernel.$(MACHINE)
 NANOCFG    = nanobsd.conf
 DISKIMAGE  = /usr/obj/nanobsd.noizebox/_.disk.full 
-NZ_ROOTSRC = $(shell (dirname $(pwd)))
+NZ_ROOTSRC = $(shell dirname $(pwd))
 
 all: 
 	@/bin/sh $(NANOSCRIPT) -b -c $(NANOCFG)
@@ -17,7 +17,8 @@ world:
 	@/bin/sh $(NANOSCRIPT) -k -i -c $(NANOCFG)
 
 kernel:
-	@cp ${KERNEL} /usr/src/sys/${MACHINE}/conf/NOIZEBOX
+	@echo "Building kernel for $(MACHINE)"
+	@cp $(KERNEL) /usr/src/sys/$(MACHINE)/conf/NOIZEBOX
 	@/bin/sh $(NANOSCRIPT) -w -i -c $(NANOCFG)
 
 install: 
