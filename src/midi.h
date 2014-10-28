@@ -92,6 +92,7 @@ volatile uint8_t buffer;	// Buffer de reception MIDI
 volatile uint8_t status;
 volatile uint8_t channel;	// Canal MIDI du message recu
 volatile uint8_t next;		// Prochaine valeur attendue
+volatile int     k;	
 volatile uint8_t data1;	
 volatile uint8_t data2;
 volatile uint8_t ready;		// Message prêt ou non 
