@@ -17,6 +17,19 @@ int noizebox_load_synth_config(void)
 		fprintf (stderr, "Error: cannot open configuration file (%s)\n", CONF_DB);
 		return (1);
 	}
+
+	sql = "select val from dsp where param='device'";
+	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
+	{
+		if (  sqlite3_step(stmt) == SQLITE_ROW ) 
+		{ 
+			NZ_audio_device=sqlite3_column_int(stmt,0);
+			sqlite3_finalize(stmt);
+		}
+		else sqlite3_reset(stmt);
+	}
+	else fprintf (stderr, "Failed to prepare database: %s\n",sqlite3_errmsg(db));
+
 	sql = "select val from mixer where param='left'";
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
 	{
@@ -119,17 +132,30 @@ int noizebox_save_synth_config(void)
         sqlite3_stmt *stmt;
 
 	int v,r,l;
-	v=noizebox_get_pcm_volume();
-	l = v & 0xff;
-	r = v >> 8;
+
         if ( sqlite3_open(CONF_DB, &db) != SQLITE_OK )
         {
                 fprintf (stderr, "Error: cannot open configuration file\n");
                 exit (1);
         }
+
+	/*
+	 * Update Audio Device
+   	 */
+	sprintf (sql, "update dsp set val=%d where param=\'device\'",NZ_audio_device);
+	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
+	{
+		sqlite3_step(stmt);
+	}
+	else fprintf (stderr, "Error: cannot update synth information: %s\n", sqlite3_errmsg(db));
+	sqlite3_finalize(stmt);
+	
 	/*
 	 * Update Volume
    	 */
+	v=noizebox_get_pcm_volume();
+	l = v & 0xff;
+	r = v >> 8;
 	sprintf (sql, "update mixer set val=%d where param=\'left\'",l);
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
 	{

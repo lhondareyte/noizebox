@@ -10,6 +10,7 @@
  *  ihm.c
  */
 int *noizebox_main_menu(void);
+void noizebox_close_mixer(void);
 void noizebox_terminate_menu(void);
 void noizebox_set_breath_curve(void);
 void noizebox_set_transpose(void);

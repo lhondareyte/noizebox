@@ -127,7 +127,9 @@ void noizebox_midi_analyze(uint8_t v)
 				switch (status)
 				{
 					case MIDI_NOTEON_MSG : 
-						data1 += font_key_offset;
+						k = data1 + font_key_offset ;
+						if ( k < 0 || k > 127 ) break ;
+						else data1 = k;
 						if ( data2 == 0 ) 
 						{
 							fluid_synth_noteoff(synth, channel, data1);
@@ -140,7 +142,9 @@ void noizebox_midi_analyze(uint8_t v)
 						break;
 
 					case MIDI_NOTOFF_MSG : 
-						data1 += font_key_offset;
+						k = data1 + font_key_offset ;
+						if ( k < 0 || k > 127 ) break ;
+						else data1 = k;
 						fluid_synth_noteoff(synth, channel, data1);
 						break;
 

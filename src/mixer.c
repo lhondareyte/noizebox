@@ -13,6 +13,13 @@
 #define NOIZEBOX_MIN_LEVEL	0
 #define NOIZEBOX_MAX_LEVEL	100
 
+int noizebox_mixer;
+
+void noizebox_close_mixer(void)
+{
+	close(noizebox_mixer);
+}
+
 int noizebox_get_pcm_volume(void)
 {
 	int v;
@@ -114,16 +121,3 @@ void noizebox_increment_left_pcm_volume(void)
 	}
 	ioctl(noizebox_mixer, MIXER_WRITE(SOUND_MIXER_PCM),&v);
 }
-
-#ifdef __NOIZEBOX_AUX_ENABLE__
-
-void noizebox_increment_line_volume(void)
-{
-	ioctl(noizebox_mixer, SOUND_MIXER_WRITE_PCM,&noizebox_pcm_volume);
-}
-
-void noizebox_decrement_line_volume(void)
-{
-	ioctl(noizebox_mixer, SOUND_MIXER_WRITE_PCM,&noizebox_pcm_volume);
-}
-#endif

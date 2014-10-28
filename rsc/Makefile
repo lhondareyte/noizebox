@@ -6,6 +6,8 @@ all: conf termdb
 conf:
 	@printf "Building configuration database ..."
 	@rm -f $(CFG)
+	@sqlite3 $(CFG) "create table dsp (param varchar(12), val smallint);"
+	@sqlite3 $(CFG) "insert into dsp values('device',1);"
 	@sqlite3 $(CFG) "create table mixer (param varchar(12), val smallint);"
 	@sqlite3 $(CFG) "insert into mixer values('left',100);"
 	@sqlite3 $(CFG) "insert into mixer values('right',100);"

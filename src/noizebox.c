@@ -21,7 +21,6 @@ struct sigaction shutdown_action;
 #ifndef __FLUIDSYNTH_MIDI_DRIVER__
 
 extern void *noizebox_midi_read();
-pthread_t threads[2];
 
 void  noizebox_shutdown(int signum)
 {
@@ -32,16 +31,14 @@ void  noizebox_shutdown(int signum)
 #ifndef __FLUIDSYNTH_MIDI_DRIVER__
 	pthread_kill(0,9);
 #endif
-	close (noizebox_mixer);
+	noizebox_close_mixer();
 	exit (rc);
 
 }
 
 int main(int argc, char *argv[])
 {
-	int c=1; 	/* Arg count */
 	FILE *conf;
-	noizebox_noteon_minimum=0;
 	NZDIR=getenv("NZDIR");
 	if ( ! NZDIR ) 
 	{
@@ -76,6 +73,8 @@ int main(void)
 {
 #endif
 
+	pthread_t threads[2];
+
 	setpriority(PRIO_PROCESS, getpid(), PRIO_MAX);
 	if ( noizebox_load_synth_config() == -1) 
 	{
@@ -87,6 +86,7 @@ int main(void)
 #ifndef __FLUIDSYNTH_MIDI_DRIVER__
 
 	/* Creation d'un thread par device MIDI passe en argument */
+	int c=1;
 	while ( c < argc ) 
 	{
 		if (pthread_create(&threads[c-1], NULL, noizebox_midi_read, argv[c]))
