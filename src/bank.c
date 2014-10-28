@@ -7,6 +7,8 @@
 #include "functions.h"
 #include <sqlite3.h>
 
+int max_font_in_bank;
+
 void noizebox_load_bank(void)
 {
 	char * sql;

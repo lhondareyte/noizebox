@@ -19,21 +19,12 @@
 #include <curses.h>
 #include <fluidsynth.h>
 
-
-int noizebox_midi_channel;
-int noizebox_mixer;
-int noizebox_master_volume;
-int noizebox_pcm_volume;
-int noizebox_noteon_minimum;
-const double * noizebox_pitch;
 int current_font;
 volatile int current_font_id;
 char current_font_name[14];
 char current_font_path[256];
 char ramdisk_font_path[256];
 int font_key_offset;
-char *current_midi_mode_name;
-int max_font_in_bank;
 int prev_v;			// previous volume
 
 int NZ_pitch_detune;
@@ -44,6 +35,7 @@ char CONF_DB[256];
 
 int channel_preset;
 int vol,NZ_pcm_volume_left,NZ_pcm_volume_right;
+int NZ_audio_device;
 /*
 	Gestion des windcontrollers
 */

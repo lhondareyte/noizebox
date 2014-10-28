@@ -6,17 +6,14 @@
 #include "noizebox.h"
 #include "functions.h"
 #ifndef	REALTIME
-#define	REALTIME 1
+ #define	REALTIME 1
 #endif
 
 #ifdef __FLUIDSYNTH_MIDI_DRIVER__
 
 int fluid_send_midi_event(void * data, fluid_midi_event_t* event)
 {
-	//int chan=0x03;
 	int chan = fluid_midi_event_get_channel(event);
-	//if ( chan != noizebox_midi_channel ) return 0;
-
 	switch (fluid_midi_event_get_type(event)) 
 	{
 		case NOTE_OFF:
@@ -25,8 +22,6 @@ int fluid_send_midi_event(void * data, fluid_midi_event_t* event)
 
 		case NOTE_ON:
 			int velocity=fluid_midi_event_get_velocity(event);
-			if ( velocity <= noizebox_noteon_minimum ) 
-				velocity=noizebox_noteon_minimum;
 			fluid_synth_noteon(synth, chan, fluid_midi_event_get_key(event),
 					velocity);
 			break;
@@ -71,12 +66,23 @@ void noizebox_delete_synth(void)
 
 void noizebox_create_synth(void)
 {
-	noizebox_pitch=0;
 	synth_settings = new_fluid_settings();
 	synth = new_fluid_synth(synth_settings);
 	fluid_settings_setstr(synth_settings, "audio.driver", "oss");
-	fluid_settings_setstr(synth_settings, "synth.gain", "5.00");
+	switch (NZ_audio_device)
+	{
+		case 0x01:
+			fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp1");
+			break;
+		case 0x02:
+			fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp2");
+			break;
+		default:
+			fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp");
+			break;
+	}
 
+	fluid_settings_setstr(synth_settings, "synth.gain", "5.00");
 	synth_audio_driver = new_fluid_audio_driver(synth_settings, synth);
 	noizebox_init_mixer();
 

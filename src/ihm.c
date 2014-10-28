@@ -45,6 +45,7 @@ void NZ_refresh_volume(void)
 
 void NZ_refresh_midi_mode(void)
 {
+	char * current_midi_mode_name = "";
 	switch (NZ_midi_mode)
 	{
 		case 0x01:
@@ -60,6 +61,17 @@ void NZ_refresh_midi_mode(void)
 	mvprintw(1,14,"M=%-3s",current_midi_mode_name);
 	NZ_refresh();
 }
+
+#if defined (__SPDIF_ADAPTER__)
+void NZ_refresh_audio_device(void)
+{
+	if ( NZ_audio_device == 0x01)
+			mvprintw(1,20,"A=AN");
+	else
+			mvprintw(1,20,"A=DI");
+	NZ_refresh();
+}
+#endif
 
 void NZ_refresh_font_name(void)
 {
@@ -118,7 +130,11 @@ void NZ_refresh_main_menu(void)
 	NZ_refresh_breath_curve();
 	NZ_refresh_transpose();
 	NZ_refresh_midi_mode();
+#if defined (__SPDIF_ADAPTER__)
+	NZ_refresh_audio_device();
+#else
 	mvprintw(1,20,"Info");
+#endif
 	NZ_refresh();
 }
 
@@ -243,6 +259,45 @@ void noizebox_control_volume(int k)
 	NZ_refresh_volume();
 }
 
+#if defined (__SPDIF_ADAPTER__)
+void NZ_set_audio_device(void)
+{
+	move(1,22);
+	curs_set(1);
+	while (1)
+	{
+		key=getch();
+		switch (key)
+		{
+			case '-':
+				if (NZ_audio_device == 0x02 ) 
+				{
+					NZ_audio_device--;
+					fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp1");
+				}
+				break;
+			case '+':
+				if (NZ_audio_device == 0x01 ) 
+				{
+					NZ_audio_device++;
+					fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp2");
+				}
+				break;
+			case '4': 
+				curs_set(0);
+				NZ_refresh_audio_device();
+				NZ_refresh();
+				return;
+				break;
+			default:
+				noizebox_control_volume(key);
+				break;
+		}
+		NZ_refresh_audio_device();
+	}
+}
+
+#else
 void NZ_info_menu(void)
 {
 	/*
@@ -275,6 +330,7 @@ void NZ_info_menu(void)
 		}
 	}
 }
+#endif
 
 
 int *noizebox_main_menu (void)
@@ -318,7 +374,11 @@ int *noizebox_main_menu (void)
 				NZ_set_midi_mode();
 				break;
 			case '4':
+#if defined (__SPDIF_ADAPTER__)
+				NZ_set_audio_device();
+#else
 				NZ_info_menu();
+#endif
 				NZ_refresh_main_menu();
 				break;
 			case '-':
