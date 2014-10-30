@@ -13,25 +13,25 @@
 #include "noizebox.h"
 #include "functions.h"
 
-extern void noizebox_create_synth(void);
-extern void noizebox_delete_synth(void);
+extern void NZ_create_synth(void);
+extern void NZ_delete_synth(void);
 
 struct sigaction shutdown_action;
 
 #ifndef __FLUIDSYNTH_MIDI_DRIVER__
 
-extern void *noizebox_midi_read();
+extern void *NZ_midi_read();
 
-void  noizebox_shutdown(int signum)
+void  NZ_shutdown(int signum)
 {
 	int rc;
-	noizebox_terminate_menu();
-	rc=noizebox_save_synth_config();
-	noizebox_delete_synth();
+	NZ_terminate_menu();
+	rc=NZ_save_synth_config();
+	NZ_delete_synth();
 #ifndef __FLUIDSYNTH_MIDI_DRIVER__
 	pthread_kill(0,9);
 #endif
-	noizebox_close_mixer();
+	NZ_close_mixer();
 	exit (rc);
 
 }
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 		exit (1);
 	}
 
-	shutdown_action.sa_handler = &noizebox_shutdown;
+	shutdown_action.sa_handler = &NZ_shutdown;
 	shutdown_action.sa_flags = 0;
 	sigemptyset(&shutdown_action.sa_mask);
 	sigaction(SIGTERM, &shutdown_action,(struct sigaction *)0);
@@ -76,12 +76,12 @@ int main(void)
 	pthread_t threads[2];
 
 	setpriority(PRIO_PROCESS, getpid(), PRIO_MAX);
-	if ( noizebox_load_synth_config() == -1) 
+	if ( NZ_load_synth_config() == -1) 
 	{
 		exit (1);
 	}
 
-	prev_v=noizebox_get_pcm_volume();
+	prev_v=NZ_get_pcm_volume();
 
 #ifndef __FLUIDSYNTH_MIDI_DRIVER__
 
@@ -89,7 +89,7 @@ int main(void)
 	int c=1;
 	while ( c < argc ) 
 	{
-		if (pthread_create(&threads[c-1], NULL, noizebox_midi_read, argv[c]))
+		if (pthread_create(&threads[c-1], NULL, NZ_midi_read, argv[c]))
 		{
 			perror("Error: Cannot create MIDI thread");
 			exit (-1);
@@ -97,8 +97,11 @@ int main(void)
 		c++;
 	}
 #endif
-	noizebox_create_synth();
-	noizebox_main_menu();
-	noizebox_shutdown(0);
+	while (1)
+	{
+		NZ_create_synth();
+		NZ_main_menu();
+	}
+	//NZ_shutdown(0);
 	exit (0);
 }

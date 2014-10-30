@@ -55,7 +55,7 @@ int fluid_send_midi_event(void * data, fluid_midi_event_t* event)
 }
 #endif
 
-void noizebox_delete_synth(void)
+void NZ_delete_synth(void)
 {
 	delete_fluid_synth(synth);
 	delete_fluid_settings(synth_settings);
@@ -64,7 +64,7 @@ void noizebox_delete_synth(void)
 #endif
 }
 
-void noizebox_create_synth(void)
+void NZ_create_synth(void)
 {
 	synth_settings = new_fluid_settings();
 	synth = new_fluid_synth(synth_settings);
@@ -84,7 +84,7 @@ void noizebox_create_synth(void)
 
 	fluid_settings_setstr(synth_settings, "synth.gain", "5.00");
 	synth_audio_driver = new_fluid_audio_driver(synth_settings, synth);
-	noizebox_init_mixer();
+	NZ_init_mixer();
 
 #ifdef __FLUIDSYNTH_MIDI_DRIVER__
 	fluid_settings_setstr(synth_settings, "midi.driver", "oss");
@@ -93,15 +93,15 @@ void noizebox_create_synth(void)
 #endif
 #ifndef __WITH_SQLITE__
 	current_font=0;
-	current_font_id=fluid_synth_sfload(synth, noizebox_bank[current_font].file, 1);
+	current_font_id=fluid_synth_sfload(synth, NZ_bank[current_font].file, 1);
 #else
-	noizebox_load_bank();
+	NZ_load_bank();
 	current_font_id=0;
-	noizebox_load_font(current_font);
+	NZ_load_font(current_font);
 #endif
 }
 
-void noizebox_synth_detune(int p)
+void NZ_synth_detune(int p)
 {
 	int key;
 	double pitch;

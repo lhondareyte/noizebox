@@ -24,7 +24,7 @@ void NZ_refresh(void)
 	refresh();
 }
 
-void noizebox_terminate_menu(void)
+void NZ_terminate_menu(void)
 {
 	clear();
         mvprintw(0,0,"  Shutdown in progress\n      Please wait...  ");
@@ -35,7 +35,7 @@ void noizebox_terminate_menu(void)
 void NZ_refresh_volume(void)
 {
 	int16_t v;
-	v=noizebox_get_pcm_volume();
+	v=NZ_get_pcm_volume();
 	if ( prev_v != v ) 
 	{
 		mvprintw(0,15,"V=%03d:%03d", (v & 0xFF), (v >> 8));
@@ -164,7 +164,7 @@ void NZ_set_breath_curve(void)
 				return;
 				break;
 			default:
-				noizebox_control_volume(key);
+				NZ_control_volume(key);
 				break;
 		}
 		NZ_refresh_breath_curve();
@@ -184,14 +184,14 @@ void NZ_set_transpose(void)
 				if ( NZ_pitch_detune > -120 )
 				{
 					NZ_pitch_detune--;
-					noizebox_synth_detune(NZ_pitch_detune);
+					NZ_synth_detune(NZ_pitch_detune);
 				}
 				break;
 			case '+':
 				if ( NZ_pitch_detune < 120 )
 				{
 					NZ_pitch_detune++;
-					noizebox_synth_detune(NZ_pitch_detune);
+					NZ_synth_detune(NZ_pitch_detune);
 				}
 				break;
 			case '2': 
@@ -199,7 +199,7 @@ void NZ_set_transpose(void)
 				return;
 				break;
 			default:
-				noizebox_control_volume(key);
+				NZ_control_volume(key);
 				break;
 		}
 		NZ_refresh_transpose();
@@ -228,7 +228,7 @@ void NZ_set_midi_mode(void)
 				return;
 				break;
 			default:
-				noizebox_control_volume(key);
+				NZ_control_volume(key);
 				break;
 		}
 		NZ_refresh_midi_mode();
@@ -237,23 +237,23 @@ void NZ_set_midi_mode(void)
 	}
 }
 
-void noizebox_control_volume(int k)
+void NZ_control_volume(int k)
 {
 	switch (k)
 	{
 		/* Volume general */
 		case 'A':
-			noizebox_increment_pcm_volume();
+			NZ_increment_pcm_volume();
 			break;
 		case 'B':
-			noizebox_decrement_pcm_volume();
+			NZ_decrement_pcm_volume();
 			break;
 		/* Balance */
 		case 'D':
-			noizebox_increment_right_pcm_volume();
+			NZ_increment_right_pcm_volume();
 			break;
 		case 'C':
-			noizebox_increment_left_pcm_volume();
+			NZ_increment_left_pcm_volume();
 			break;
 	}
 	NZ_refresh_volume();
@@ -290,7 +290,7 @@ void NZ_set_audio_device(void)
 				return;
 				break;
 			default:
-				noizebox_control_volume(key);
+				NZ_control_volume(key);
 				break;
 		}
 		NZ_refresh_audio_device();
@@ -313,8 +313,8 @@ void NZ_info_menu(void)
 	mvprintw(1,20,"Exit");
 	while (1)
 	{
-		temp=noizebox_get_cpu_temperature();
-		mem=noizebox_get_free_memory();
+		temp=NZ_get_cpu_temperature();
+		mem=NZ_get_free_memory();
 		load=fluid_synth_get_cpu_load(synth);
 		mvprintw(0,0,"Idle=%02.2f%%   Temp=%02.1fC", 100 - load, temp);
 		mvprintw(1,0,"Free=%dK",mem); 
@@ -333,7 +333,7 @@ void NZ_info_menu(void)
 #endif
 
 
-int *noizebox_main_menu (void)
+int *NZ_main_menu (void)
 {
 	/* Init curses */
 	screen=initscr();
@@ -383,28 +383,28 @@ int *noizebox_main_menu (void)
 				break;
 			case '-':
 				mvprintw(0,2,"Loading      ");NZ_refresh();
-				noizebox_load_font(current_font--);
+				NZ_load_font(current_font--);
 				NZ_refresh_font_name();
 				break;
 			case '+':
 				mvprintw(0,2,"Loading      ");NZ_refresh();
-				noizebox_load_font(current_font++);
+				NZ_load_font(current_font++);
 				NZ_refresh_font_name();
 				break;
 #ifdef __NOIZEBOX_DEBUG__
 			case 'V':
-				noizebox_maximize_pcm_volume();
+				NZ_maximize_pcm_volume();
 				break;
 			case 'v':
-				noizebox_mute_pcm_volume();
+				NZ_mute_pcm_volume();
 				break;
 #endif
 			case 'q':
-				noizebox_terminate_menu();
+				NZ_terminate_menu();
 				return(0);
 				break;
 			default:
-				noizebox_control_volume(key);
+				NZ_control_volume(key);
 				break;
 		}
 	}

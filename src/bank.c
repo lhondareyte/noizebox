@@ -9,7 +9,7 @@
 
 int max_font_in_bank;
 
-void noizebox_load_bank(void)
+void NZ_load_bank(void)
 {
 	char * sql;
 	sqlite3 *bank;
@@ -38,7 +38,7 @@ void noizebox_load_bank(void)
 	sqlite3_shutdown();
 }
 
-void noizebox_load_font(int font)
+void NZ_load_font(int font)
 {
 	int  i;
         char sql[80];
@@ -101,5 +101,5 @@ void noizebox_load_font(int font)
 		fluid_synth_select_tuning(synth, i, 1, 1);
 	}
 	/* Retablissement du tuning courant */
-	noizebox_synth_detune(NZ_pitch_detune);
+	NZ_synth_detune(NZ_pitch_detune);
 }

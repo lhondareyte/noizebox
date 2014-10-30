@@ -9,65 +9,65 @@
 /*
  *  ihm.c
  */
-int *noizebox_main_menu(void);
-void noizebox_close_mixer(void);
-void noizebox_terminate_menu(void);
-void noizebox_set_breath_curve(void);
-void noizebox_set_transpose(void);
-void noizebox_set_midi_mode(void);
+int *NZ_main_menu(void);
+void NZ_close_mixer(void);
+void NZ_terminate_menu(void);
+void NZ_set_breath_curve(void);
+void NZ_set_transpose(void);
+void NZ_set_midi_mode(void);
 
 /*
  *  conf.c
  */
-int noizebox_load_synth_config(void);
-int noizebox_save_synth_config(void);
+int NZ_load_synth_config(void);
+int NZ_save_synth_config(void);
 
 /*
  * bank.c
  */
 
-void noizebox_load_bank(void);
-void noizebox_load_font(int);
+void NZ_load_bank(void);
+void NZ_load_font(int);
 
 /*
  * synth.c
  */
 
-void noizebox_delete_synth(void);
-void noizebox_create_synth(void);
-void noizebox_load_next_font(void);
-void noizebox_load_prev_font(void);
+void NZ_delete_synth(void);
+void NZ_create_synth(void);
+void NZ_load_next_font(void);
+void NZ_load_prev_font(void);
 
-void noizebox_pitch_up(void);
-void noizebox_pitch_down(void);
+void NZ_pitch_up(void);
+void NZ_pitch_down(void);
 
-void noizebox_synth_detune(int);
+void NZ_synth_detune(int);
 
 /*
  * mixer.c
  */
 
-int 	noizebox_init_mixer(void);
-int 	noizebox_get_pcm_volume(void);
-void 	noizebox_mute_pcm_volume(void);
-void 	noizebox_maximize_pcm_volume(void);
-void 	noizebox_increment_pcm_volume(void);
-void 	noizebox_decrement_pcm_volume(void);
-void 	noizebox_increment_right_pcm_volume(void);
-void 	noizebox_increment_left_pcm_volume(void);
-void 	noizebox_decrement_line_volume(void);
-void 	noizebox_increment_line_volume(void);
+int 	NZ_init_mixer(void);
+int 	NZ_get_pcm_volume(void);
+void 	NZ_mute_pcm_volume(void);
+void 	NZ_maximize_pcm_volume(void);
+void 	NZ_increment_pcm_volume(void);
+void 	NZ_decrement_pcm_volume(void);
+void 	NZ_increment_right_pcm_volume(void);
+void 	NZ_increment_left_pcm_volume(void);
+void 	NZ_decrement_line_volume(void);
+void 	NZ_increment_line_volume(void);
 
 /*
  * hinv.c
  */
-float noizebox_get_cpu_temperature(void);
-uint64_t noizebox_get_free_memory(void);
+float NZ_get_cpu_temperature(void);
+uint64_t NZ_get_free_memory(void);
 
 /*
  * ihm.c
  */
-void noizebox_control_volume(int);
+void NZ_control_volume(int);
 
 
 #endif
