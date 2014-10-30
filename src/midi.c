@@ -27,7 +27,7 @@
 #endif
 
 
-void noizebox_midi_analyze(uint8_t v)
+void NZ_midi_analyze(uint8_t v)
 {
 	buffer=v;
 	// Traitement Status Byte
@@ -216,7 +216,7 @@ void noizebox_midi_analyze(uint8_t v)
 	}
 }
 
-int *noizebox_midi_read( char *dev )
+int *NZ_midi_read( char *dev )
 {
 	FILE *fp;
 	uint8_t c;
@@ -229,7 +229,7 @@ int *noizebox_midi_read( char *dev )
 	while (!feof(fp))
 	{
 		c = fgetc(fp);
-		noizebox_midi_analyze(c);
+		NZ_midi_analyze(c);
 	}
 	return(0);
 }

@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include "noizebox.h"
 
-uint64_t noizebox_get_free_memory(void)
+uint64_t NZ_get_free_memory(void)
 {
 #ifdef __FreeBSD__
         size_t size;
@@ -21,7 +21,7 @@ uint64_t noizebox_get_free_memory(void)
 	return( freepages * pagesize / 1024 );
 }
 
-float noizebox_get_cpu_temperature(void)
+float NZ_get_cpu_temperature(void)
 {
 #ifdef __FreeBSD__
         size_t size;
