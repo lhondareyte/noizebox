@@ -7,7 +7,7 @@
 #include "noizebox.h"
 #include "functions.h"
 
-int noizebox_load_synth_config(void)
+int NZ_load_synth_config(void)
 {
 	char * sql;
 	sqlite3 *db;
@@ -124,7 +124,7 @@ int noizebox_load_synth_config(void)
 	return (0);
 }
 
-int noizebox_save_synth_config(void)
+int NZ_save_synth_config(void)
 {
 	int rc;
         char sql[80];
@@ -153,7 +153,7 @@ int noizebox_save_synth_config(void)
 	/*
 	 * Update Volume
    	 */
-	v=noizebox_get_pcm_volume();
+	v=NZ_get_pcm_volume();
 	l = v & 0xff;
 	r = v >> 8;
 	sprintf (sql, "update mixer set val=%d where param=\'left\'",l);
