@@ -97,11 +97,8 @@ int main(void)
 		c++;
 	}
 #endif
-	while (1)
-	{
-		NZ_create_synth();
-		NZ_main_menu();
-	}
-	//NZ_shutdown(0);
+	NZ_create_synth();
+	NZ_main_menu();
+	NZ_shutdown(0);
 	exit (0);
 }
