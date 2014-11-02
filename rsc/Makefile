@@ -1,7 +1,7 @@
 
 
 CFG = noizebox.conf
-all: conf termdb
+all: conf
 
 conf:
 	@printf "Building configuration database ..."
@@ -20,12 +20,6 @@ conf:
 	@sqlite3 $(CFG) "insert into synth values('detune',0);"
 	@sqlite3 $(CFG) "create table soundfont (param varchar(12), val smallint);"
 	@sqlite3 $(CFG) "insert into soundfont values('last_id',1);"
-	@echo " done."
-termdb:
-	@printf "Building Termcap database ..."
-	@cp /usr/share/misc/termcap .
-	@cat termcap.tinyVT >> termcap
-	@cap_mkdb termcap
 	@echo " done."
 clean:
 	@rm -f $(CFG)

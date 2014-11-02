@@ -294,6 +294,8 @@ void NZ_set_audio_device(void)
 				break;
 		}
 		NZ_refresh_audio_device();
+		move(1,22);
+		NZ_refresh();
 	}
 }
 
