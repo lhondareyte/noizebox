@@ -44,4 +44,4 @@ clean:
 	@$(CC) $(CFLAGS) -Os -c $< -o $@
 	@printf "\tdone.\n"
 install:
-	install -m 755 noizebox ../nanobsd/Noizebox/Contents/FreeBSD/amd64/
+	install -m 755 noizebox ../Noizebox/Contents/FreeBSD/amd64/
