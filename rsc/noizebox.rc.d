@@ -42,14 +42,17 @@ mkramdisk ()
 	echo " done!"
 	printf "Copying SF2 fonts ..."
 	mkdir -p /Ramdisk/SF2
-	for f in ${nzdir}/Resources/SF2/*.sf2
+	cd ${nzdir}/Resources/SF2/*.sf2
+	for f *.sf2
 	do
-		_f=$(basename $f)
-       		cp "$f" "/Ramdisk/SF2/${_f}.$$"
+       		cp "$f" "/Ramdisk/SF2/${f}.$$"
 		if [ $? -eq 0 ] ; then
-			mv "/Ramdisk/SF2/${_f}.$$" "/Ramdisk/SF2/${_f}"
+			mv "/Ramdisk/SF2/${f}.$$" "/Ramdisk/SF2/${f}"
+		else
+       			rm "/Ramdisk/SF2/${f}.$$"
 		fi
 	done	
+	cd -
 	echo " done!"
 }
 

@@ -141,10 +141,10 @@ int NZ_save_synth_config(void)
                 exit (1);
         }
 
+#if defined (__SPDIF_ADAPTER__)
 	/*
 	 * Update Audio Device
    	 */
-#if defined (__SPDIF_ADAPTER__)
 	sprintf (sql, "update dsp set val=%d where param=\'device\'",NZ_audio_device);
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
 	{

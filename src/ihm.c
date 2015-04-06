@@ -86,7 +86,7 @@ void NZ_refresh_audio_device(void)
 
 void NZ_refresh_font_name(void)
 {
-	mvprintw(0,0,"%-13s", current_font_name);
+	mvprintw(0,0,"P=%-13s", current_font_name);
 	NZ_refresh();
 }
 
@@ -395,12 +395,12 @@ int *NZ_main_menu (void)
 				NZ_refresh_main_menu();
 				break;
 			case '-':
-				mvprintw(0,0,"Loading      ");NZ_refresh();
+				mvprintw(0,2,"Loading      ");NZ_refresh();
 				NZ_load_font(current_font--);
 				NZ_refresh_font_name();
 				break;
 			case '+':
-				mvprintw(0,0,"Loading      ");NZ_refresh();
+				mvprintw(0,2,"Loading      ");NZ_refresh();
 				NZ_load_font(current_font++);
 				NZ_refresh_font_name();
 				break;
