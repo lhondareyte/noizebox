@@ -18,6 +18,7 @@ int NZ_load_synth_config(void)
 		return (1);
 	}
 
+#if defined (__SPDIF_ADAPTER__)
 	sql = "select val from dsp where param='device'";
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
 	{
@@ -29,6 +30,7 @@ int NZ_load_synth_config(void)
 		else sqlite3_reset(stmt);
 	}
 	else fprintf (stderr, "Failed to prepare database: %s\n",sqlite3_errmsg(db));
+#endif
 
 	sql = "select val from mixer where param='left'";
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
@@ -142,6 +144,7 @@ int NZ_save_synth_config(void)
 	/*
 	 * Update Audio Device
    	 */
+#if defined (__SPDIF_ADAPTER__)
 	sprintf (sql, "update dsp set val=%d where param=\'device\'",NZ_audio_device);
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
 	{
@@ -149,6 +152,7 @@ int NZ_save_synth_config(void)
 	}
 	else fprintf (stderr, "Error: cannot update synth information: %s\n", sqlite3_errmsg(db));
 	sqlite3_finalize(stmt);
+#endif
 	
 	/*
 	 * Update Volume

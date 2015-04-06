@@ -35,7 +35,11 @@ char CONF_DB[256];
 
 int channel_preset;
 int vol,NZ_pcm_volume_left,NZ_pcm_volume_right;
+
+#if defined (__SPDIF_ADAPTER__)
 int NZ_audio_device;
+#endif
+
 /*
 	Gestion des windcontrollers
 */
