@@ -152,13 +152,15 @@ void NZ_midi_analyze(uint8_t v)
 						break;
 
 					case MIDI_CTRLCHG_MSG : 
-						data2= *(p_current_curve + data2);
 						if ( NZ_midi_mode == EWI || NZ_midi_mode == WX5 ) 
 						{
-							/* 
-							   Mappage du breath control sur le volume pour les EWIs
-							 */
-							if ( data1 == 2  || data1 == 34) data1+=5;
+							if ( data1 == 2 || data1 == 34 )
+							{
+							/* Mappage du breath control sur le volume pour les EWIs */
+								data1+=5;
+							/* Prise en compte de la courbe de reponse du souffle */
+								data2= *(p_current_curve + data2);
+							}
 						}
 						fluid_synth_cc(synth, channel, data1, data2);
 						break;

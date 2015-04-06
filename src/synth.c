@@ -69,18 +69,28 @@ void NZ_create_synth(void)
 	synth_settings = new_fluid_settings();
 	synth = new_fluid_synth(synth_settings);
 	fluid_settings_setstr(synth_settings, "audio.driver", "oss");
+#if defined (__SPDIF_ADAPTER__)
 	switch (NZ_audio_device)
 	{
+		case 0x00:
+			fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp0");
+			break;
 		case 0x01:
 			fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp1");
 			break;
 		case 0x02:
 			fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp2");
 			break;
+		case 0x03:
+			fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp3");
+			break;
 		default:
 			fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp");
 			break;
 	}
+#else
+	fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp");
+#endif
 
 	fluid_settings_setstr(synth_settings, "synth.gain", "5.00");
 	synth_audio_driver = new_fluid_audio_driver(synth_settings, synth);

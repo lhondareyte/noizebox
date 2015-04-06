@@ -6,7 +6,8 @@ CFLAGS	= -O2 -Wall -I /usr/include -I /usr/local/include -I ../fluidsynth/includ
 CFLAGS	+= -I ../fluidsynth/include -L ../fluidsynth/src/.libs
 #CFLAGS	+= -D __WITH_SQLITE__ 
 CFLAGS	+= -D __WITH_SQLITE__ -D SQLITE_TEMP_STORE=3
-CFLAGS	+= -D __SPDIF_ADAPTER__
+#CFLAGS	+= -D __SPDIF_ADAPTER__
+CFLAGS	+= -D __WT11_COMPAT__
 
 #CFLAGS=-O2 -Wall -I /usr/include -I /usr/local/include -D __NOIZEBOX_DEBUG__
 #CFLAGS= -O -Wall -I /usr/include -I /usr/local/include -D __FLUIDSYNTH_MIDI_DRIVER__  -D __NOIZEBOX_DEBUG__
@@ -30,8 +31,6 @@ $(PRG): $(OBJECTS) Makefile
 	@printf "Linking   $@:"
 	@$(CC) $(LDFLAGS) $(CFLAGS) $(OBJECTS) -o $@
 	@printf "\tdone.\n"
-
-
 
 mrproper: clean
 	@rm -f $(PRG)
