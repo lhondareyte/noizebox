@@ -13,7 +13,9 @@ ARCH=$(uname -p)
 APP=noizebox
 PLATFORM="${HOST}/${ARCH}"
 BIN="${DIR}/Contents/${PLATFORM}/${APP}"
-MIDI="/dev/umidi0.0 /dev/umidi1.0 /dev/umidi2.0"
+LOG=/tmp/nz.log
+#MIDI="/dev/umidi0.0 /dev/umidi1.0 /dev/umidi2.0"
+MIDI="/dev/umidi2.0 /dev/umidi1.0"
 export NZDIR=$DIR
 
 #
@@ -26,9 +28,9 @@ export LD_LIBRARY_PATH
 RT="/usr/sbin/rtprio"
 if [ -x ${BIN} ] ; then
 	if [ -x ${RT} ] ; then
-		exec ${RT} 0 ${BIN} ${MIDI} 2>nz.log
+		exec ${RT} 0 ${BIN} ${MIDI} 2> $LOG
 	else
-		exec ${BIN} ${MIDI} 2>nz.log
+		exec ${BIN} ${MIDI} 2> $LOG
 	fi
 fi
 exit 0

@@ -9,7 +9,7 @@ all:
 		(cd $$dir; ${MAKE} ); \
 	done
 noizebox.pkg:
-	@./install.sh
+	@utils/install.sh
 clean:
 	for dir in $(MODULES); do \
 		(cd $$dir; ${MAKE} clean); \

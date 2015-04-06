@@ -65,17 +65,28 @@ void NZ_refresh_midi_mode(void)
 #if defined (__SPDIF_ADAPTER__)
 void NZ_refresh_audio_device(void)
 {
-	if ( NZ_audio_device == 0x01)
+	switch (NZ_audio_device)
+	{
+		case 0x00:
+			mvprintw(1,20,"A=BK");
+			break;
+		case 0x01:
 			mvprintw(1,20,"A=AN");
-	else
+			break;
+		case 0x02:
 			mvprintw(1,20,"A=DI");
+			break;
+		case 0x03:
+			mvprintw(1,20,"A=HD");
+			break;
+	}
 	NZ_refresh();
 }
 #endif
 
 void NZ_refresh_font_name(void)
 {
-	mvprintw(0,0,"P=%-13s", current_font_name);
+	mvprintw(0,0,"%-13s", current_font_name);
 	NZ_refresh();
 }
 
@@ -270,17 +281,17 @@ void NZ_set_audio_device(void)
 		switch (key)
 		{
 			case '-':
-				if (NZ_audio_device == 0x02 ) 
+				if (NZ_audio_device != 0x00 ) 
 				{
 					NZ_audio_device--;
-					fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp1");
+					//fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp1");
 				}
 				break;
 			case '+':
-				if (NZ_audio_device == 0x01 ) 
+				if (NZ_audio_device != 0x03 ) 
 				{
 					NZ_audio_device++;
-					fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp2");
+					//fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp2");
 				}
 				break;
 			case '4': 
@@ -384,12 +395,12 @@ int *NZ_main_menu (void)
 				NZ_refresh_main_menu();
 				break;
 			case '-':
-				mvprintw(0,2,"Loading      ");NZ_refresh();
+				mvprintw(0,0,"Loading      ");NZ_refresh();
 				NZ_load_font(current_font--);
 				NZ_refresh_font_name();
 				break;
 			case '+':
-				mvprintw(0,2,"Loading      ");NZ_refresh();
+				mvprintw(0,0,"Loading      ");NZ_refresh();
 				NZ_load_font(current_font++);
 				NZ_refresh_font_name();
 				break;
