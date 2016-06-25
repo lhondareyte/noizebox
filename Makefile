@@ -2,13 +2,13 @@
 #  $Id$
 # 
 MAKE=gmake
-MODULES = fluidsynth src rsc sf2
+MODULES = fluidsynth src rsc
 package: all noizebox.pkg
 all:
 	for dir in $(MODULES); do \
 		(cd $$dir; ${MAKE} ); \
 	done
-noizebox.pkg:
+package:
 	@utils/install.sh
 clean:
 	for dir in $(MODULES); do \
