@@ -14,8 +14,8 @@ APP=noizebox
 PLATFORM="${HOST}/${ARCH}"
 BIN="${DIR}/Contents/${PLATFORM}/${APP}"
 LOG=/tmp/nz.log
-#MIDI="/dev/umidi0.0 /dev/umidi1.0 /dev/umidi2.0"
-MIDI="/dev/umidi2.0 /dev/umidi1.0"
+MIDI="/dev/umidi0.0 /dev/umidi1.0 /dev/umidi2.0"
+#MIDI="/dev/umidi2.0 /dev/umidi1.0"
 export NZDIR=$DIR
 
 #
@@ -24,13 +24,18 @@ LD_LIBRARY_PATH="${DIR}/Frameworks/${PLATFORM}"
 export LD_LIBRARY_PATH
 
 #
-# Run application
+# Run application with high priority
 RT="/usr/sbin/rtprio"
 if [ -x ${BIN} ] ; then
 	if [ -x ${RT} ] ; then
 		exec ${RT} 0 ${BIN} ${MIDI} 2> $LOG
+		rc=$?
 	else
 		exec ${BIN} ${MIDI} 2> $LOG
+		rc=$?
 	fi
+else
+	echo "Fatal error: ${BIN} not found!"
+	rc=42
 fi
-exit 0
+exit $rc
