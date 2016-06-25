@@ -3,7 +3,7 @@
 # 
 
 CFLAGS	= -O2 -Wall -I /usr/include -I /usr/local/include -I ../fluidsynth/include
-CFLAGS	+= -I ../fluidsynth/include -L ../fluidsynth/src/.libs
+CFLAGS	+= -I ../fluidsynth/include 
 #CFLAGS	+= -D __WITH_SQLITE__ 
 CFLAGS	+= -D __WITH_SQLITE__ -D SQLITE_TEMP_STORE=3
 #CFLAGS	+= -D __SPDIF_ADAPTER__
@@ -13,6 +13,7 @@ CFLAGS	+= -D __WT11_COMPAT__
 #CFLAGS= -O -Wall -I /usr/include -I /usr/local/include -D __FLUIDSYNTH_MIDI_DRIVER__  -D __NOIZEBOX_DEBUG__
 
 LDFLAGS= -lsqlite3 -lncurses -lfluidsynth -L/usr/local/lib -pthread -I .
+LDFLAGS  += -L ../fluidsynth/src/.libs
 
 HEADERS       := $(wildcard *.h)
 SOURCES       := $(wildcard *.c)
