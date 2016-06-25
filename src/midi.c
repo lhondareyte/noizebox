@@ -224,7 +224,7 @@ int *NZ_midi_read( char *dev )
 	uint8_t c;
 	while (( fp=fopen(dev,"r")) == NULL ) 
 	{
-		fprintf(stderr,"Error: %s: %s (will trying later)\n",dev,strerror(errno));
+		fprintf(stderr,"Warning: %s: %s (will trying later)\n",dev,strerror(errno));
 		sleep(5);
 	}
 	fprintf(stderr,"Opening %s OK\n", dev);
