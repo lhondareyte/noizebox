@@ -233,6 +233,7 @@ int *NZ_midi_read( char *dev )
 		c = fgetc(fp);
 		NZ_midi_analyze(c);
 	}
+	close(fp);
 	return(0);
 }
 
