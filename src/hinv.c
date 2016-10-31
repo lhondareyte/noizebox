@@ -11,7 +11,8 @@
 uint64_t NZ_get_free_memory(void)
 {
         size_t size;
-        int freepages, pagesize;
+        int pagesize=0;
+        int freepages=0;
 #ifdef __FreeBSD__
         size = sizeof freepages;
         sysctlbyname("vm.stats.vm.v_free_count", &freepages, &size, NULL, 0);
