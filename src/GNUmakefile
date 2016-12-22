@@ -30,7 +30,7 @@ CFLAGS	      += -DYEAR=\"$(GIT_YEAR)\"
 
 PRG=noizebox
 
-$(PRG): $(OBJECTS) Makefile
+$(PRG): $(OBJECTS) GNUmakefile
 	@printf "Linking   $@:"
 	@$(CC) $(LDFLAGS) $(CFLAGS) $(OBJECTS) -o $@
 	@printf "\tdone.\n"
