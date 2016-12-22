@@ -14,4 +14,4 @@ clean:
 	for dir in $(MODULES); do \
 		(cd $$dir; $(MAKE) clean); \
 	done
-	rm -f noizebox.pkg noizebox.md5
+	rm -rf noizebox.pkg noizebox.md5 Noizebox/*
