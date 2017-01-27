@@ -12,6 +12,6 @@ package:
 	@utils/install.sh
 clean:
 	for dir in $(MODULES); do \
-		(cd $$dir; $(MAKE) clean); \
+		(cd $$dir; $(MAKE) clean ; cd ..); \
 	done
 	rm -rf noizebox.pkg noizebox.md5 Noizebox/*
