@@ -81,8 +81,6 @@ int main(void)
 		exit (1);
 	}
 
-	prev_v=NZ_get_pcm_volume();
-
 #ifndef __FLUIDSYNTH_MIDI_DRIVER__
 
 	/* Creation d'un thread par device MIDI passe en argument */

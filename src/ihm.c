@@ -146,7 +146,7 @@ void NZ_refresh_main_menu(void)
 #else
 	mvprintw(1,20,"Info");
 #endif
-	NZ_refresh();
+//	NZ_refresh();
 }
 
 
@@ -266,6 +266,14 @@ void NZ_control_volume(int k)
 		case 'C':
 			NZ_increment_left_pcm_volume();
 			break;
+#ifdef __NOIZEBOX_DEBUG__
+		case 'V':
+			NZ_maximize_pcm_volume();
+			break;
+		case 'v':
+			NZ_mute_pcm_volume();
+			break;
+#endif
 	}
 	NZ_refresh_volume();
 }
@@ -367,6 +375,7 @@ int *NZ_main_menu (void)
 	/*
 	 * Menu principal
 	 */
+	prev_v = INVALID;
 	NZ_refresh_main_menu();
 
 	/* 
@@ -404,14 +413,6 @@ int *NZ_main_menu (void)
 				NZ_load_font(current_font++);
 				NZ_refresh_font_name();
 				break;
-#ifdef __NOIZEBOX_DEBUG__
-			case 'V':
-				NZ_maximize_pcm_volume();
-				break;
-			case 'v':
-				NZ_mute_pcm_volume();
-				break;
-#endif
 			case 'q':
 				NZ_terminate_menu();
 				return(0);
