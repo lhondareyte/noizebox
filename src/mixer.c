@@ -38,8 +38,8 @@ int NZ_init_mixer(void)
 		return -1;
 	}
 	ioctl(mixer, SOUND_MIXER_WRITE_VOLUME,&v);
-	v = NZ_pcm_volume_left;
-	v = (v << 8 ) + NZ_pcm_volume_right;
+	v = NZ_pcm_volume_right;
+	v = (v << 8 ) + NZ_pcm_volume_left;
 	return ioctl(mixer, MIXER_WRITE(SOUND_MIXER_PCM),&v);
 }
 
