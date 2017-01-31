@@ -28,14 +28,17 @@ export LD_LIBRARY_PATH
 RT="/usr/sbin/rtprio"
 if [ -x ${BIN} ] ; then
 	if [ -x ${RT} ] ; then
-		exec ${RT} 0 ${BIN} ${MIDI} 2> $LOG
+		${RT} 0 ${BIN} ${MIDI} 2> $LOG
 		rc=$?
 	else
-		exec ${BIN} ${MIDI} 2> $LOG
+		${BIN} ${MIDI} 2> $LOG
 		rc=$?
 	fi
 else
 	echo "Fatal error: ${BIN} not found!"
 	rc=42
+fi
+if [ $rc -ne 0 ] ; then
+	cat $LOG
 fi
 exit $rc
