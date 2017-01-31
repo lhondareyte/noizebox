@@ -28,7 +28,9 @@ float NZ_get_cpu_temperature(void)
         size_t size;
         int buf;
         size = sizeof buf;
-        sysctlbyname("hw.acpi.thermal.tz0.temperature", &buf, &size, NULL, 0);
+        if (sysctlbyname("hw.acpi.thermal.tz0.temperature", &buf, &size, NULL, 0) == -1 )
+	return (0.0);
+	;
 #endif
 	/*
 	 * Conversion Kelvin -> Centigrade
