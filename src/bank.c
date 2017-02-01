@@ -18,7 +18,7 @@ void NZ_load_bank(void)
 	sqlite3_initialize();
         if ( sqlite3_open_v2(FONT_DB, &bank, SQLITE_OPEN_READONLY, NULL) != SQLITE_OK )
         {
-                fprintf (stderr, "Error: cannot open SF2 configuration file (%s)\n",FONT_DB);
+                fprintf (stderr, "Error: Cannot open SF2 configuration file (%s)\n",FONT_DB);
                 exit (1);
         }
 	sql = "select count(id) from bank" ;
@@ -32,7 +32,8 @@ void NZ_load_bank(void)
 	}
 	else
 	{
-		fprintf (stderr, "Failed to prepare database: %s\n",sqlite3_errmsg(bank));
+		fprintf (stderr, "Error: Failed to prepare database: %s\n",sqlite3_errmsg(bank));
+                exit (1);
 	}
 	sqlite3_close(bank);
 	sqlite3_shutdown();
@@ -61,7 +62,7 @@ void NZ_load_font(int font)
         sqlite3_initialize();
         if ( sqlite3_open_v2(FONT_DB, &bank, SQLITE_OPEN_READONLY, NULL) != SQLITE_OK )
         {
-                fprintf (stderr, "Error: cannot open SF2 configuration file\n");
+                fprintf (stderr, "Error: Cannot open SF2 configuration file\n");
                 exit (1);
         }
 	
@@ -80,9 +81,10 @@ void NZ_load_font(int font)
         }
         else
         {
-                fprintf (stderr, "Failed to prepare database: %s\n",sqlite3_errmsg(bank));
+                fprintf (stderr, "Error: Failed to prepare database: %s\n",sqlite3_errmsg(bank));
+                exit (1);
         }
-//
+
         sqlite3_close(bank);
         sqlite3_shutdown();
 
@@ -93,7 +95,9 @@ void NZ_load_font(int font)
 	{
 		current_font_id=fluid_synth_sfload(synth,current_font_path,1);
 	}
+#ifdef __NOIZEBOX_DEBUG__
 	fprintf (stderr,"Loading SF2 %s (%d)\n",current_font_path, current_font_id);
+#endif
 
 	/* Actication du tuning pour tous les canaux */
 	for ( i=0; i<= 15; i++)

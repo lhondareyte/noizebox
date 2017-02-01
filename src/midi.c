@@ -224,10 +224,14 @@ int *NZ_midi_read( char *dev )
 	uint8_t c;
 	while (( fp=fopen(dev,"r")) == NULL ) 
 	{
+#ifdef __NOIZEBOX_DEBUG__
 		fprintf(stderr,"Warning: %s: %s (will trying later)\n",dev,strerror(errno));
+#endif
 		sleep(5);
 	}
+#ifdef __NOIZEBOX_DEBUG__
 	fprintf(stderr,"Opening %s OK\n", dev);
+#endif
 	while (!feof(fp))
 	{
 		c = fgetc(fp);

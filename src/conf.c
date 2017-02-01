@@ -14,7 +14,7 @@ int NZ_load_synth_config(void)
 	sqlite3_stmt *stmt;
 	if ( sqlite3_open(CONF_DB, &db) != SQLITE_OK )
 	{
-		fprintf (stderr, "Error: cannot open configuration file (%s)\n", CONF_DB);
+		fprintf (stderr, "Error: Cannot open configuration file (%s)\n", CONF_DB);
 		return 1;
 	}
 
@@ -29,7 +29,11 @@ int NZ_load_synth_config(void)
 		}
 		else sqlite3_reset(stmt);
 	}
-	else fprintf (stderr, "Failed to prepare database: %s\n",sqlite3_errmsg(db));
+	else 
+	{
+		fprintf (stderr, "Error: Failed to prepare database: %s\n",sqlite3_errmsg(db));
+		return 1;
+	}
 #endif
 
 	sql = "select val from mixer where param='left'";
@@ -42,7 +46,11 @@ int NZ_load_synth_config(void)
 		}
 		else sqlite3_reset(stmt);
 	}
-	else fprintf (stderr, "Failed to prepare database: %s\n",sqlite3_errmsg(db));
+	else 
+	{
+		fprintf (stderr, "Error: Failed to prepare database: %s\n",sqlite3_errmsg(db));
+		return 1;
+	}
 
 	sql = "select val from mixer where param='right'";
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
@@ -54,7 +62,11 @@ int NZ_load_synth_config(void)
 		}
 		else sqlite3_reset(stmt);
 	}
-	else fprintf (stderr, "Failed to prepare database: %s\n",sqlite3_errmsg(db));
+	else 
+	{
+		fprintf (stderr, "Error: Failed to prepare database: %s\n",sqlite3_errmsg(db));
+		return 1;
+	}
 
 	sql = "select val from soundfont where param='last_id'";
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
@@ -70,7 +82,11 @@ int NZ_load_synth_config(void)
 		}
 		sqlite3_finalize(stmt);
 	}
-	else fprintf (stderr, "Failed to prepare database: %s\n",sqlite3_errmsg(db));
+	else 
+	{
+		fprintf (stderr, "Error: Failed to prepare database: %s\n",sqlite3_errmsg(db));
+		return 1;
+	}
 
 	sql = "select val from midi where param='mode'";
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
@@ -86,7 +102,11 @@ int NZ_load_synth_config(void)
 		}
 		sqlite3_finalize(stmt);
 	}
-	else fprintf (stderr, "Failed to prepare database: %s\n",sqlite3_errmsg(db));
+	else 
+	{
+		fprintf (stderr, "Error: Failed to prepare database: %s\n",sqlite3_errmsg(db));
+		return 1;
+	}
 
         sql = "select val from midi where param='breath_curve'";
         if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK )
@@ -102,7 +122,11 @@ int NZ_load_synth_config(void)
                 }
                 sqlite3_finalize(stmt);
         }
-        else fprintf (stderr, "Failed to prepare database: %s\n",sqlite3_errmsg(db));
+	else 
+	{
+		fprintf (stderr, "Error: Failed to prepare database: %s\n",sqlite3_errmsg(db));
+		return 1;
+	}
 
 	sql = "select val from synth where param='detune'";
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
@@ -118,7 +142,11 @@ int NZ_load_synth_config(void)
 		}
 		sqlite3_finalize(stmt);
 	}
-	else fprintf (stderr, "Failed to prepare database: %s\n",sqlite3_errmsg(db));
+	else 
+	{
+		fprintf (stderr, "Error: Failed to prepare database: %s\n",sqlite3_errmsg(db));
+		return 1;
+	}
 
 
 	sqlite3_close(db);
@@ -137,8 +165,8 @@ int NZ_save_synth_config(void)
 
         if ( sqlite3_open(CONF_DB, &db) != SQLITE_OK )
         {
-                fprintf (stderr, "Error: cannot open configuration file\n");
-                exit (1);
+                fprintf (stderr, "Error: Cannot open configuration file\n");
+                return 1;
         }
 
 #if defined (__SPDIF_ADAPTER__)
@@ -150,7 +178,11 @@ int NZ_save_synth_config(void)
 	{
 		sqlite3_step(stmt);
 	}
-	else fprintf (stderr, "Error: cannot update synth information: %s\n", sqlite3_errmsg(db));
+	else 
+	{
+		fprintf (stderr, "Error: Cannot update synth information: %s\n", sqlite3_errmsg(db));
+		return 1;
+	}
 	sqlite3_finalize(stmt);
 #endif
 	
@@ -164,17 +196,25 @@ int NZ_save_synth_config(void)
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
 	{
 		sqlite3_step(stmt);
+		sqlite3_finalize(stmt);
 	}
-	else fprintf (stderr, "Error: cannot update synth information: %s\n", sqlite3_errmsg(db));
-	sqlite3_finalize(stmt);
+	else 
+	{
+		fprintf (stderr, "Error: Cannot update synth information: %s\n", sqlite3_errmsg(db));
+		return 1;
+	}
 	
 	sprintf (sql, "update mixer set val=%d where param=\'right\'",r);
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
 	{
 		sqlite3_step(stmt);
+		sqlite3_finalize(stmt);
 	}
-	else fprintf (stderr, "Error: cannot update synth information: %s\n", sqlite3_errmsg(db));
-	sqlite3_finalize(stmt);
+	else 
+	{
+		fprintf (stderr, "Error: Cannot update synth information: %s\n", sqlite3_errmsg(db));
+		return 1;
+	}
 	
 	/*
 	 * Update SoundFont information
@@ -183,9 +223,13 @@ int NZ_save_synth_config(void)
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
 	{
 		sqlite3_step(stmt);
+		sqlite3_finalize(stmt);
 	}
-	else fprintf (stderr, "Error: cannot update synth information: %s\n", sqlite3_errmsg(db));
-	sqlite3_finalize(stmt);
+	else 
+	{
+		fprintf (stderr, "Error: Cannot update synth information: %s\n", sqlite3_errmsg(db));
+		return 1;
+	}
 
 	/*
 	 * Update MIDI information
@@ -194,17 +238,25 @@ int NZ_save_synth_config(void)
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
 	{
 		sqlite3_step(stmt);
+		sqlite3_finalize(stmt);
 	}
-	else fprintf (stderr, "Error: cannot update synth information: %s\n", sqlite3_errmsg(db));
-	sqlite3_finalize(stmt);
+	else 
+	{
+		fprintf (stderr, "Error: Cannot update synth information: %s\n", sqlite3_errmsg(db));
+		return 1;
+	}
 
         sprintf (sql, "update midi set val=%d where param=\'breath_curve\'",NZ_breath_curve);
         if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK )
         {
                 sqlite3_step(stmt);
-        }
-        else fprintf (stderr, "Error: cannot update synth information: %s\n", sqlite3_errmsg(db));
-        sqlite3_finalize(stmt);
+		sqlite3_finalize(stmt);
+	}
+	else 
+	{
+		fprintf (stderr, "Error: Cannot update synth information: %s\n", sqlite3_errmsg(db));
+		return 1;
+	}
         
 	/*
 	 * Update SYNTH information
@@ -213,14 +265,14 @@ int NZ_save_synth_config(void)
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
 	{
 		sqlite3_step(stmt);
+		sqlite3_finalize(stmt);
 	}
-	else fprintf (stderr, "Error: cannot update synth information: %s\n", sqlite3_errmsg(db));
-	sqlite3_finalize(stmt);
+	else 
+	{
+		fprintf (stderr, "Error: Cannot update synth information: %s\n", sqlite3_errmsg(db));
+		return 1;
+	}
 
-	/*
-	 * Update Synth parameters
-   	 */
-	sqlite3_finalize(stmt);
 	rc=sqlite3_close(db);
 
 	if ( rc != SQLITE_OK )
