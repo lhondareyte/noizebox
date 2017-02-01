@@ -24,7 +24,7 @@ int NZ_get_pcm_volume(void)
 {
 	int v;
 	ioctl(mixer, MIXER_READ(SOUND_MIXER_PCM),&v);
-	return(v);
+	return v;
 }
 
 int NZ_init_mixer(void)

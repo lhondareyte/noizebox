@@ -415,7 +415,7 @@ int *NZ_main_menu (void)
 				break;
 			case 'q':
 				NZ_terminate_menu();
-				return(0);
+				return 0;
 				break;
 			default:
 				NZ_control_volume(key);
