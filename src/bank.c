@@ -6,6 +6,7 @@
 #include "noizebox.h"
 #include "functions.h"
 #include <sqlite3.h>
+#include <sys/stat.h>
 
 int max_font_in_bank;
 
@@ -45,6 +46,8 @@ void NZ_load_font(int font)
         char sql[80];
         sqlite3 *bank;
         sqlite3_stmt *stmt;
+
+	struct stat st;
 
 	/* Reset du tuning pour tous les canaux */
 	for ( i=0; i<= 15; i++ )
@@ -90,11 +93,9 @@ void NZ_load_font(int font)
 
 	fluid_synth_system_reset(synth);
 
+	if (stat(ramdisk_font_path, &st) == 0)
 	current_font_id=fluid_synth_sfload(synth,ramdisk_font_path,1);
-	if ( current_font_id == FLUID_FAILED ) 
-	{
-		current_font_id=fluid_synth_sfload(synth,current_font_path,1);
-	}
+	else current_font_id=fluid_synth_sfload(synth,current_font_path,1);
 #ifdef __NOIZEBOX_DEBUG__
 	fprintf (stderr,"Loading SF2 %s (%d)\n",current_font_path, current_font_id);
 #endif
