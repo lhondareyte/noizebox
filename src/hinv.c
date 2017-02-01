@@ -19,7 +19,7 @@ uint64_t NZ_get_free_memory(void)
         size = sizeof pagesize;
         sysctlbyname("vm.stats.vm.v_page_size", &pagesize, &size, NULL, 0);
 #endif
-	return( freepages * pagesize / 1024 );
+	return freepages * pagesize / 1024 ;
 }
 
 float NZ_get_cpu_temperature(void)
@@ -29,11 +29,11 @@ float NZ_get_cpu_temperature(void)
         int buf;
         size = sizeof buf;
         if (sysctlbyname("hw.acpi.thermal.tz0.temperature", &buf, &size, NULL, 0) == -1 )
-	return (0.0);
+	return 0.0;
 	;
 #endif
 	/*
 	 * Conversion Kelvin -> Centigrade
 	 */
-	return (((float)buf-2732)/10);
+	return ((float)buf-2732)/10;
 }

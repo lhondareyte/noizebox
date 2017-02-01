@@ -15,7 +15,7 @@ int NZ_load_synth_config(void)
 	if ( sqlite3_open(CONF_DB, &db) != SQLITE_OK )
 	{
 		fprintf (stderr, "Error: cannot open configuration file (%s)\n", CONF_DB);
-		return (1);
+		return 1;
 	}
 
 #if defined (__SPDIF_ADAPTER__)
@@ -123,7 +123,7 @@ int NZ_load_synth_config(void)
 
 	sqlite3_close(db);
 
-	return (0);
+	return 0;
 }
 
 int NZ_save_synth_config(void)
@@ -227,5 +227,5 @@ int NZ_save_synth_config(void)
 		fprintf (stderr, 
 		"Error: cannot save configuration file: %s\n", 
 		sqlite3_errmsg(db));
-	return(rc);
+	return rc;
 }
