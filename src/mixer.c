@@ -34,7 +34,7 @@ int NZ_init_mixer(void)
 	v = (v << 8) + NOIZEBOX_MAX_LEVEL;
 	if ((mixer = open("/dev/mixer",O_RDWR|O_NONBLOCK)) == -1) 
 	{
-		fprintf(stderr,"Error while opening Mixer device: /dev/mixer: %s\n",strerror(errno));
+		fprintf(stderr,"Error: Cannot open /dev/mixer: %s\n",strerror(errno));
 		return -1;
 	}
 	ioctl(mixer, SOUND_MIXER_WRITE_VOLUME,&v);
