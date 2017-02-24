@@ -1,3 +1,4 @@
+CC    = gcc
 PROG=	noizebox
 SRCS!=	ls *.c
 CFLAGS+= -I ../fluidsynth/include

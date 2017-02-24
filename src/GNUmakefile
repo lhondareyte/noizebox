@@ -1,7 +1,7 @@
 #
 #  $Id$
 # 
-
+CC      = gcc
 CFLAGS	= -O2 -Wall -I /usr/include -I /usr/local/include -I ../fluidsynth/include
 CFLAGS	+= -I ../fluidsynth/include 
 #CFLAGS	+= -D __WITH_SQLITE__ 
