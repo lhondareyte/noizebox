@@ -36,7 +36,6 @@ APP=$(readlink -f $0)
 DIR=$(dirname $APP)
 APP=$(basename $0)
 BIN="${DIR}/Contents/${PLATFORM}/${APP}"
-MIDI="/dev/umidi0.0 /dev/umidi1.0 /dev/umidi2.0"
 TTY="/dev/cuaU0"
 export NZDIR=$DIR
 
@@ -44,6 +43,11 @@ if [ ! -c $TTY -o -z $TTY ] ; then
 	printf "Fatal error: cannot open ${APP} Terminal ($TTY).\n"
 	exit 1
 fi
+
+for i in /dev/umidi[0-9]
+do
+	MIDI="$i "
+done
 
 #
 # Set embbeded library path

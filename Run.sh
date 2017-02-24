@@ -14,9 +14,12 @@ APP=noizebox
 PLATFORM="${HOST}/${ARCH}"
 BIN="${DIR}/Contents/${PLATFORM}/${APP}"
 LOG=/tmp/nz.log
-MIDI="/dev/umidi0.0 /dev/umidi1.0 /dev/umidi2.0"
-#MIDI="/dev/umidi2.0 /dev/umidi1.0"
 export NZDIR=$DIR
+
+for i in /dev/umidi[0-9]
+do
+	MIDI="$i "
+done
 
 #
 # Set embbeded library path
