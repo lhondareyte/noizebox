@@ -60,7 +60,7 @@ if [ -x ${BIN} ] ; then
 		exec ${BIN} ${MIDI} < ${TTY} > ${TTY} 2>/dev/null
 	fi
 else
-	printf "ECannot load ${APP}\nPlease, call Support\n" > ${TTY}
+	printf "\033ECannot load ${APP}\nPlease, call Support\n" > ${TTY}
 	exit 1
 fi
 exit 0
