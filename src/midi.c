@@ -225,9 +225,9 @@ int *NZ_midi_read( char *dev )
 	while (( fp=fopen(dev,"r")) == NULL ) 
 	{
 #ifdef __NOIZEBOX_DEBUG__
-		fprintf(stderr,"Warning: %s: %s (will trying later)\n",dev,strerror(errno));
+		fprintf(stderr,"Warning: %s: %s\n",dev,strerror(errno));
 #endif
-		sleep(5);
+		return(0);
 	}
 #ifdef __NOIZEBOX_DEBUG__
 	fprintf(stderr,"Opening %s OK\n", dev);
