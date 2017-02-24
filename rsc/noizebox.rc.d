@@ -116,7 +116,7 @@ noizebox_stop()
 	# Effacement du curseur
 	for i in 1 2
 	do
-		printf "c" > $nztty
+		printf "\033c" > $nztty
 	done
 	sleep 2
 	sync;sync;sync
