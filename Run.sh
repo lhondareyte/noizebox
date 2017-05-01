@@ -15,6 +15,7 @@ PLATFORM="${HOST}/${ARCH}"
 BIN="${DIR}/Contents/${PLATFORM}/${APP}"
 LOG=/tmp/nz.log
 export NZDIR=$DIR
+> $LOG
 
 for i in /dev/umidi[0-9]
 do
