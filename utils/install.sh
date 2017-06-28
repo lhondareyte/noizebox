@@ -3,7 +3,9 @@
 #  $Id$
 # 
 
-Done() { echo " done." }
+Done() { 
+	echo " done." 
+}
 
 OSNAME=$(uname -s)
 ARCH=$(uname -m)
@@ -59,3 +61,4 @@ Done
 printf "Creating signature file ..."
 md5 noizebox.pkg > noizebox.md5
 Done
+
