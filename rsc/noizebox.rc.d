@@ -49,11 +49,6 @@ nztty="/dev/cuaU0"
 nz=$(basename $nzdir)
 PATH=$nzdir:$PATH
 
-getPID ()
-{
-	ps ax | awk '/'"${nz}"'/ && !/awk/ && /'"${name}"'/ {print $1}'
-}
-
 umount_cfg ()
 {
 	m=$(df /cfg | awk '!/Filesystem/ { print $6 }')
@@ -76,7 +71,7 @@ mkramdisk ()
 		if [ $? -eq 0 ] ; then
 			mv "/Ramdisk/SF2/${f}.$$" "/Ramdisk/SF2/${f}"
 		else
-       			rm "/Ramdisk/SF2/${f}.$$"
+       			rm -f "/Ramdisk/SF2/${f}.$$"
 		fi
 	done	
 	cd -
@@ -105,7 +100,7 @@ noizebox_start()
 
 noizebox_stop()
 {
-	rc_pid=$(getPID)
+	rc_pid=$(pgrep ${name})
 	if [ -z "$rc_pid" ] ; then
 		_run_rc_notrunning
 		return 1
