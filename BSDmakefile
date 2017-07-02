@@ -1,0 +1,2 @@
+MAKE=gmake
+include Makefile
