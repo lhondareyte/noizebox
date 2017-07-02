@@ -8,6 +8,7 @@
 #include <signal.h>
 #include <pthread.h>
 #include <sys/time.h>
+#include <sys/types.h>
 #include <sys/resource.h>
 #include <unistd.h>
 #include "noizebox.h"
@@ -60,13 +61,7 @@ int main(int argc, char *argv[])
 		printf("Error: You must specify a OSS midi device.\n");
 		exit (1);
 	}
-
-	shutdown_action.sa_handler = &NZ_shutdown;
-	shutdown_action.sa_flags = 0;
-	sigemptyset(&shutdown_action.sa_mask);
-	sigaction(SIGTERM, &shutdown_action,(struct sigaction *)0);
-	//sigaction(SIGQUIT, &shutdown_action,(struct sigaction *)0);
-
+	signal(SIGINT, NZ_shutdown);
 #else
 
 int main(void)
