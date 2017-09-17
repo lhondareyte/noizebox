@@ -3,8 +3,7 @@
 #  $Id$
 # 
 
-Done() { 
-	echo " done." 
+Done() { echo " done." 
 }
 
 OSNAME=$(uname -s)
@@ -43,17 +42,23 @@ ldd ${CONTENT}/noizebox | awk '!/not found/ && /=>/ {print $3}' | \
 	 done
 Done
 printf "Installing Application libraries ..."
-install -m 755 -o root -g wheel  ./fluidsynth/src/.libs/libfluid*so.* ${FRAMEWORK}/
-ldd ./fluidsynth/src/.libs/libfluidsynth*so.* | awk '!/not found/ && /=>/ {print $3}' | \
-	while read l 
+for lib in ./fluidsynth/build/src/libfluidsynth.so*
+do
+	if [ -L $lib ] ; then
+		l_dest=$(ls -l $lib | awk '{print $NF}')
+		cd $FRAMEWORK
+		ln -s $l_dest $(basename $lib)
+		cd -
+	elif [ -f $lib ] ; then
+		install -m 755 -o root -g wheel $lib ${FRAMEWORK}/
+	fi
+done
+ldd ./fluidsynth/build/src/libfluidsynth*so.* | awk '!/not found/ && /=>/ {print $3}' | \
+	while read lib 
 	do 
-		#install -m 755 -o root -g wheel  $l ${FRAMEWORK}/ 
-		cp  $l ${FRAMEWORK}/ 
+		cp  $lib ${FRAMEWORK}/ 
 	done
 Done
-cd  ${FRAMEWORK}
-ln -s libfluidsynth*so.* libfluidsynth.so
-cd -
 chown -R root:wheel ${APP}
 printf "Creating tar ball ..."
 tar czf noizebox.pkg ${APP}
@@ -61,4 +66,3 @@ Done
 printf "Creating signature file ..."
 md5 noizebox.pkg > noizebox.md5
 Done
-
