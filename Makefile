@@ -20,4 +20,8 @@ clean:
 fluidsynth:
 	git clone https://github.com/FluidSynth/fluidsynth.git
 	mkdir fluidsynth/build
-	cd fluidsynth/build && cmake -DCMAKE_C_COMPILER=$(GCC) .. && gmake
+	cd fluidsynth/build && cmake -DCMAKE_C_COMPILER=$(GCC)  \
+                                     -Denable-ipv6=off .. \
+                                     -Denable-readline=off .. \
+                                     -Denable-dbus=off .. \
+                                     && gmake
