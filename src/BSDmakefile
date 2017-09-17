@@ -1,11 +1,11 @@
 CC    = cc
 PROG=	noizebox
 SRCS!=	ls *.c
-CFLAGS+= -I ../fluidsynth/include
+CFLAGS+= -I ../fluidsynth/include -I ../fluidsynth/build/include
 CFLAGS+=	-I/usr/local/include -Wall -D __WITH_SQLITE__ -I .
 CFLAGS+=	-D __NOIZEBOX_DEBUG__
 LDFLAGS+=	-lfluidsynth -L/usr/local/lib -lncurses -lsqlite3 -pthread
-LDFLAGS+= 	-L ../fluidsynth/src/.libs
+LDFLAGS+= 	-L ../fluidsynth/build/src
 
 OSNAME        != uname
 ARCH          != uname -m
