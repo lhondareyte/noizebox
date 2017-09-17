@@ -3,7 +3,7 @@
 #
 ID=$(id -u)
 if [ $ID -ne 0 ] ; then
-	echo "You must be root to run this scipt."
+	echo "You must be root to run this script."
 	exit 1
 fi
 export DIR="/home/luc/noizebox/Noizebox"
@@ -17,7 +17,7 @@ LOG=/tmp/nz.log
 export NZDIR=$DIR
 > $LOG
 
-for i in /dev/umidi[0-9]
+for i in /dev/umidi[0-9]*
 do
 	MIDI="$i "
 done
@@ -43,6 +43,7 @@ else
 	rc=42
 fi
 if [ $rc -ne 0 ] ; then
-	cat $LOG
+	cat $LOG 
 fi
+rm -f $LOG
 exit $rc
