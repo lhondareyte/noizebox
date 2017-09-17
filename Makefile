@@ -16,6 +16,7 @@ clean:
 		(cd $$dir; $(MAKE) clean ; cd ..); \
 	done
 	rm -rf noizebox.pkg noizebox.md5 Noizebox/*
+	rm -rf fluidsynth
 
 fluidsynth:
 	git clone https://github.com/FluidSynth/fluidsynth.git
