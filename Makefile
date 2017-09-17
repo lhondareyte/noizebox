@@ -2,9 +2,10 @@
 #  $Id$
 # 
 MAKE=gmake
-MODULES = fluidsynth src rsc
+GCC=/usr/local/bin/gcc
+MODULES = src rsc
 package: all
-all:
+all: fluidsynth
 	for dir in $(MODULES); do \
 		(cd $$dir; $(MAKE) ; cd ..); \
 	done
@@ -15,3 +16,8 @@ clean:
 		(cd $$dir; $(MAKE) clean ; cd ..); \
 	done
 	rm -rf noizebox.pkg noizebox.md5 Noizebox/*
+
+fluidsynth:
+	git clone https://github.com/FluidSynth/fluidsynth.git
+	mkdir fluidsynth/build
+	cd fluidsynth/build && cmake -DCMAKE_C_COMPILER=$(GCC) .. && gmake
