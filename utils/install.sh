@@ -18,12 +18,14 @@ if [ -e ${FRAMEWORK}/*so ] ; then
 fi
 rm -rf ${APP}
 mkdir -p ${APP}/tmp
-install -m 755 -o root -g wheel ./rsc/noizebox.rc.d ${APP}/tmp
 printf "Creating application tree ..."
 mkdir -p ${RESOURCE}/SF2
 mkdir -p ${CONTENT}
 mkdir -p ${FRAMEWORK}
 Done
+install -m 755 -o root -g wheel ./rsc/noizebox.rc.d ${APP}/tmp
+install -m 755 -o root -g wheel ./rsc/noizebox.rc.d ${APP}/tmp
+install -m 755 -o root -g wheel ./rsc/mksf2db.sh ${RESOURCE}
 if [ -d sf2 ] ; then
 	printf "Installing SF2 files ..."
 	cp sf2/*.sf2 ${RESOURCE}/SF2
