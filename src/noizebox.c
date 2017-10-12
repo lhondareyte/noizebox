@@ -62,6 +62,7 @@ int main(int argc, char *argv[])
 		exit (1);
 	}
 	signal(SIGINT, NZ_shutdown);
+	signal(SIGTERM, NZ_shutdown);
 #else
 
 int main(void)
