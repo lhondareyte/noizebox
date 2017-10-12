@@ -345,9 +345,15 @@ void NZ_info_menu(void)
 		key=getch();
 		switch (key) 
 		{
-			case '1': case '2': case '3': case '4':
-			nodelay(screen,FALSE);
-			return;
+			case '1': case '2': case '3': 
+				nodelay(screen,FALSE);
+				return;
+				break;
+			case '4':
+				nodelay(screen,FALSE);
+				key='q';
+				return ;
+				break;
 		}
 	}
 }
@@ -383,6 +389,11 @@ int *NZ_main_menu (void)
 	 */
 	while (1)
 	{
+		if ( key == 'q' ) 
+		{
+			NZ_terminate_menu();
+			return 0;
+		}
 		key=getch();
 		switch (key)
 		{
