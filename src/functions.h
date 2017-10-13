@@ -11,7 +11,7 @@
  */
 int NZ_main_menu(void);
 void NZ_close_mixer(void);
-int  NZ_terminate_menu(int);
+void NZ_shutdown(int);
 void NZ_set_breath_curve(void);
 void NZ_set_transpose(void);
 void NZ_set_midi_mode(void);

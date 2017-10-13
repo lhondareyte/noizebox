@@ -5,8 +5,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <signal.h>
-#include <pthread.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/resource.h>
@@ -22,19 +20,6 @@ struct sigaction shutdown_action;
 #ifndef __FLUIDSYNTH_MIDI_DRIVER__
 
 extern void *NZ_midi_read();
-
-void NZ_shutdown(int rc)
-{
-	NZ_terminate_menu(rc);
-	NZ_save_synth_config();
-	NZ_delete_synth();
-#ifndef __FLUIDSYNTH_MIDI_DRIVER__
-	pthread_kill(0,9);
-#endif
-	NZ_close_mixer();
-	exit (rc);
-
-}
 
 int main(int argc, char *argv[])
 {
