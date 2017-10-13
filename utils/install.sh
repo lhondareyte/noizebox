@@ -3,7 +3,16 @@
 #  $Id$
 # 
 
-Done() { echo " done." 
+Exec () { 
+	printf "$1 ... "
+	shift 
+	$* 
+	if [ $? -ne 0 ] ; then
+		echo "failed!"
+		exit 1
+	else
+		echo "done."
+	fi
 }
 
 OSNAME=$(uname -s)
@@ -18,32 +27,18 @@ if [ -e ${FRAMEWORK}/*so ] ; then
 fi
 rm -rf ${APP}
 mkdir -p ${APP}/tmp
-printf "Creating application tree ..."
-mkdir -p ${RESOURCE}/SF2
-mkdir -p ${CONTENT}
-mkdir -p ${FRAMEWORK}
-Done
-install -m 755 -o root -g wheel ./rsc/noizebox.rc.d ${APP}/tmp
-install -m 755 -o root -g wheel ./rsc/noizebox.rc.d ${APP}/tmp
-install -m 755 -o root -g wheel ./rsc/mksf2db.sh ${RESOURCE}
-if [ -d sf2 ] ; then
-	printf "Installing SF2 files ..."
-	cp sf2/*.sf2 ${RESOURCE}/SF2
-	cp sf2/soundfont.conf  ${RESOURCE}
-	Done
-fi
-printf "Installing Executable ..."
-install -m 755 rsc/noizebox.${OSNAME} ${APP}/noizebox
-install -m 755 src/noizebox ${CONTENT}
-Done
-printf "Installing System libraries ..."
+Exec "Creating application tree" mkdir -p ${RESOURCE} ${CONTENT} ${FRAMEWORK}
+Exec "Installing noizebox.rc.d" install -m 755 -o root -g wheel ./rsc/noizebox.rc.d ${APP}/tmp
+Exec "Installing mksf2db.sh" install -m 755 -o root -g wheel ./rsc/mksf2db.sh ${RESOURCE}
+
+Exec "Installing Executable" install -m 755 rsc/noizebox.${OSNAME} ${APP}/noizebox
+Exec "Installing Executable" install -m 755 src/noizebox ${CONTENT}
+
 ldd ${CONTENT}/noizebox | awk '!/not found/ && /=>/ {print $3}' | \
-	 while read l 
-	 do 
-		cp $l ${FRAMEWORK}/ 
-	 done
-Done
-printf "Installing Application libraries ..."
+while read l 
+	do 
+		Exec "Installing $l" cp $l ${FRAMEWORK}/ 
+	done
 for lib in ./fluidsynth/build/src/libfluidsynth.so*
 do
 	if [ -L $lib ] ; then
@@ -52,19 +47,12 @@ do
 		ln -s $l_dest $(basename $lib)
 		cd -
 	elif [ -f $lib ] ; then
-		install -m 755 -o root -g wheel $lib ${FRAMEWORK}/
+		Exec "Installing $lib" install -m 755 -o root -g wheel $lib ${FRAMEWORK}/
 	fi
 done
 ldd ./fluidsynth/build/src/libfluidsynth*so.* | awk '!/not found/ && /=>/ {print $3}' | \
-	while read lib 
-	do 
-		cp  $lib ${FRAMEWORK}/ 
-	done
-Done
-chown -R root:wheel ${APP}
-printf "Creating tar ball ..."
-tar czf noizebox.pkg ${APP}
-Done
-printf "Creating signature file ..."
-md5 noizebox.pkg > noizebox.md5
-Done
+while read lib 
+do 
+	Exec "Installing $lib" cp  $lib ${FRAMEWORK}/ 
+done
+Exec "Applying owner" chown -R root:wheel ${APP}
