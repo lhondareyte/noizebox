@@ -32,3 +32,6 @@ package:
 	touch Noizebox/Resources/soundfont.conf
 	find Noizebox -type f > port/pkg-plist
 	cd port && make package
+
+clean-port:
+	cd port && make clean
