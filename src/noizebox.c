@@ -23,11 +23,10 @@ struct sigaction shutdown_action;
 
 extern void *NZ_midi_read();
 
-void  NZ_shutdown(int signum)
+void NZ_shutdown(int rc)
 {
-	int rc;
-	NZ_terminate_menu();
-	rc=NZ_save_synth_config();
+	NZ_terminate_menu(rc);
+	NZ_save_synth_config();
 	NZ_delete_synth();
 #ifndef __FLUIDSYNTH_MIDI_DRIVER__
 	pthread_kill(0,9);
@@ -92,7 +91,5 @@ int main(void)
 	}
 #endif
 	NZ_create_synth();
-	NZ_main_menu();
-	NZ_shutdown(0);
-	exit (0);
+	NZ_shutdown(NZ_main_menu());
 }
