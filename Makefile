@@ -9,14 +9,13 @@ all: fluidsynth
 	for dir in $(MODULES); do \
 		(cd $$dir; $(MAKE) ; cd ..); \
 	done
-package:
-	@utils/install.sh
 clean:
 	for dir in $(MODULES); do \
 		(cd $$dir; $(MAKE) clean ; cd ..); \
 	done
 	rm -rf noizebox.pkg noizebox.md5 Noizebox/*
 	rm -rf fluidsynth
+	cd port && make clean
 
 fluidsynth:
 	git clone https://github.com/FluidSynth/fluidsynth.git
@@ -26,3 +25,7 @@ fluidsynth:
                                      -Denable-readline=off .. \
                                      -Denable-dbus=off .. \
                                      && gmake
+package:
+	@utils/install.sh
+	find Noizebox -type f > port/pkg-plist
+	cd port && make package
