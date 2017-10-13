@@ -24,12 +24,13 @@ void NZ_refresh(void)
 	refresh();
 }
 
-void NZ_terminate_menu(void)
+int NZ_terminate_menu(int rc)
 {
 	clear();
-        mvprintw(0,0,"  Shutdown in progress\n      Please wait...  ");
+        if ( rc == 0 ) mvprintw(0,0,"  Shutdown in progress\n      Please wait...  ");
         NZ_refresh();
         endwin();
+	return rc;
 }
 
 void NZ_refresh_volume(void)
@@ -351,7 +352,7 @@ void NZ_info_menu(void)
 				break;
 			case '4':
 				nodelay(screen,FALSE);
-				key='q';
+				key='Q';
 				return ;
 				break;
 		}
@@ -360,7 +361,7 @@ void NZ_info_menu(void)
 #endif
 
 
-int *NZ_main_menu (void)
+int NZ_main_menu (void)
 {
 	/* Init curses */
 	screen=initscr();
@@ -389,10 +390,9 @@ int *NZ_main_menu (void)
 	 */
 	while (1)
 	{
-		if ( key == 'q' ) 
+		if ( key == 'Q' ) 
 		{
-			NZ_terminate_menu();
-			return 0;
+			return (NZ_terminate_menu(42));
 		}
 		key=getch();
 		switch (key)
@@ -425,8 +425,7 @@ int *NZ_main_menu (void)
 				NZ_refresh_font_name();
 				break;
 			case 'q':
-				NZ_terminate_menu();
-				return 0;
+				return (NZ_terminate_menu(0));
 				break;
 			default:
 				NZ_control_volume(key);

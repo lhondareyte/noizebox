@@ -42,7 +42,7 @@ else
 	echo "Fatal error: ${BIN} not found!"
 	rc=42
 fi
-if [ $rc -ne 0 ] ; then
+if [ "$rc" -ne 0 ]  && [ "$rc" -ne 42 ]; then
 	cat $LOG 
 fi
 rm -f $LOG
