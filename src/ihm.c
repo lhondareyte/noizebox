@@ -24,13 +24,20 @@ void NZ_refresh(void)
 	refresh();
 }
 
-int NZ_terminate_menu(int rc)
+void NZ_shutdown(int rc)
 {
-	clear();
+        clear();
         if ( rc == 0 ) mvprintw(0,0,"  Shutdown in progress\n      Please wait...  ");
         NZ_refresh();
         endwin();
-	return rc;
+        NZ_save_synth_config();
+        NZ_delete_synth();
+#ifndef __FLUIDSYNTH_MIDI_DRIVER__
+        pthread_kill(0,9);
+#endif
+        NZ_close_mixer();
+        exit (rc);
+
 }
 
 void NZ_refresh_volume(void)
@@ -392,7 +399,7 @@ int NZ_main_menu (void)
 	{
 		if ( key == 'Q' ) 
 		{
-			return (NZ_terminate_menu(42));
+			NZ_shutdown(42);
 		}
 		key=getch();
 		switch (key)
@@ -425,7 +432,7 @@ int NZ_main_menu (void)
 				NZ_refresh_font_name();
 				break;
 			case 'q':
-				return (NZ_terminate_menu(0));
+				NZ_shutdown(0);
 				break;
 			default:
 				NZ_control_volume(key);
