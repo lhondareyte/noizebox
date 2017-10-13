@@ -24,8 +24,11 @@ fluidsynth:
                                      -Denable-ipv6=off .. \
                                      -Denable-readline=off .. \
                                      -Denable-dbus=off .. \
+                                     -Denable-libsndfile=off .. \
+                                     -Denable-aufile=off .. \
                                      && gmake
 package:
 	@utils/install.sh
+	touch Noizebox/Resources/soundfont.conf
 	find Noizebox -type f > port/pkg-plist
 	cd port && make package
