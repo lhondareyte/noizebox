@@ -11,7 +11,7 @@ if [ $? -ne 0 ] ; then
 fi
 
 Exec() {
-	printf "$1 ..."
+	printf "$1... "
 	shift ; 
 	eval $* >> $LOG 2>&1
 	if [ $? -ne 0 ] ; then
