@@ -29,6 +29,7 @@ rm -rf ${APP}
 mkdir -p ${APP}/tmp
 Exec "Creating application tree" mkdir -p ${RESOURCE} ${CONTENT} ${FRAMEWORK}
 Exec "Installing mksf2db.sh" install -m 755 -o root -g wheel ./rsc/mksf2db.sh ${RESOURCE}
+Exec "Installing configuration file" install -m 644 -o root -g wheel ./rsc/noizebox.conf ${RESOURCE}
 
 Exec "Installing Launch Script" install -m 755 rsc/noizebox.sh ${APP}/noizebox
 Exec "Installing Executable" install -m 755 src/noizebox ${CONTENT}

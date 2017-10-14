@@ -34,10 +34,11 @@ app=$(basename $0)
 osname=$(uname -s)
 arch=$(uname -p)
 platform="${osname}/${arch}"
-nzdir="/Applications/Noizebox"
-nzlib="/Library/Noizebox"
-nz=$(basename $nzdir)
-PATH=$nzdir:$PATH
+appdir="/Applications/$(echo $app | awk '{print toupper(substr($0,0,1))tolower(substr($0,2))}')"
+appdir="/Library/$(echo $app | awk '{print toupper(substr($0,0,1))tolower(substr($0,2))}')"
+export PATH=$appdir:$PATH
+timeout=30
+ramdisk=YES
 
 rc=1	
 
@@ -48,19 +49,22 @@ quiet () {
 	return $?
 }
 
-noizebox_saveconfig () {
+save_config () {
 	if [ -d /cfg ] ; then
 		sync;sync;sync
 		quiet mount /cfg
 		if [ $? -eq 0 ] ; then
-			quiet cp /etc/noizebox.conf /cfg
+			quiet cp /etc/${app}.conf /cfg
 			sync;sync;sync
 			quiet umount /cfg
 		fi
 	fi
 }
 
-noizebow_make_ramdisk () {
+make_ramdisk () {
+	if [ "$RAMDISK" != "YES" ] || [ "$RAMDISK" != "yes" ] ;  then
+		return 0
+	fi
 	if [ -f /etc/ramdisk.conf ] ; then
 		. /etc/ramdisk.conf
 	else
@@ -71,7 +75,7 @@ noizebow_make_ramdisk () {
 	quiet newfs -U md${RAMDISK_LUN} > /dev/null 2>&1
 	quiet mount -t ufs /dev/md${RAMDISK_LUN} /Ramdisk
 	mkdir -p /Ramdisk/SF2
-	for f in "${nzlib}/Resources/SF2/*.sf2"
+	for f in "${applib}/Resources/SF2/*.sf2"
 	do
        		quiet cp "$f" "/Ramdisk/SF2/${f}.$$"
 		if [ $? -eq 0 ] ; then
@@ -82,7 +86,7 @@ noizebow_make_ramdisk () {
 	done	
 }
 
-noizebox_delete_ramdisk () {
+delete_ramdisk () {
 	i=1
 	while :
 	do
@@ -98,14 +102,17 @@ noizebox_delete_ramdisk () {
 }
 
 
-noizebox_start() {
+app_start () {
 	if [ ! -z "$_pid" ] ; then
 		# App is already running
 		return 1
 	fi
-	noizebox_make_ramdisk &
+	if [ ! -f /etc/${app}.conf ] ; then
+		quiet install -m 644 ${appdir}/Resources/${app}.conf /etc
+	fi
+	make_ramdisk &
 
-	export LD_LIBRARY_PATH=$xx/Framworks/${platform}
+	export LD_LIBRARY_PATH=${appdir}/Frameworks/${platform}
 	if [ -x /usr/sbin/trprio ] ; then
 		/usr/sbin/rtprio 0 $app_bin $midi
 	else
@@ -113,24 +120,23 @@ noizebox_start() {
 	fi
 }
 
-noizebox_stop()
-{
+app_stop () {
 	if [ -z "$_pid" ] ; then
 		return 0
 	fi
 	kill $_pid 
 	sleep 1
-	noizebox_saveconfig
-	noizebox_delete_ramdisk
+	save_config
+	delete_ramdisk
 }
 
 case $1 in
 	'start')
-		noizebox_start
+		app_start
 		rc=$?
 		;;
 	'stop')
-		noizebox_stop 
+		app_stop 
 		rc=$?
 		;;
 	'status')
