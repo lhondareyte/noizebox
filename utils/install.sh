@@ -28,10 +28,9 @@ fi
 rm -rf ${APP}
 mkdir -p ${APP}/tmp
 Exec "Creating application tree" mkdir -p ${RESOURCE} ${CONTENT} ${FRAMEWORK}
-Exec "Installing noizebox.rc.d" install -m 755 -o root -g wheel ./rsc/noizebox.rc.d ${APP}/tmp
 Exec "Installing mksf2db.sh" install -m 755 -o root -g wheel ./rsc/mksf2db.sh ${RESOURCE}
 
-Exec "Installing Executable" install -m 755 rsc/noizebox.${OSNAME} ${APP}/noizebox
+Exec "Installing Launch Script" install -m 755 rsc/noizebox.sh ${APP}/noizebox
 Exec "Installing Executable" install -m 755 src/noizebox ${CONTENT}
 
 ldd ${CONTENT}/noizebox | awk '!/not found/ && /=>/ {print $3}' | \
