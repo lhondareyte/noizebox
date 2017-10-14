@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	noizebox
-PORTVERSION!=	git describe --tags
+#PORTVERSION!=	git describe --tags
+PORTVERSION=	1.5
 CATEGORIES=	audio
 
 MAINTAINER=	lhondareyte@laposte.net
@@ -29,5 +30,6 @@ build:
 do-install:
 	@${MKDIR} ${STAGEDIR}${PREFIX}
 	@${COPYTREE_BIN} ../Noizebox  ${STAGEDIR}${PREFIX}/${PREFIX}
+	@chmod 644  ${STAGEDIR}${PREFIX}/Noizebox/Resources/soundfont.conf
 
 .include <bsd.port.mk>
