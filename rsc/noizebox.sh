@@ -111,12 +111,11 @@ app_start () {
 		quiet install -m 644 ${appdir}/Resources/${app}.conf /etc
 	fi
 	make_ramdisk &
-
 	export LD_LIBRARY_PATH=${appdir}/Frameworks/${platform}
-	if [ -x /usr/sbin/trprio ] ; then
-		/usr/sbin/rtprio 0 $app_bin $midi
+	if [ -x /usr/sbin/rtprio ] ; then
+		/usr/sbin/rtprio 0 $app_bin $(ls /dev/umidi* 2> /dev/null)
 	else
-		$app_bin $midi
+		$app_bin $(ls /dev/umidi* 2> /dev/null)
 	fi
 }
 
