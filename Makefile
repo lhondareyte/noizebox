@@ -13,13 +13,15 @@ clean:
 	for dir in $(MODULES); do \
 		(cd $$dir; $(MAKE) clean ; cd ..); \
 	done
-	rm -rf noizebox.pkg noizebox.md5 Noizebox/*
-	rm -rf fluidsynth
-	cd port && make clean
+	@rm -rf noizebox.pkg noizebox.md5 Noizebox/*
+	@rm -rf fluidsynth
+	@cd port && make clean
 
 fluidsynth:
-	git clone https://github.com/FluidSynth/fluidsynth.git
-	mkdir fluidsynth/build
+	@printf "Fetching fluidsynth ..."
+	@git clone https://github.com/FluidSynth/fluidsynth.git
+	@echo "done."
+	@mkdir fluidsynth/build
 	cd fluidsynth/build && cmake -DCMAKE_C_COMPILER=$(GCC)  \
                                      -Denable-ipv6=off .. \
                                      -Denable-readline=off .. \
@@ -29,9 +31,9 @@ fluidsynth:
                                      && gmake
 package:
 	@utils/install.sh
-	touch Noizebox/Resources/soundfont.conf
-	find Noizebox -type f > port/pkg-plist
-	cd port && make package
+	@touch Noizebox/Resources/soundfont.conf
+	@find Noizebox -type f > port/pkg-plist
+	@cd port && make package
 
 clean-port:
-	cd port && make clean
+	@cd port && make clean
