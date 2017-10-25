@@ -37,7 +37,7 @@ Exec "Installing Executable" install -m 755 src/noizebox ${CONTENT}
 ldd ${CONTENT}/noizebox | awk '!/not found/ && /=>/ {print $3}' | \
 while read l 
 	do 
-		Exec "Installing $l" cp $l ${FRAMEWORK}/ 
+		Exec "Installing $(basename $l)" cp $l ${FRAMEWORK}/ 
 	done
 for lib in ./fluidsynth/build/src/libfluidsynth.so*
 do
@@ -47,12 +47,12 @@ do
 		ln -s $l_dest $(basename $lib)
 		cd -
 	elif [ -f $lib ] ; then
-		Exec "Installing $lib" install -m 755 -o root -g wheel $lib ${FRAMEWORK}/
+		Exec "Installing $(basename $lib)" install -m 755 -o root -g wheel $lib ${FRAMEWORK}/
 	fi
 done
 ldd ./fluidsynth/build/src/libfluidsynth*so.* | awk '!/not found/ && /=>/ {print $3}' | \
 while read lib 
 do 
-	Exec "Installing $lib" cp  $lib ${FRAMEWORK}/ 
+	Exec "Installing $(basename $lib)" cp  $lib ${FRAMEWORK}/ 
 done
 Exec "Applying owner" chown -R root:wheel ${APP}
