@@ -14,7 +14,7 @@ LEGAL_PACKAGE=	yes
 LICENSE=	BSD2CLAUSE
 NO_LICENSES_INSTALL=yes
 
-#RUN_DEPENDS=	sysutils/spectro-450
+RUN_DEPENDS=	sysutils/spectro450
 
 PREFIX=		/Applications
 USES=		pkgconfig
