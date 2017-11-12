@@ -22,7 +22,7 @@ fluidsynth:
 	@git clone https://github.com/FluidSynth/fluidsynth.git
 	@echo "done."
 	@mkdir fluidsynth/build
-	cd fluidsynth/build && cmake -DCMAKE_C_COMPILER=$(GCC)  \
+	@cd fluidsynth/build && cmake -DCMAKE_C_COMPILER=$(GCC)  \
                                      -Denable-ipv6=off .. \
                                      -Denable-readline=off .. \
                                      -Denable-dbus=off .. \
