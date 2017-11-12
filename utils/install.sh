@@ -35,10 +35,12 @@ Exec "Installing Launch Script" install -m 755 rsc/noizebox.sh ${APP}/noizebox
 Exec "Installing Executable" install -m 755 src/noizebox ${CONTENT}
 
 ldd ${CONTENT}/noizebox | awk '!/not found/ && /=>/ {print $3}' | \
-while read l 
-	do 
-		Exec "Installing $(basename $l)" cp $l ${FRAMEWORK}/ 
-	done
+while read lib 
+do 
+	if [ ! -f ${FRAMEWORK}/$(basename $lib) ] ; then
+		Exec "Installing $(basename $lib)" cp $lib ${FRAMEWORK}/ 
+	fi
+done
 for lib in ./fluidsynth/build/src/libfluidsynth.so*
 do
 	if [ -L $lib ] ; then
@@ -47,12 +49,16 @@ do
 		ln -s $l_dest $(basename $lib)
 		cd -
 	elif [ -f $lib ] ; then
-		Exec "Installing $(basename $lib)" install -m 755 -o root -g wheel $lib ${FRAMEWORK}/
+		if [ ! -f ${FRAMEWORK}/$(basename $lib) ] ; then
+			Exec "Installing $(basename $lib)" install -m 755 -o root -g wheel $lib ${FRAMEWORK}/
+		fi
 	fi
 done
 ldd ./fluidsynth/build/src/libfluidsynth*so.* | awk '!/not found/ && /=>/ {print $3}' | \
 while read lib 
 do 
-	Exec "Installing $(basename $lib)" cp  $lib ${FRAMEWORK}/ 
+	if [ ! -f ${FRAMEWORK}/$(basename $lib) ] ; then
+		Exec "Installing $(basename $lib)" cp  $lib ${FRAMEWORK}/ 
+	fi
 done
 Exec "Applying owner" chown -R root:wheel ${APP}
