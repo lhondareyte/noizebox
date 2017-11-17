@@ -26,7 +26,6 @@ if [ -e ${FRAMEWORK}/*so ] ; then
 	chflags noschg ${FRAMEWORK}/*
 fi
 rm -rf ${APP}
-mkdir -p ${APP}/tmp
 Exec "Creating application tree" mkdir -p ${RESOURCE} ${CONTENT} ${FRAMEWORK}
 Exec "Installing mksf2db.sh" install -m 755 -o root -g wheel ./rsc/mksf2db.sh ${RESOURCE}
 Exec "Installing configuration file" install -m 644 -o root -g wheel ./rsc/noizebox.conf ${RESOURCE}
