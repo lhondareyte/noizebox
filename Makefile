@@ -5,7 +5,7 @@ MAKE=gmake
 GCC=/usr/local/bin/gcc
 MODULES = src rsc
 package: all
-all: fluidsynth
+all: modules
 	for dir in $(MODULES); do \
 		(cd $$dir; $(MAKE) ; cd ..); \
 	done
@@ -17,9 +17,10 @@ clean:
 	@rm -rf fluidsynth
 	@cd port && make clean
 
-fluidsynth:
-	@printf "Fetching fluidsynth ..."
-	@git clone https://github.com/FluidSynth/fluidsynth.git
+modules:
+	@printf "Updating modules ..."
+	@git submodule init
+	@git submodule update
 	@echo "done."
 	@mkdir fluidsynth/build
 	@cd fluidsynth/build && cmake -DCMAKE_C_COMPILER=$(GCC)  \
