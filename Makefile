@@ -22,7 +22,7 @@ modules:
 	@git submodule init
 	@git submodule update
 	@echo "done."
-	@mkdir fluidsynth/build
+	@mkdir -p fluidsynth/build
 	@cd fluidsynth/build && cmake -DCMAKE_C_COMPILER=$(GCC)  \
                                      -Denable-ipv6=off .. \
                                      -Denable-readline=off .. \
