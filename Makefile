@@ -4,7 +4,7 @@
 MAKE	= gmake
 GCC 	= /usr/local/bin/gcc
 MODULES = src rsc
-package: all
+
 all: modules
 	for dir in $(MODULES); do \
 		(cd $$dir; $(MAKE) ; cd ..); \
@@ -30,7 +30,7 @@ modules:
                                      -Denable-libsndfile=off .. \
                                      -Denable-aufile=off .. \
                                      && gmake
-package:
+package: all
 	@utils/install.sh
 	@touch Noizebox/Resources/soundfont.conf
 	@find Noizebox -type f > port/pkg-plist
