@@ -1,8 +1,8 @@
 #
 #  $Id$
 # 
-MAKE=gmake
-GCC=/usr/local/bin/gcc
+MAKE	= gmake
+GCC 	= /usr/local/bin/gcc
 MODULES = src rsc
 package: all
 all: modules
