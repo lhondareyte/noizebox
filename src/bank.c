@@ -52,7 +52,7 @@ void NZ_load_font(int font)
 	/* Reset du tuning pour tous les canaux */
 	for ( i=0; i<= 15; i++ )
 	{
-		fluid_synth_reset_tuning(synth, i);
+		fluid_synth_deactivate_tuning(synth, i, FALSE);
 	}
 
 	if ( current_font_id != 0 ) 
@@ -103,7 +103,7 @@ void NZ_load_font(int font)
 	/* Actication du tuning pour tous les canaux */
 	for ( i=0; i<= 15; i++)
 	{
-		fluid_synth_select_tuning(synth, i, 1, 1);
+		fluid_synth_activate_tuning(synth, i, 1, 1, FALSE);
 	}
 	/* Retablissement du tuning courant */
 	NZ_synth_detune(NZ_pitch_detune);
