@@ -4,12 +4,6 @@ FONTSDIR="/Library/Noizebox/Resources/SF2/"
 FONTS="${FONTSDIR}/*.lst"
 SF2DB="/Library/Noizebox/Resources/soundfont.conf"
 
-ls $FONTS > /dev/null 2>&1
-if [ $? -ne 0 ] ; then
-	echo "No SF2 to register."
-	exit 0
-fi
-
 Exec() {
 	printf "$1... "
 	shift ; 
@@ -21,8 +15,24 @@ Exec() {
 	echo "done."
 }
 
+CreateSF2DB() {
+	DB=$1
+	sqlite3 $DB "create table bank (id smallint, name varchar(12), file varchar(50) , key_offset smallint, pitch_offset smallint);"
+}
+
+if [ "$1" == "--empty" ] ; then
+	Exec "Creating empty database" CreateSF2DB ./rsc/soundfont.conf
+	exit 0
+fi
+
+ls $FONTS > /dev/null 2>&1
+if [ $? -ne 0 ] ; then
+	echo "No SF2 to register."
+	exit 0
+fi
+
 Exec "Deleting $SF2DB" rm -f $SF2DB
-Exec "Creating $SF2DB" sqlite3 $SF2DB \"create table bank \(id smallint, name varchar\(12\), file varchar\(50\) , key_offset smallint, pitch_offset smallint\)\;\"
+Exec "Creating $SF2DB" CreateSF2DB $SF2DB
 
 i=1
 for FONT in $FONTS
