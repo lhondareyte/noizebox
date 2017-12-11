@@ -30,9 +30,14 @@ modules:
                                      -Denable-libsndfile=off .. \
                                      -Denable-aufile=off .. \
                                      && gmake
-package: all
-	@utils/install.sh
+
+install: all
+	@rm -f ./rsc/soundfont.conf
+	@rsc/mksf2db.sh --empty
+	@utils/install.sh Noizebox ./fluidsynth/build/src/libfluidsynth*so.*
 	@touch Noizebox/Resources/soundfont.conf
+
+package: install
 	@find Noizebox -type f > port/pkg-plist
 	@cd port && make package
 
