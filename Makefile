@@ -2,7 +2,6 @@
 #  $Id$
 # 
 MAKE	= gmake
-GCC 	= /usr/local/bin/gcc
 MODULES = src rsc
 
 all: modules
@@ -18,24 +17,24 @@ clean:
 	@cd port && make clean
 
 modules:
+	@echo $(CC)
 	@printf "Updating modules ..."
 	@git submodule init
 	@git submodule update
 	@echo "done."
 	@mkdir -p fluidsynth/build
-	@cd fluidsynth/build && cmake -DCMAKE_C_COMPILER=$(GCC)  \
+	@cd fluidsynth/build && cmake -DCMAKE_C_COMPILER=$(CC)  \
                                      -Denable-ipv6=off .. \
                                      -Denable-readline=off .. \
                                      -Denable-dbus=off .. \
                                      -Denable-libsndfile=off .. \
                                      -Denable-aufile=off .. \
-                                     && gmake
+                                     && $(MAKE)
 
-install: all
-	@rm -f ./rsc/soundfont.conf
+install: src/noizebox
+	@rm -f rsc/soundfont.conf
 	@rsc/mksf2db.sh --empty
 	@utils/install.sh Noizebox ./fluidsynth/build/src/libfluidsynth*so.*
-	@touch Noizebox/Resources/soundfont.conf
 
 package: install
 	@find Noizebox -type f > port/pkg-plist
