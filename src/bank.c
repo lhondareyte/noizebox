@@ -93,12 +93,18 @@ void NZ_load_font(int font)
 
 	fluid_synth_system_reset(synth);
 
-	if (stat(ramdisk_font_path, &st) == 0)
-	current_font_id=fluid_synth_sfload(synth,ramdisk_font_path,1);
-	else current_font_id=fluid_synth_sfload(synth,current_font_path,1);
+	if (stat(ramdisk_font_path, &st) == 0) {
 #ifdef __NOIZEBOX_DEBUG__
-	fprintf (stderr,"Loading SF2 %s (%d)\n",current_font_path, current_font_id);
+		fprintf (stderr,"Loading SF2 %s (%d)\n",ramdisk_font_path, current_font_id);
 #endif
+		current_font_id=fluid_synth_sfload(synth,ramdisk_font_path,1);
+	}
+	else {
+#ifdef __NOIZEBOX_DEBUG__
+		fprintf (stderr,"Loading SF2 %s (%d)\n",current_font_path, current_font_id);
+#endif
+		current_font_id=fluid_synth_sfload(synth,current_font_path,1);
+	}
 
 	/* Actication du tuning pour tous les canaux */
 	for ( i=0; i<= 15; i++)
