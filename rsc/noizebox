@@ -75,16 +75,18 @@ make_ramdisk () {
 	quiet newfs -U /dev/$MD
 	mount -t ufs /dev/$MD /Ramdisk
 	mkdir -p /Ramdisk/SF2
+	cd /Ramdisk/SF2
 	for f in ${libdir}/Resources/SF2/*.sf2
 	do
 		_f=$(basename $f)
-       		quiet cp "$f" "/Ramdisk/SF2/${_f}.$$"
+       		quiet cp "$f" "${_f}.$$"
 		if [ $? -eq 0 ] ; then
-			quiet mv "/Ramdisk/SF2/${_f}.$$" "/Ramdisk/SF2/${_f}"
+			quiet mv "${_f}.$$" "${_f}"
 		else
-       			rm -f "/Ramdisk/SF2/${_f}.$$"
+       			rm -f "${_f}.$$"
 		fi
 	done	
+	cd -
 }
 
 delete_ramdisk () {
