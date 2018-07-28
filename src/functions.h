@@ -1,5 +1,6 @@
 /*
  * Copyright (c)2017, Luc Hondareyte
+ * 
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification,
@@ -25,8 +26,8 @@
  *
  */
 
-#ifndef __TENSIO2000_FUNCTIONS_H__
-#define __TENSIO2000_FUNCTIONS_H__
+#ifndef __NOIZEBOX2_FUNCTIONS_H__
+#define __NOIZEBOX2_FUNCTIONS_H__
 
 /*
  *  ihm.c
@@ -89,4 +90,4 @@ uint64_t NZ_get_free_memory(void);
 
 void NZ_control_volume(int);
 
-#endif // __TENSIO2000_FUNCTIONS_H_
+#endif // NOIZEBOX2_FUNCTIONS_H__
