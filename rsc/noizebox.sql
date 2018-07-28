@@ -37,5 +37,8 @@ INSERT INTO midi VALUES('mode',1);
 INSERT INTO midi VALUES('breath_curve',1);
 CREATE TABLE synth (PARAM VARCHAR(12), VAL SMALLINT);
 INSERT INTO synth VALUES('detune',0);
+INSERT INTO synth VALUES('reverb',0);
+INSERT INTO synth VALUES('chorus',0);
 CREATE TABLE soundfont (PARAM VARCHAR(12), VAL SMALLINT);
 INSERT INTO soundfont VALUES('last_id',1);
+INSERT INTO soundfont VALUES('last_preset',1);
