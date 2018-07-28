@@ -1,6 +1,29 @@
 /*
- * $Id$
- * (c)2013 - Luc Hondareyte <luc.hondareyte@laposte.net>
+ * Copyright (c)2013, Luc Hondareyte
+ * 
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ * 
+ *     * Redistributions of source code must retain the above copyright notice,
+ *       this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright notice,
+ *       this list of conditions and the following disclaimer in the documentation
+ *       and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER
+ * OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
  */
 
 #include "noizebox.h"
@@ -49,7 +72,7 @@ void NZ_load_font(int font)
 
 	struct stat st;
 
-	/* Reset du tuning pour tous les canaux */
+	/* Reset tuning for all channels */
 	for ( i=0; i<= 15; i++ )
 	{
 		fluid_synth_deactivate_tuning(synth, i, FALSE);
@@ -106,11 +129,11 @@ void NZ_load_font(int font)
 		current_font_id=fluid_synth_sfload(synth,current_font_path,1);
 	}
 
-	/* Actication du tuning pour tous les canaux */
+	/* turn on tuning for all channels */
 	for ( i=0; i<= 15; i++)
 	{
 		fluid_synth_activate_tuning(synth, i, 1, 1, FALSE);
 	}
-	/* Retablissement du tuning courant */
+	/* Restore current tuning */
 	NZ_synth_detune(NZ_pitch_detune);
 }

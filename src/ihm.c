@@ -1,6 +1,29 @@
 /*
- * $Id$
- * (c)2013 - Luc Hondareyte <luc.hondareyte@laposte.net>
+ * Copyright (c)2013-2017, Luc Hondareyte
+ * 
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ * 
+ *     * Redistributions of source code must retain the above copyright notice,
+ *       this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright notice,
+ *       this list of conditions and the following disclaimer in the documentation
+ *       and/or other materials provided with the distribution.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER
+ * OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
  */
 
 #include <ncurses.h>
@@ -19,7 +42,7 @@ int key;
 
 void NZ_refresh(void)
 {
-	/* Rustine pour fonctionnement avec tinyVT */
+	/* workaround for tinyVT */
 	//usleep (25000);
 	refresh();
 }
@@ -260,7 +283,7 @@ void NZ_control_volume(int k)
 {
 	switch (k)
 	{
-		/* Volume general */
+		/* Master Volume */
 		case 'A':
 			NZ_increment_pcm_volume();
 			break;
@@ -300,14 +323,12 @@ void NZ_set_audio_device(void)
 				if (NZ_audio_device != 0x00 ) 
 				{
 					NZ_audio_device--;
-					//fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp1");
 				}
 				break;
 			case '+':
 				if (NZ_audio_device != 0x03 ) 
 				{
 					NZ_audio_device++;
-					//fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp2");
 				}
 				break;
 			case '4': 
@@ -330,7 +351,7 @@ void NZ_set_audio_device(void)
 void NZ_info_menu(void)
 {
 	/*
-         * Pas d'attente du clavier pour permettre le raffraichissement
+         * No wait for keyboard
 	 */
 	nodelay(screen,TRUE);
 	double load;
@@ -387,13 +408,13 @@ int NZ_main_menu (void)
 	sleep(1);
 
 	/*
-	 * Menu principal
+	 * Main menu
 	 */
 	prev_v = INVALID;
 	NZ_refresh_main_menu();
 
 	/* 
-	 * Boucle d'attente utilisateur 
+	 * Loop for key pressed
 	 */
 	while (1)
 	{
