@@ -1,7 +1,5 @@
 #
-# This file is part of the Noizebox Project.
-#
-# Copyright (c)2016,  Luc Hondareyte <lhondareyte_AT_laposte.net>.
+# Copyright (c)2016,  Luc Hondareyte 
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -29,26 +27,15 @@
 #
 
 CFG = noizebox.conf
+SQL = noizebox.sql
 all: conf
 
 conf:
 	@printf "Building configuration database ..."
 	@rm -f $(CFG)
-	@sqlite3 $(CFG) "create table dsp (param varchar(12), val smallint);"
-	@sqlite3 $(CFG) "insert into dsp values('device',1);"
-	@sqlite3 $(CFG) "create table mixer (param varchar(12), val smallint);"
-	@sqlite3 $(CFG) "insert into mixer values('left',100);"
-	@sqlite3 $(CFG) "insert into mixer values('right',100);"
-	@sqlite3 $(CFG) "create table midi (param varchar(12), val smallint);"
-	@sqlite3 $(CFG) "insert into midi values('sensitivity',0);"
-	@sqlite3 $(CFG) "insert into midi values('transpose',0);"
-	@sqlite3 $(CFG) "insert into midi values('mode',1);"
-	@sqlite3 $(CFG) "insert into midi values('breath_curve',1);"
-	@sqlite3 $(CFG) "create table synth (param varchar(12), val smallint);"
-	@sqlite3 $(CFG) "insert into synth values('detune',0);"
-	@sqlite3 $(CFG) "create table soundfont (param varchar(12), val smallint);"
-	@sqlite3 $(CFG) "insert into soundfont values('last_id',1);"
+	@sqlite3 $(CFG) < $(SQL)
 	@echo " done."
 clean:
 	@rm -f $(CFG)
 install:
+	
