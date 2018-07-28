@@ -14,7 +14,7 @@ CFLAGS  += -D __NOIZEBOX_DEBUG__
 LDFLAGS	= -lsqlite3 -lncurses -lfluidsynth -L/usr/local/lib -pthread -I .
 LDFLAGS	+= -L ../fluidsynth/build/src
 
-HEADERS	= $(shell *.h)
+HEADERS	= $(shell ls *.h)
 SOURCES	= $(shell ls *.c)
 OBJECTS = $(subst .c,.o,$(SOURCES))
 
@@ -24,6 +24,11 @@ GIT_TAG	= $(shell git describe --tags)
 GIT_YEAR= $(shell git log -1 --format=%cd | cut -d' ' -f5)
 CFLAGS	+= -DVERSION=\"$(GIT_TAG)\"
 CFLAGS	+= -DYEAR=\"$(GIT_YEAR)\"
+
+ifeq ($( GIT_TAG),)
+GIT_TAG = devel
+endif
+
 
 $(PRG): $(OBJECTS)
 	@printf "Linking   $@:"
