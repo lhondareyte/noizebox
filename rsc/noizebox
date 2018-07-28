@@ -132,7 +132,10 @@ app_stop () {
 	if [ -z "$_pid" ] ; then
 		return 0
 	fi
-	kill $_pid 
+	for p in $_pid 
+	do
+		kill $p
+	done
 	sleep 1
 	save_config
 	delete_ramdisk
