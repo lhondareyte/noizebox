@@ -99,7 +99,7 @@ delete_ramdisk () {
 		if [ $? -eq 0 ] || [ $i == $timeout ] ; then
 			break
 		else
-			let i+=1 > /dev/null 2>&1
+			let i+=1
 			sleep 1
 		fi
 	done
