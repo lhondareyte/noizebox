@@ -4,7 +4,7 @@
 # 
 
 OSNAME=$(uname -s)
-ARCH=$(uname -m)
+ARCH=$(uname -p)
 SYS="/${OSNAME}/${ARCH}"
 APP=$1
 shift
