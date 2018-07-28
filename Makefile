@@ -16,12 +16,14 @@ clean:
 	@rm -rf fluidsynth
 	@cd port && make clean
 
-modules:
+init-modules:
 	@echo $(CC)
 	@printf "Updating modules ..."
 	@git submodule init
 	@git submodule update
 	@echo "done."
+
+modules:
 	@mkdir -p fluidsynth/build
 	@cd fluidsynth/build && cmake -DCMAKE_C_COMPILER=$(CC)  \
                                      -Denable-ipv6=off .. \
