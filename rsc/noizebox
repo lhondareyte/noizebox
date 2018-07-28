@@ -123,6 +123,8 @@ app_start () {
 	else
 		$app_bin $(ls /dev/umidi* 2> /dev/null) 2>/dev/null
 	fi
+	# wait for make_ramdisk
+	wait
 	delete_ramdisk
 }
 
