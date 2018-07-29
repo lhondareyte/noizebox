@@ -46,7 +46,7 @@ Exec() {
 
 CreateSF2DB() {
 	DB=$1
-	sqlite3 $DB "create table bank (id smallint, name varchar(12), file varchar(50) , key_offset smallint, pitch_offset smallint);"
+	sqlite3 $DB "create table bank ( name varchar(12), file varchar(50) , key_offset smallint, pitch_offset smallint);"
 }
 
 if [ "$1" == "--empty" ] ; then
@@ -69,8 +69,7 @@ do
 	grep -v ^# $FONT | while read n f k p junk
 	do
 		if [ -f "${FONTSDIR}/${f}" ] ; then
-			Exec "Registering $f" sqlite3 $SF2DB \"insert into bank values\(${i}, \'${n}\', \'${f}\', \'${k}\', \'${p}\'\)\;\"
-			let i+=1 > /dev/null
+			Exec "Registering $f" sqlite3 $SF2DB \"insert into bank values\(\'${n}\', \'${f}\', \'${k}\', \'${p}\'\)\;\"
 		else
 			echo "($(basename $f) does not exist, skipping) ..."
 		fi
