@@ -31,7 +31,7 @@
 LOG="/tmp/$(basename $0).$$"
 FONTSDIR="/Library/Noizebox/Resources/SF2/"
 FONTS="${FONTSDIR}/*.lst"
-SF2DB="/Library/Noizebox/Resources/soundfont.conf"
+SF2DB="/Applications/Noizebox/Resources/soundfont.conf"
 
 Exec() {
 	printf "$1... "
