@@ -39,6 +39,7 @@
 
 static WINDOW *screen;
 int key;
+extern int max_font_in_bank;
 
 void NZ_refresh(void)
 {
@@ -443,14 +444,18 @@ int NZ_main_menu (void)
 				NZ_refresh_main_menu();
 				break;
 			case '-':
-				mvprintw(0,2,"Loading      ");NZ_refresh();
-				NZ_load_font(current_font--);
-				NZ_refresh_font_name();
+				if (max_font_in_bank > 1) {
+					mvprintw(0,2,"Loading      ");NZ_refresh();
+					NZ_load_font(current_font--);
+					NZ_refresh_font_name();
+				}
 				break;
 			case '+':
-				mvprintw(0,2,"Loading      ");NZ_refresh();
-				NZ_load_font(current_font++);
-				NZ_refresh_font_name();
+				if (max_font_in_bank > 1) {
+					mvprintw(0,2,"Loading      ");NZ_refresh();
+					NZ_load_font(current_font++);
+					NZ_refresh_font_name();
+				}
 				break;
 			case 'q':
 				NZ_shutdown(0);
