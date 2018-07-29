@@ -45,7 +45,7 @@ void NZ_load_bank(void)
                 fprintf (stderr, "Error: Cannot open SF2 configuration file (%s)\n",FONT_DB);
                 exit (1);
         }
-	sql = "select count(id) from bank" ;
+	sql = "select count(rowid) from bank" ;
 	if ( sqlite3_prepare_v2(bank,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) 
 	{
 		if (  sqlite3_step(stmt) == SQLITE_ROW ) 
@@ -92,7 +92,7 @@ void NZ_load_font(int font)
                 exit (1);
         }
 	
-	sprintf (sql, "select name, file, key_offset from bank where id='%d'", current_font);
+	sprintf (sql, "select name, file, key_offset from bank where rowid='%d'", current_font);
         if ( sqlite3_prepare_v2(bank,sql,strlen(sql),&stmt,NULL) == SQLITE_OK )
         {
 		if ( sqlite3_step(stmt) == SQLITE_ROW ) 
