@@ -38,9 +38,8 @@ arch=$(uname -p)
 platform="${osname}/${arch}"
 app_bin=$appdir/Contents/$platform/$app
 export PATH=$appdir:$PATH
-timeout=30
 ramdisk=YES
-export NZDIR=$libdir
+export NZDIR=$appdir
 
 rc=1	
 
@@ -76,7 +75,7 @@ make_ramdisk () {
 	mount -t ufs /dev/$MD /Ramdisk
 	mkdir -p /Ramdisk/SF2
 	cd /Ramdisk/SF2
-	for f in ${libdir}/Resources/SF2/*.sf2
+	for f in $(ls -S ${libdir}/Resources/SF2/*.sf2)
 	do
 		_f=$(basename $f)
        		quiet cp "$f" "${_f}.$$"
@@ -92,17 +91,7 @@ make_ramdisk () {
 delete_ramdisk () {
 	MD=$(mount | awk '/\/Ramdisk/ {print $1}')
 	[ -z $MD ] && return 0
-	i=1
-	while :
-	do
-		quiet umount /Ramdisk
-		if [ $? -eq 0 ] || [ $i == $timeout ] ; then
-			break
-		else
-			let i+=1
-			sleep 1
-		fi
-	done
+	quiet umount -f /Ramdisk
 	quiet mdconfig -d -u ${MD} 
 }
 
