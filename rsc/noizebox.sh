@@ -2,7 +2,7 @@
 #
 # This file is part of the Noizebox Project.
 #
-# Copyright (c)2016-2017,  Luc Hondareyte <lhondareyte_AT_laposte.net>.
+# Copyright (c)2016-2017,  Luc Hondareyte
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -30,28 +30,28 @@
 #
 
 
-app=$(basename $0)
+app=noizebox
+appdir=/Applications/Noizebox
+libdir=/Library/Noizebox
 osname=$(uname -s)
 arch=$(uname -p)
 platform="${osname}/${arch}"
-appdir="/Applications/$(echo $app | awk '{print toupper(substr($0,0,1))tolower(substr($0,2))}')"
-appdir="/Library/$(echo $app | awk '{print toupper(substr($0,0,1))tolower(substr($0,2))}')"
+app_bin=$appdir/Contents/$platform/$app
 export PATH=$appdir:$PATH
 timeout=30
 ramdisk=YES
+export NZDIR=$libdir
 
 rc=1	
 
 _pid=$(pgrep $app)
 
 quiet () {
-	$* > /dev/null 2>&1
-	return $?
+	$* > /dev/null 2>&1 ; return $?
 }
 
 save_config () {
 	if [ -d /cfg ] ; then
-		sync;sync;sync
 		quiet mount /cfg
 		if [ $? -eq 0 ] ; then
 			quiet cp /etc/${app}.conf /cfg
@@ -62,31 +62,36 @@ save_config () {
 }
 
 make_ramdisk () {
-	if [ "$RAMDISK" != "YES" ] || [ "$RAMDISK" != "yes" ] ;  then
+	if [ "$ramdisk" != "YES" ] && [ "$ramdisk" != "yes" ] ;  then
 		return 0
 	fi
 	if [ -f /etc/ramdisk.conf ] ; then
 		. /etc/ramdisk.conf
 	else
-		RAMDISK_SIZE=512m
-		RAMDISK_LUN=3
+		RAMDISK_SIZE=256m
 	fi
-	quiet mdconfig -a -t swap -s ${RAMDISK_SIZE} -u ${RAMDISK_LUN}
-	quiet newfs -U md${RAMDISK_LUN} > /dev/null 2>&1
-	quiet mount -t ufs /dev/md${RAMDISK_LUN} /Ramdisk
+	MD=$(mdconfig -a -t swap -s $RAMDISK_SIZE 2>/dev/null)
+	[ $? -ne 0 ] && return 0
+	quiet newfs -U /dev/$MD
+	mount -t ufs /dev/$MD /Ramdisk
 	mkdir -p /Ramdisk/SF2
-	for f in "${applib}/Resources/SF2/*.sf2"
+	cd /Ramdisk/SF2
+	for f in ${libdir}/Resources/SF2/*.sf2
 	do
-       		quiet cp "$f" "/Ramdisk/SF2/${f}.$$"
+		_f=$(basename $f)
+       		quiet cp "$f" "${_f}.$$"
 		if [ $? -eq 0 ] ; then
-			mv "/Ramdisk/SF2/${f}.$$" "/Ramdisk/SF2/${f}"
+			quiet mv "${_f}.$$" "${_f}"
 		else
-       			rm -f "/Ramdisk/SF2/${f}.$$"
+       			rm -f "${_f}.$$"
 		fi
 	done	
+	cd -
 }
 
 delete_ramdisk () {
+	MD=$(mount | awk '/\/Ramdisk/ {print $1}')
+	[ -z $MD ] && return 0
 	i=1
 	while :
 	do
@@ -94,11 +99,11 @@ delete_ramdisk () {
 		if [ $? -eq 0 ] || [ $i == $timeout ] ; then
 			break
 		else
-			let i+=1 > /dev/null 2>&1
+			let i+=1
 			sleep 1
 		fi
 	done
-	quiet mdconfig -d -u${RAMDISK_LUN} 
+	quiet mdconfig -d -u ${MD} 
 }
 
 
@@ -112,18 +117,25 @@ app_start () {
 	fi
 	make_ramdisk &
 	export LD_LIBRARY_PATH=${appdir}/Frameworks/${platform}
+	echo $LD_LIBRARY_PATH
 	if [ -x /usr/sbin/rtprio ] ; then
-		/usr/sbin/rtprio 0 $app_bin $(ls /dev/umidi* 2> /dev/null)
+		/usr/sbin/rtprio 0 $app_bin $(ls /dev/umidi* 2> /dev/null) 2> /tmp/noizebox.log
 	else
-		$app_bin $(ls /dev/umidi* 2> /dev/null)
+		$app_bin $(ls /dev/umidi* 2> /dev/null) 2>/dev/null
 	fi
+	# wait for make_ramdisk
+	wait
+	delete_ramdisk
 }
 
 app_stop () {
 	if [ -z "$_pid" ] ; then
 		return 0
 	fi
-	kill $_pid 
+	for p in $_pid 
+	do
+		kill $p
+	done
 	sleep 1
 	save_config
 	delete_ramdisk
