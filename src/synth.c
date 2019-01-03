@@ -91,7 +91,6 @@ void NZ_create_synth(void)
 {
 	synth_settings = new_fluid_settings();
 	synth = new_fluid_synth(synth_settings);
-	fluid_settings_setstr(synth_settings, "audio.driver", "oss");
 #if defined (__SPDIF_ADAPTER__)
 	switch (NZ_audio_device)
 	{
@@ -115,18 +114,21 @@ void NZ_create_synth(void)
 	fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp");
 #endif
 
-	fluid_settings_setstr(synth_settings, "synth.gain", "5.00");
+#ifdef __NOIZEBOX_DEBUG__
+	fluid_settings_setint(synth_settings, "synth.verbose", TRUE);
+#endif
+	fluid_settings_setnum(synth_settings, "synth.gain", 1.0);
+	fluid_settings_setstr(synth_settings, "audio.driver", "oss");
 	synth_audio_driver = new_fluid_audio_driver(synth_settings, synth);
 	NZ_init_mixer();
 
 #ifdef __FLUIDSYNTH_MIDI_DRIVER__
-	fluid_settings_setstr(synth_settings, "midi.driver", "oss");
 	fluid_settings_setstr(synth_settings, "midi.oss.device", "/dev/umidi0.0");
 	synth_midi_driver = new_fluid_midi_driver(synth_settings, fluid_send_midi_event, NULL);
 #endif
 #ifndef __WITH_SQLITE__
 	current_font=0;
-	current_font_id=fluid_synth_sfload(synth, NZ_bank[current_font].file, 1);
+	current_font_id=fluid_synth_sfload(synth, NZ_bank[current_font].file, TRUE);
 #else
 	NZ_load_bank();
 	current_font_id=0;
