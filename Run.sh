@@ -17,9 +17,9 @@ LOG=/tmp/nz.log
 export NZDIR=$DIR
 > $LOG
 
-for i in /dev/umidi[0-9]*
+for i in /dev/umidi[0-9].[0-9]
 do
-	MIDI="$i "
+	MIDI="$MIDI $i "
 done
 
 #
@@ -45,5 +45,5 @@ fi
 if [ "$rc" -ne 0 ]  && [ "$rc" -ne 42 ]; then
 	cat $LOG 
 fi
-rm -f $LOG
+#rm -f $LOG
 exit $rc
