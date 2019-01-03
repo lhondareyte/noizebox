@@ -30,6 +30,7 @@ modules:
                                      -Denable-readline=off .. \
                                      -Denable-dbus=off .. \
                                      -Denable-libsndfile=off .. \
+                                     -Denable-jack=off .. \
                                      -Denable-aufile=off .. \
                                      && $(MAKE)
 
