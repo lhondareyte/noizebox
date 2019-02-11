@@ -1,3 +1,6 @@
 soundfont.conf
 noizebox.conf
 Noizebox/
+*.o
+.depend*
+noizebox/
