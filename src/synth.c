@@ -117,6 +117,7 @@ void NZ_create_synth(void)
 #ifdef __NOIZEBOX_DEBUG__
 	fluid_settings_setint(synth_settings, "synth.verbose", TRUE);
 #endif
+	fluid_settings_setnum(synth_settings, "synth.polyphony", 64);
 	fluid_settings_setnum(synth_settings, "synth.gain", 1.0);
 	fluid_settings_setstr(synth_settings, "audio.driver", "oss");
 	synth_audio_driver = new_fluid_audio_driver(synth_settings, synth);
