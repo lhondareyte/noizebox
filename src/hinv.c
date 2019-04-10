@@ -35,13 +35,15 @@ uint64_t NZ_get_free_memory(void)
 {
 #ifdef __FreeBSD__
         int pagesize=0;
-        int freepages=0;
+        int free=0;
+        int inactive=0;
         size_t size;
-        size = sizeof freepages;
-        sysctlbyname("vm.stats.vm.v_free_count", &freepages, &size, NULL, 0);
+        size = sizeof free;
+        sysctlbyname("vm.stats.vm.v_free_count", &free, &size, NULL, 0);
+        sysctlbyname("vm.stats.vm.v_inactive_count", &inactive, &size, NULL, 0);
         size = sizeof pagesize;
         sysctlbyname("vm.stats.vm.v_page_size", &pagesize, &size, NULL, 0);
-	return freepages * pagesize / 1024 ;
+	return (free + inactive) * pagesize / 1024 ;
 #endif
 	return 0;
 }
