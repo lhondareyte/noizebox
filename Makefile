@@ -23,7 +23,7 @@ init-modules:
 	@git submodule update
 	@echo "done."
 
-modules:
+modules: init-modules
 	@mkdir -p fluidsynth/build
 	@cd fluidsynth/build && cmake -DCMAKE_C_COMPILER=$(CC)  \
                                      -Denable-ipv6=off .. \
@@ -34,7 +34,7 @@ modules:
                                      -Denable-aufile=off .. \
                                      && $(MAKE)
 
-install: src/noizebox
+install: all
 	@rm -f rsc/soundfont.conf
 	@rsc/mksf2db.sh --empty
 	@utils/install.sh Noizebox ./fluidsynth/build/src/libfluidsynth*so.*

@@ -4,3 +4,5 @@ Noizebox/
 *.o
 .depend*
 noizebox/
+port
+src/noizebox
