@@ -1,6 +1,0 @@
-PROG=	noizebox
-SRCS!=	ls *.c
-CFLAGS+=	-I/usr/local/include -Wall -D __WITH_SQLITE__
-LDFLAGS+=	-lfluidsynth -L/usr/local/lib -lncurses -lsqlite3
-
-.include <bsd.prog.mk>
