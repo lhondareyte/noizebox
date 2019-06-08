@@ -13,7 +13,6 @@ clean:
 		(cd $$dir; $(MAKE) clean ; cd ..); \
 	done
 	@rm -rf noizebox.pkg noizebox.md5 Noizebox/*
-	@rm -rf fluidsynth
 	@cd port && make clean
 
 init-modules:
@@ -45,3 +44,6 @@ package: install
 
 clean-port:
 	@cd port && make clean
+
+distclean: clean
+
