@@ -36,15 +36,15 @@ Exec "Creating application tree" mkdir -p ${RESOURCE} ${CONTENT} ${FRAMEWORK}
 
 for f in ./rsc/*.conf 
 do
-	Exec "Installing $f" install -m 644 -o root -g wheel $f ${RESOURCE}
+	Exec "Installing $f" install -m 644 $f ${RESOURCE}
 done
 
 for f in ./rsc/*.sh 
 do
 	if [ "$f" == "./rsc/${app}.sh" ] ; then
-		Exec "Installing $f" install -m 755 -o root -g wheel $f ${APP}/${app}
+		Exec "Installing $f" install -m 755 $f ${APP}/${app}
 	else
-		Exec "Installing $f" install -m 755 -o root -g wheel $f ${RESOURCE}
+		Exec "Installing $f" install -m 755 $f ${RESOURCE}
 	fi
 done
 
@@ -70,16 +70,15 @@ if [ ! -z "$EXTRALIBS" ] ; then
 				cd -
 			elif [ -f $lib ] ; then
 				if [ ! -f ${FRAMEWORK}/$(basename $lib) ] ; then
-					Exec "Installing $(basename $lib)" install -m 755 -o root -g wheel $lib ${FRAMEWORK}/
+					Exec "Installing $(basename $lib)" install -m 755 $lib ${FRAMEWORK}/
 				fi
 			fi
 		done
 		ldd $LIB | awk '!/not found/ && /=>/ {print $3}' | while read lib
 		do
 			if [ ! -f ${FRAMEWORK}/$(basename $lib) ] ; then
-				Exec "Installing $(basename $lib)" install -m 755 -o root -g wheel $lib ${FRAMEWORK}/
+				Exec "Installing $(basename $lib)" install -m 755 $lib ${FRAMEWORK}/
 			fi
 		done
 	done
 fi
-Exec "Applying owner" chown -R root:wheel ${APP}
