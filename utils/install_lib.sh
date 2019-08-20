@@ -2,8 +2,6 @@
 #
 #  $Id$
 # 
-echo $*
-
 Exec () { 
 	printf "$1 ... "
 	shift 
