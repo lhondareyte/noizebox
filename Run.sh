@@ -6,7 +6,11 @@ if [ $ID -ne 0 ] ; then
 	echo "You must be root to run this script."
 	exit 1
 fi
-export DIR="./Noizebox"
+if [ "$1" == "--local" ] ; then
+	export DIR="/Applications/Noizebox"
+else
+	export DIR="./Noizebox"
+fi
 
 HOST=$(uname -s)
 ARCH=$(uname -p)
