@@ -29,7 +29,7 @@
 # SUCH DAMAGE.
 #
 LOG="/tmp/$(basename $0).$$"
-FONTSDIR="/Library/Noizebox/Resources/SF2/"
+FONTSDIR="/Library/Noizebox/SF2/"
 FONTS="${FONTSDIR}/*.lst"
 SF2DB="/Applications/Noizebox/Resources/soundfont.conf"
 
@@ -58,14 +58,13 @@ fi
 
 ls $FONTS > /dev/null 2>&1
 if [ $? -ne 0 ] ; then
-	echo "No SF2 to register."
+	echo "No soundfont to register."
 	exit 0
 fi
 
 Exec "Deleting $SF2DB" rm -f $SF2DB
 Exec "Creating $SF2DB" CreateSF2DB $SF2DB
 
-i=1
 for FONT in $FONTS
 do
 	grep -v ^# $FONT | while read n f k p junk
