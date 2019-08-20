@@ -32,23 +32,8 @@ if [ -e "${FRAMEWORK}/*so" ] ; then
 fi
 rm -rf ${APP}
 
-Exec "Creating application tree" mkdir -p ${RESOURCE} ${CONTENT} ${FRAMEWORK}
-
-for f in ./rsc/*.conf 
-do
-	Exec "Installing $f" install -m 644 $f ${RESOURCE}
-done
-
-for f in ./rsc/*.sh 
-do
-	if [ "$f" == "./rsc/${app}.sh" ] ; then
-		Exec "Installing $f" install -m 755 $f ${APP}/${app}
-	else
-		Exec "Installing $f" install -m 755 $f ${RESOURCE}
-	fi
-done
-
-Exec "Installing Executable" install -m 755 src/$app ${CONTENT}
+Exec "Creating application folder" mkdir -p ${RESOURCE}/etc/devd ${CONTENT} ${FRAMEWORK}
+Exec "Installing $1" install -m 755 src/$app ${CONTENT}
 
 ldd ${CONTENT}/noizebox | awk '!/not found/ && /=>/ {print $3}' | while read lib 
 do 

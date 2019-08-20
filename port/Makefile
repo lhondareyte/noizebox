@@ -30,6 +30,8 @@ build:
 do-install:
 	@${MKDIR} ${STAGEDIR}${PREFIX}
 	@${COPYTREE_BIN} ../Noizebox  ${STAGEDIR}${PREFIX}/${PREFIX}
-	@chmod 644  ${STAGEDIR}${PREFIX}/Noizebox/Resources/soundfont.conf
+	@chmod 644  ${STAGEDIR}${PREFIX}/Noizebox/Resources/*.conf
+	@chmod 644  ${STAGEDIR}${PREFIX}/Noizebox/Resources/etc/*.conf
+	@chmod 644  ${STAGEDIR}${PREFIX}/Noizebox/Resources/etc/devd/*.conf
 
 .include <bsd.port.mk>
