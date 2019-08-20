@@ -36,7 +36,7 @@ CONTENT=	$(APPDIR)/Contents/$(SYS)
 FRAMEWORK=	$(APPDIR)/Frameworks/$(SYS)
 RESOURCE=	$(APPDIR)/Resources
 
-install: all
+install:
 	@rm -f rsc/soundfont.conf
 	@rsc/mksf2db.sh --empty
 	@mkdir -p $(CONTENT) $(FRAMEWORK) $(RESOURCE)/etc/devd
