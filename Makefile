@@ -43,6 +43,7 @@ install:
 	@install -m 644 rsc/$(APP).conf $(RESOURCE)/etc/
 	@install -m 644 rsc/soundfont.conf $(RESOURCE)
 	@install -m 644 rsc/noizebox-usb.conf $(RESOURCE)/etc/devd
+	@install -m 755 rsc/mksf2db.sh $(RESOURCE)
 	@install -m 755 rsc/$(APP).sh $(APPDIR)/$(APP)
 	@install -m 755 src/$(APP) $(CONTENT)
 	@utils/install_lib.sh $(FRAMEWORK) src/$(APP)
