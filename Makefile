@@ -1,21 +1,14 @@
 #
 #  $Id$
 # 
-MAKE	= gmake
-MODULES = src rsc
-APP     = noizebox
-APPDIR  = Noizebox
+MAKE=		gmake
+APP=		noizebox
+MODULES=	src rsc
 
 all: modules
 	for dir in $(MODULES); do \
 		(cd $$dir; $(MAKE) ; cd ..); \
 	done
-clean:
-	for dir in $(MODULES); do \
-		(cd $$dir; $(MAKE) clean ; cd ..); \
-	done
-	@rm -rf $(APP).pkg $(APP).md5 $(APPDIR)/*
-	@cd port && make clean
 
 init-modules:
 	@echo $(CC)
@@ -24,7 +17,7 @@ init-modules:
 	@git submodule update
 	@echo "done."
 
-modules: init-modules
+modules:
 	@mkdir -p fluidsynth/build
 	@cd fluidsynth/build && cmake -DCMAKE_C_COMPILER=$(CC)  \
                                      -Denable-ipv6=off .. \
@@ -35,21 +28,35 @@ modules: init-modules
                                      -Denable-aufile=off .. \
                                      && $(MAKE)
 
+OSNAME=		$(shell uname -s)
+ARCH=		$(shell uname -p)
+SYS=		"$(OSNAME)/$(ARCH)"
+APPDIR=		./Noizebox
+CONTENT=	$(APPDIR)/Contents/$(SYS)
+FRAMEWORK=	$(APPDIR)/Frameworks/$(SYS)
+RESOURCE=	$(APPDIR)/Resources
+
 install: all
 	@rm -f rsc/soundfont.conf
 	@rsc/mksf2db.sh --empty
-	@utils/install.sh Noizebox ./fluidsynth/build/src/libfluidsynth*so.*
-	@install -m 644 rsc/$(APP).conf $(APPDIR)/Resources/etc/
-	@install -m 644 rsc/soundfont.conf $(APPDIR)/Resources/
-	@install -m 644 rsc/noizebox-usb.conf $(APPDIR)/Resources/etc/devd
+	@mkdir -p $(CONTENT) $(FRAMEWORK) $(RESOURCE)/etc/devd
+	@install -m 644 rsc/$(APP).conf $(RESOURCE)/etc/
+	@install -m 644 rsc/soundfont.conf $(RESOURCE)
+	@install -m 644 rsc/noizebox-usb.conf $(RESOURCE)/etc/devd
 	@install -m 755 rsc/$(APP).sh $(APPDIR)/$(APP)
+	@install -m 755 src/$(APP) $(CONTENT)
+	@utils/install_lib.sh $(FRAMEWORK) src/$(APP)
+	@utils/install_lib.sh -l $(FRAMEWORK) ./fluidsynth/build/src/libfluidsynth*so.*
 
-package: install
-	@find Noizebox \( -type l -o -type f \) > port/pkg-plist
-	@cd port && make package
+clean:
+	for dir in $(MODULES); do \
+		(cd $$dir; $(MAKE) clean ; cd ..); \
+	done
 
-clean-port:
-	@cd port && make clean && rm -f pkg-plist
-
-distclean: clean clean-port
-
+tarball: clean
+	@cd .. && tar cvf noizebox.tgz noizebox/src \
+			               noizebox/rsc \
+			               noizebox/Makefile \
+			               noizebox/BSDmakefile \
+			               noizebox/utils \
+			               noizebox/Run.sh 
