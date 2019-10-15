@@ -3,14 +3,15 @@
  * 
  * All rights reserved.
  * 
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
  * 
- *     * Redistributions of source code must retain the above copyright notice,
- *       this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright notice,
- *       this list of conditions and the following disclaimer in the documentation
- *       and/or other materials provided with the distribution.
+ *  * Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *  * Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -34,11 +35,9 @@
 
 #ifdef __FLUIDSYNTH_MIDI_DRIVER__
 
-int fluid_send_midi_event(void * data, fluid_midi_event_t* event)
-{
+int fluid_send_midi_event(void * data, fluid_midi_event_t* event) {
 	int chan = fluid_midi_event_get_channel(event);
-	switch (fluid_midi_event_get_type(event)) 
-	{
+	switch (fluid_midi_event_get_type(event)) {
 		case NOTE_OFF:
 			fluid_synth_noteoff(synth, chan, fluid_midi_event_get_key(event));
 			break;
@@ -78,8 +77,7 @@ int fluid_send_midi_event(void * data, fluid_midi_event_t* event)
 }
 #endif
 
-void NZ_delete_synth(void)
-{
+void NZ_delete_synth(void) {
 	delete_fluid_synth(synth);
 	delete_fluid_settings(synth_settings);
 #ifdef __FLUIDSYNTH_MIDI_DRIVER__
@@ -87,13 +85,11 @@ void NZ_delete_synth(void)
 #endif
 }
 
-void NZ_create_synth(void)
-{
+void NZ_create_synth(void) {
 	synth_settings = new_fluid_settings();
 	synth = new_fluid_synth(synth_settings);
 #if defined (__SPDIF_ADAPTER__)
-	switch (NZ_audio_device)
-	{
+	switch (NZ_audio_device) {
 		case 0x00:
 			fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp0");
 			break;
@@ -137,13 +133,12 @@ void NZ_create_synth(void)
 #endif
 }
 
-void NZ_synth_detune(int p)
-{
+void NZ_synth_detune(int p) {
 	int key;
 	double pitch;
-	for (key=0; key<=127; key++)
-	{
+	for (key=0; key<=127; key++) {
 		pitch = ((key * 10) + (double)p ) * 10;
 		fluid_synth_tune_notes(synth,1,1,1,&key,&pitch,TRUE);
 	}
 }
+

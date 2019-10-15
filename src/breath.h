@@ -3,14 +3,15 @@
  * 
  * All rights reserved.
  * 
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
  * 
- *     * Redistributions of source code must retain the above copyright notice,
- *       this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright notice,
- *       this list of conditions and the following disclaimer in the documentation
- *       and/or other materials provided with the distribution.
+ *  * Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *  * Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,8 +31,8 @@
 #define TABLE_SIZE	128
 
 /* Linear curve */
-static const int a_curve[TABLE_SIZE] = 
-{
+static const int a_curve[TABLE_SIZE] = {
+
 	0, 1, 2, 3, 4, 5, 6, 7, 
 	8, 9, 10, 11, 12, 13, 14, 15, 
 	16, 17, 18, 19, 20, 21, 22, 23, 
@@ -51,8 +52,8 @@ static const int a_curve[TABLE_SIZE] =
 };
 
 /* pseudo exponential curve */
-static const int b_curve[TABLE_SIZE] = 
-{
+static const int b_curve[TABLE_SIZE] = {
+
 	1, 1, 2, 3, 4, 5, 6, 7, 
 	8, 9, 10, 11, 12, 13, 14, 15, 
 	17, 19, 22, 27, 31, 35, 38, 41, 
@@ -74,8 +75,8 @@ static const int b_curve[TABLE_SIZE] =
 /*  Curve that simulate WT11 response */
 
 #if defined __WT11_COMPAT__
-static const int c_curve[TABLE_SIZE] = 
-{
+static const int c_curve[TABLE_SIZE] = {
+
 	20, 20, 20, 20, 20, 20, 20, 20, 
 	20, 20, 20, 20, 21, 21, 21, 21, 
 	21, 22, 22, 22, 22, 23, 23, 23, 
@@ -94,8 +95,8 @@ static const int c_curve[TABLE_SIZE] =
 	117, 118, 120, 122, 123, 125, 126, 127
 };
 
-static const int d_curve[TABLE_SIZE] = 
-{
+static const int d_curve[TABLE_SIZE] = {
+
 	25, 25, 25, 25, 25, 25, 25, 25,
 	25, 25, 25, 25, 25, 26, 26, 26,
 	26, 26, 27, 27, 27, 27, 28, 28,
@@ -114,8 +115,8 @@ static const int d_curve[TABLE_SIZE] =
 	116, 117, 119, 120, 122, 123, 125, 126 
 };
 
-static const int e_curve[TABLE_SIZE] = 
-{
+static const int e_curve[TABLE_SIZE] = {
+
 	30, 30, 30, 30, 30, 30, 30, 30, 
 	30, 30, 30, 30, 30, 31, 31, 31, 
 	31, 31, 31, 32, 32, 32, 32, 33, 
@@ -135,8 +136,8 @@ static const int e_curve[TABLE_SIZE] =
 };	
 
 #else
-static const int c_curve[TABLE_SIZE] = 
-{
+static const int c_curve[TABLE_SIZE] = {
+
 	0, 3, 6, 9, 12, 15, 18, 21, 
 	24, 27, 30, 33, 36, 39, 42, 45, 
 	48, 51, 54, 57, 60, 63, 66, 69, 
@@ -156,8 +157,8 @@ static const int c_curve[TABLE_SIZE] =
 };
 
 /* See README file  */
-static const int d_curve[TABLE_SIZE] = 
-{
+static const int d_curve[TABLE_SIZE] = {
+
 	0, 3, 6, 9, 12, 15, 18, 21, 
 	24, 27, 30, 33, 36, 39, 42, 45, 
 	48, 51, 54, 57, 60, 63, 66, 69, 
@@ -177,8 +178,8 @@ static const int d_curve[TABLE_SIZE] =
 };
 
 /* See README file */
-static const int e_curve[TABLE_SIZE] = 
-{
+static const int e_curve[TABLE_SIZE] = {
+
 	0, 1, 1, 1, 1, 2, 2, 3, 
 	3, 3, 4, 4, 5, 5, 6, 6, 
 	6, 7, 7, 8, 8, 9, 9, 9, 
@@ -198,8 +199,8 @@ static const int e_curve[TABLE_SIZE] =
 };
 #endif
 
-static const int f_curve[TABLE_SIZE] = 
-{
+static const int f_curve[TABLE_SIZE] = {
+
 	0, 0, 0, 1, 1, 2, 2, 3, 
 	3, 3, 4, 4, 5, 5, 6, 6, 
 	6, 7, 7, 8, 8, 9, 9, 9, 

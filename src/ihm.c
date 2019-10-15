@@ -3,14 +3,15 @@
  * 
  * All rights reserved.
  * 
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
  * 
- *     * Redistributions of source code must retain the above copyright notice,
- *       this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright notice,
- *       this list of conditions and the following disclaimer in the documentation
- *       and/or other materials provided with the distribution.
+ *  * Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *  * Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -41,15 +42,13 @@ static WINDOW *screen;
 int key;
 extern int max_font_in_bank;
 
-void NZ_refresh(void)
-{
+void NZ_refresh(void) {
 	/* workaround for tinyVT */
 	//usleep (25000);
 	refresh();
 }
 
-void NZ_shutdown(int rc)
-{
+void NZ_shutdown(int rc) {
         clear();
         if ( rc == 0 ) mvprintw(0,0,"  Shutdown in progress\n      Please wait...  ");
         NZ_refresh();
@@ -64,22 +63,18 @@ void NZ_shutdown(int rc)
 
 }
 
-void NZ_refresh_volume(void)
-{
+void NZ_refresh_volume(void) {
 	int16_t v;
 	v=NZ_get_pcm_volume();
-	if ( prev_v != v ) 
-	{
+	if ( prev_v != v ) {
 		mvprintw(0,15,"V=%03d:%03d", (v & 0xFF), (v >> 8));
 		NZ_refresh();
 	}
 }
 
-void NZ_refresh_midi_mode(void)
-{
+void NZ_refresh_midi_mode(void) {
 	char * current_midi_mode_name = "";
-	switch (NZ_midi_mode)
-	{
+	switch (NZ_midi_mode) {
 		case 0x01:
 			current_midi_mode_name="STD";
 			break;
@@ -95,10 +90,9 @@ void NZ_refresh_midi_mode(void)
 }
 
 #if defined (__SPDIF_ADAPTER__)
-void NZ_refresh_audio_device(void)
-{
-	switch (NZ_audio_device)
-	{
+void NZ_refresh_audio_device(void) {
+
+	switch (NZ_audio_device) {
 		case 0x00:
 			mvprintw(1,20,"A=BK");
 			break;
@@ -116,16 +110,15 @@ void NZ_refresh_audio_device(void)
 }
 #endif
 
-void NZ_refresh_font_name(void)
-{
+void NZ_refresh_font_name(void) {
+
 	mvprintw(0,0,"P=%-13s", current_font_name);
 	NZ_refresh();
 }
 
-void NZ_refresh_breath_curve()
-{
-	switch (NZ_breath_curve)
-	{
+void NZ_refresh_breath_curve() {
+
+	switch (NZ_breath_curve) {
 		case 0x01:
 			p_current_curve = a_curve;
 			break;
@@ -150,12 +143,14 @@ void NZ_refresh_breath_curve()
 	NZ_refresh();
 }
 
-void NZ_refresh_transpose()
-{
+void NZ_refresh_transpose() {
+
 	float f;
-	if ( NZ_pitch_detune == 0) mvprintw(1,5,"T=000.0");
-	else
-	{
+
+	if ( NZ_pitch_detune == 0) {
+		mvprintw(1,5,"T=000.0");
+	}
+	else {
 		f= (float)NZ_pitch_detune /10;
 		if ( f < 0.0 ) mvprintw(1,5,"T=-%04.1f", fabs(f));
 		else mvprintw(1,5,"T=+%04.1f", f);
@@ -164,8 +159,8 @@ void NZ_refresh_transpose()
 	NZ_refresh();
 }
 
-void NZ_refresh_main_menu(void)
-{
+void NZ_refresh_main_menu(void) {
+
 	clear();
 	NZ_refresh_font_name();
 	NZ_refresh_volume();
@@ -181,17 +176,12 @@ void NZ_refresh_main_menu(void)
 //	NZ_refresh();
 }
 
-
-
-void NZ_set_breath_curve(void)
-{
+void NZ_set_breath_curve(void) {
 	move(1,3);
 	curs_set(1);
-	while (1)
-	{
+	while (1) {
 		key=getch();
-		switch (key)
-		{
+		switch (key) {
 			case '-':
 				if (NZ_breath_curve > 1 ) 
 					NZ_breath_curve--;
@@ -214,25 +204,20 @@ void NZ_set_breath_curve(void)
 	}
 }
 
-void NZ_set_transpose(void)
-{
+void NZ_set_transpose(void) {
 	move(1,9);
 	curs_set(1);
-	while (1)
-	{
+	while (1) {
 		key=getch();
-		switch (key)
-		{
+		switch (key) {
 			case '-':
-				if ( NZ_pitch_detune > -120 )
-				{
+				if ( NZ_pitch_detune > -120 ) {
 					NZ_pitch_detune--;
 					NZ_synth_detune(NZ_pitch_detune);
 				}
 				break;
 			case '+':
-				if ( NZ_pitch_detune < 120 )
-				{
+				if ( NZ_pitch_detune < 120 ) {
 					NZ_pitch_detune++;
 					NZ_synth_detune(NZ_pitch_detune);
 				}
@@ -249,20 +234,20 @@ void NZ_set_transpose(void)
 	}
 }
 
-void NZ_set_midi_mode(void)
-{
+void NZ_set_midi_mode(void) {
+
 	move(1,17);
 	curs_set(1);
-	while (1)
-	{
+	while (1) {
 		key=getch();
-		switch (key)
-		{
+		switch (key) {
 			case '-':
-				if ( NZ_midi_mode > 1 ) NZ_midi_mode--;
+				if ( NZ_midi_mode > 1 )
+					NZ_midi_mode--;
 				break;
 			case '+':
-				if ( NZ_midi_mode < MAX_MIDI_MODE ) NZ_midi_mode++;
+				if ( NZ_midi_mode < MAX_MIDI_MODE )
+					NZ_midi_mode++;
 				break;
 			case '3': 
 				NZ_refresh_midi_mode();
@@ -280,10 +265,9 @@ void NZ_set_midi_mode(void)
 	}
 }
 
-void NZ_control_volume(int k)
-{
-	switch (k)
-	{
+void NZ_control_volume(int k) {
+
+	switch (k) {
 		/* Master Volume */
 		case 'A':
 			NZ_increment_pcm_volume();
@@ -311,24 +295,19 @@ void NZ_control_volume(int k)
 }
 
 #if defined (__SPDIF_ADAPTER__)
-void NZ_set_audio_device(void)
-{
+void NZ_set_audio_device(void) {
 	move(1,22);
 	curs_set(1);
-	while (1)
-	{
+	while (1) {
 		key=getch();
-		switch (key)
-		{
+		switch (key) {
 			case '-':
-				if (NZ_audio_device != 0x00 ) 
-				{
+				if (NZ_audio_device != 0x00 ) {
 					NZ_audio_device--;
 				}
 				break;
 			case '+':
-				if (NZ_audio_device != 0x03 ) 
-				{
+				if (NZ_audio_device != 0x03 ) {
 					NZ_audio_device++;
 				}
 				break;
@@ -349,8 +328,7 @@ void NZ_set_audio_device(void)
 }
 
 #else
-void NZ_info_menu(void)
-{
+void NZ_info_menu(void) {
 	/*
          * No wait for keyboard
 	 */
@@ -362,8 +340,7 @@ void NZ_info_menu(void)
 
 	clear();
 	mvprintw(1,20,"Exit");
-	while (1)
-	{
+	while (1) {
 		temp=NZ_get_cpu_temperature();
 		mem=NZ_get_free_memory();
 		load=fluid_synth_get_cpu_load(synth);
@@ -373,8 +350,7 @@ void NZ_info_menu(void)
 		usleep (400000);
 		
 		key=getch();
-		switch (key) 
-		{
+		switch (key) {
 			case '1': case '2': case '3': 
 				nodelay(screen,FALSE);
 				return;
@@ -390,8 +366,7 @@ void NZ_info_menu(void)
 #endif
 
 
-int NZ_main_menu (void)
-{
+int NZ_main_menu (void) {
 	/* Init curses */
 	screen=initscr();
 	noecho();
@@ -417,15 +392,12 @@ int NZ_main_menu (void)
 	/* 
 	 * Loop for key pressed
 	 */
-	while (1)
-	{
-		if ( key == 'Q' ) 
-		{
+	while (1) {
+		if ( key == 'Q' ) {
 			NZ_shutdown(42);
 		}
 		key=getch();
-		switch (key)
-		{
+		switch (key) {
 			case '1':
 				NZ_set_breath_curve();
 				break;

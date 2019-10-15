@@ -3,14 +3,15 @@
  * 
  * All rights reserved.
  * 
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
  * 
- *     * Redistributions of source code must retain the above copyright notice,
- *       this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright notice,
- *       this list of conditions and the following disclaimer in the documentation
- *       and/or other materials provided with the distribution.
+ *  * Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *  * Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -30,29 +31,24 @@
 #include "noizebox.h"
 #include "functions.h"
 
-int NZ_load_synth_parameter(char * col, char * val)
-{
+int NZ_load_synth_parameter(char * col, char * val) {
 	int rc=0;
 	char sql[80];
 	sqlite3 *db;
 	sqlite3_stmt *stmt;
-	if ( sqlite3_open(CONF_DB, &db) != SQLITE_OK )
-	{
+	if ( sqlite3_open(CONF_DB, &db) != SQLITE_OK ) {
 		fprintf (stderr, "Error: Cannot open configuration file (%s)\n", CONF_DB);
 		return -1;
 	}
 	sprintf (sql, "select val from %s where param=\'%s\'", col, val);
-        if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK )
-        {
-                if (  sqlite3_step(stmt) == SQLITE_ROW )
-                {
+        if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) {
+                if (  sqlite3_step(stmt) == SQLITE_ROW ) {
                         rc=sqlite3_column_int(stmt,0);
                         sqlite3_finalize(stmt);
                 }
                 else sqlite3_reset(stmt);
         }
-        else
-        {
+        else {
                 fprintf (stderr, "Error: Failed to prepare database: %s\n",sqlite3_errmsg(db));
                 return -1;
         }
@@ -60,8 +56,7 @@ int NZ_load_synth_parameter(char * col, char * val)
 	return rc; 
 }
 
-int NZ_load_synth_config(void)
-{
+int NZ_load_synth_config(void) {
 	int rc = 0;
 
 #ifdef __SPDIF_ADAPTER__
@@ -97,27 +92,23 @@ int NZ_load_synth_config(void)
 	return 0;
 }
 
-int NZ_save_synth_parameter(char * tab, char * col, int val)
-{
+int NZ_save_synth_parameter(char * tab, char * col, int val) {
 
 	int rc;
         char sql[80];
         sqlite3 *db;
         sqlite3_stmt *stmt;
 
-        if ( sqlite3_open(CONF_DB, &db) != SQLITE_OK )
-        {
+        if ( sqlite3_open(CONF_DB, &db) != SQLITE_OK ) {
                 fprintf (stderr, "Error: Cannot open configuration file\n");
                 return -1;
         }
         sprintf (sql, "update %s set val=%d where param=\'%s\'", tab, val, col);
-        if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK )
-        {
+        if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) {
                 sqlite3_step(stmt);
                 sqlite3_finalize(stmt);
         }
-        else
-        {
+        else {
                 fprintf (stderr, "Error: %s\n", sqlite3_errmsg(db));
                 return -1;
         }
@@ -130,17 +121,15 @@ int NZ_save_synth_parameter(char * tab, char * col, int val)
         return rc;
 }
 
-int NZ_save_synth_config(void)
-{
-	int v,r,l;
+int NZ_save_synth_config(void) {
 
+	int v,r,l;
 
 #if defined (__SPDIF_ADAPTER__)
 	/*
 	 * Update Audio Device
    	 */
-	if (NZ_save_synth_parameter("dsp", "device", NZ_audio_device) == -1)
-	{
+	if (NZ_save_synth_parameter("dsp", "device", NZ_audio_device) == -1) {
 		fprintf (stderr, "Error: Cannot update device information: %s\n", sqlite3_errmsg(db));
 		return -1;
 	}
@@ -152,14 +141,12 @@ int NZ_save_synth_config(void)
 	v=NZ_get_pcm_volume();
 	l = v & 0xff;
 	r = v >> 8;
-	if (NZ_save_synth_parameter("mixer", "left", l) == -1)
-	{
+	if (NZ_save_synth_parameter("mixer", "left", l) == -1) {
 		fprintf (stderr, "Error: Cannot save volume (l) information!\n"); 
 		return -1;
 	}
 	
-	if (NZ_save_synth_parameter("mixer", "right", r) == -1)
-	{
+	if (NZ_save_synth_parameter("mixer", "right", r) == -1) {
 		fprintf (stderr, "Error: Cannot save volume (r) information!\n");
 		return -1;
 	}
@@ -167,8 +154,7 @@ int NZ_save_synth_config(void)
 	/*
 	 * Update SoundFont information
    	 */
-	if (NZ_save_synth_parameter("soundfont", "last_id", current_font) == -1)
-	{
+	if (NZ_save_synth_parameter("soundfont", "last_id", current_font) == -1) {
 		fprintf (stderr, "Error: Cannot save soundfont information!\n");
 		return -1;
 	}
@@ -176,14 +162,12 @@ int NZ_save_synth_config(void)
 	/*
 	 * Update MIDI information
    	 */
-	if (NZ_save_synth_parameter("midi", "mode", NZ_midi_mode) == -1)
-	{
+	if (NZ_save_synth_parameter("midi", "mode", NZ_midi_mode) == -1) {
 		fprintf (stderr, "Error: Cannot save MIDI mode information!\n");
 		return -1;
 	}
 	
-	if (NZ_save_synth_parameter("midi", "breath_curve", NZ_breath_curve) == -1)
-	{
+	if (NZ_save_synth_parameter("midi", "breath_curve", NZ_breath_curve) == -1) {
 		fprintf (stderr, "Error: Cannot save breath mode information!\n");
 		return -1;
 	}
@@ -191,8 +175,7 @@ int NZ_save_synth_config(void)
 	/*
 	 * Update SYNTH information
    	 */
-	if (NZ_save_synth_parameter("synth", "detune", NZ_pitch_detune) == -1)
-	{
+	if (NZ_save_synth_parameter("synth", "detune", NZ_pitch_detune) == -1) {
 		fprintf (stderr, "Error: Cannot save detune information!\n");
 		return -1;
 	}
