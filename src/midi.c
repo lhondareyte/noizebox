@@ -3,14 +3,15 @@
  * 
  * All rights reserved.
  * 
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * Redistribution and use in source and binary forms, with or without
+ * modification,  are permitted provided that the following conditions
+ * are met:
  * 
- *     * Redistributions of source code must retain the above copyright notice,
- *       this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright notice,
- *       this list of conditions and the following disclaimer in the documentation
- *       and/or other materials provided with the distribution.
+ *  * Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *  * Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -49,18 +50,13 @@
  #define bit_is_set(var,pos) ((var) & (1<<(pos)))
 #endif
 
-
-void NZ_midi_analyze(uint8_t v)
-{
+void NZ_midi_analyze(uint8_t v) {
 	buffer=v;
 	// Traitement Status Byte
-	if (bit_is_set(buffer,7))
-	{
+	if (bit_is_set(buffer,7)) {
 		// Real Time messages
-		if ( buffer >= MIDI_SYSEX_MSG )
-		{
-			switch (buffer)
-			{
+		if ( buffer >= MIDI_SYSEX_MSG ) {
+			switch (buffer) {
 			case MIDI_SYSEX_MSG:
 				rsbuff=status;
 				status = buffer;
@@ -101,8 +97,7 @@ void NZ_midi_analyze(uint8_t v)
 				break;
 			}
 		}		
-		else 
-		{
+		else {
 			rsbuff=status;		// Store previous status for
 						// Running status
 			status=buffer&0xF0;
@@ -114,15 +109,12 @@ void NZ_midi_analyze(uint8_t v)
 
 	}
 	// Traitement des DATA Bytes
-	else
-	{
-		switch (next)
-		{
+	else {
+		switch (next) {
 			case MIDI_DATA1: 
 				data1=buffer;
 				next=MIDI_UNKNOW_MSG;
-				switch (status)
-				{
+				switch (status) {
 					case MIDI_PROGCH_MSG:
 						fluid_synth_program_change(synth, channel, data1);
 						break;
@@ -147,18 +139,15 @@ void NZ_midi_analyze(uint8_t v)
 						
 			case MIDI_DATA2: 
 				data2=buffer;
-				switch (status)
-				{
+				switch (status) {
 					case MIDI_NOTEON_MSG : 
 						k = data1 + font_key_offset ;
 						if ( k < 0 || k > 127 ) break ;
 						else data1 = k;
-						if ( data2 == 0 ) 
-						{
+						if ( data2 == 0 ) {
 							fluid_synth_noteoff(synth, channel, data1);
 						}
-						else
-						{
+						else {
 							if ( NZ_midi_mode == WX5 ) data2=100;
 							fluid_synth_noteon(synth, channel, data1,  data2);
 						}
@@ -175,10 +164,8 @@ void NZ_midi_analyze(uint8_t v)
 						break;
 
 					case MIDI_CTRLCHG_MSG : 
-						if ( NZ_midi_mode == EWI || NZ_midi_mode == WX5 ) 
-						{
-							if ( data1 == 2 || data1 == 34 )
-							{
+						if ( NZ_midi_mode == EWI || NZ_midi_mode == WX5 ) {
+							if ( data1 == 2 || data1 == 34 ) {
 							/* Map breath control on volume for EWIs */
 								data1+=5;
 							/* Translate current breath curve */
@@ -217,13 +204,11 @@ void NZ_midi_analyze(uint8_t v)
 
 			// Running status
 			case MIDI_UNKNOW_MSG :
-				if (rsbuff < MIDI_SYSEX_MSG)
-				{
+				if (rsbuff < MIDI_SYSEX_MSG) {
 					status=rsbuff;
 					data1=buffer;
 					next=MIDI_DATA2;
-					if (rsbuff == MIDI_PROGCH_MSG || rsbuff == MIDI_CHANAF_MSG )
-					{
+					if (rsbuff == MIDI_PROGCH_MSG || rsbuff == MIDI_CHANAF_MSG ) {
 						next=MIDI_UNKNOW_MSG;
 						ready=MIDI_TRUE;
 					}
@@ -241,12 +226,10 @@ void NZ_midi_analyze(uint8_t v)
 	}
 }
 
-int *NZ_midi_read( char *dev )
-{
+int *NZ_midi_read( char *dev ) {
 	FILE *fp;
 	uint8_t c;
-	while (( fp=fopen(dev,"r")) == NULL ) 
-	{
+	while (( fp=fopen(dev,"r")) == NULL ) {
 #ifdef __NOIZEBOX_DEBUG__
 		fprintf(stderr,"Warning: %s: %s\n",dev,strerror(errno));
 #endif
@@ -255,8 +238,7 @@ int *NZ_midi_read( char *dev )
 #ifdef __NOIZEBOX_DEBUG__
 	fprintf(stderr,"Opening %s OK\n", dev);
 #endif
-	while (!feof(fp))
-	{
+	while (!feof(fp)) {
 		c = fgetc(fp);
 		NZ_midi_analyze(c);
 	}

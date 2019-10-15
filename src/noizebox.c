@@ -3,14 +3,15 @@
  * 
  * All rights reserved.
  * 
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
  * 
- *     * Redistributions of source code must retain the above copyright notice,
- *       this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright notice,
- *       this list of conditions and the following disclaimer in the documentation
- *       and/or other materials provided with the distribution.
+ *  * Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *  * Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -44,27 +45,23 @@ struct sigaction shutdown_action;
 
 extern void *NZ_midi_read();
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
 	FILE *conf;
 	NZDIR=getenv("NZDIR");
-	if ( ! NZDIR ) 
-	{
+	if ( ! NZDIR ) {
 		printf ("Error; NZDIR is not set!\n");
 		exit (1);
 	}
 	sprintf(CONF_DB,"%s/Resources/noizebox.conf",NZDIR);
 	conf = fopen (CONF_DB, "r" ) ;
-	if ( conf == NULL ) 
-	{
+	if ( conf == NULL ) {
 		sprintf(CONF_DB,"/etc/noizebox.conf");
 	}
 	else fclose(conf);
 
 	sprintf(FONT_DB,"%s/Resources/soundfont.conf",NZDIR);
 
-	if ( argc <= 1 ) 
-	{
+	if ( argc <= 1 ) {
 		printf("Error: You must specify a OSS midi device.\n");
 		exit (1);
 	}
@@ -72,15 +69,13 @@ int main(int argc, char *argv[])
 	signal(SIGTERM, NZ_shutdown);
 #else
 
-int main(void)
-{
+int main(void) {
 #endif
 
 	pthread_t threads[2];
 
 	setpriority(PRIO_PROCESS, getpid(), PRIO_MAX);
-	if ( NZ_load_synth_config() == -1) 
-	{
+	if ( NZ_load_synth_config() == -1) {
 		exit (1);
 	}
 
@@ -88,10 +83,8 @@ int main(void)
 
 	/* One thread per MIDI device */
 	int c=1;
-	while ( c < argc ) 
-	{
-		if (pthread_create(&threads[c-1], NULL, NZ_midi_read, argv[c]))
-		{
+	while ( c < argc ) {
+		if (pthread_create(&threads[c-1], NULL, NZ_midi_read, argv[c])) {
 			perror("Error: Cannot create MIDI thread");
 			exit (-1);
 		}
