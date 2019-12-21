@@ -50,9 +50,9 @@ CreateSF2DB() {
 }
 
 if [ "$1" == "--empty" ] ; then
-	rm -rf ./rsc/soundfont.conf
-	Exec "Creating empty database" CreateSF2DB ./rsc/soundfont.conf
-	sqlite3 ./rsc/soundfont.conf "insert into bank values('--NO-SOUND--', '/dev/null', 0, 0);"
+	rm -rf soundfont.conf
+	Exec "Creating empty database" CreateSF2DB soundfont.conf
+	sqlite3 soundfont.conf "insert into bank values('--NO-SOUND--', '/dev/null', 0, 0);"
 	exit 0
 fi
 
