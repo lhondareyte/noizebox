@@ -26,16 +26,20 @@
 # SUCH DAMAGE.
 #
 
-CFG = noizebox.conf
-SQL = noizebox.sql
-all: conf
+CFG   = noizebox.conf
+SQL   = noizebox.sql
+SF2DB = soundfont.conf
 
-conf:
+all: nzconf sf2conf
+
+sf2conf:
+	@ ./mksf2db.sh --empty
+nzconf:
 	@printf "Building configuration database ..."
 	@rm -f $(CFG)
 	@sqlite3 $(CFG) < $(SQL)
 	@echo " done."
 clean:
-	@rm -f $(CFG)
+	@rm -f $(CFG) $(SF2DB)
 install:
 	
