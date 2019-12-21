@@ -5,10 +5,12 @@ MAKE=		gmake
 APP=		noizebox
 MODULES=	src rsc
 
-all: modules
+all: init-modules modules 
 	for dir in $(MODULES); do \
 		(cd $$dir; $(MAKE) ; cd ..); \
 	done
+
+bintree: all
 
 init-modules:
 	@echo $(CC)
@@ -36,9 +38,10 @@ CONTENT=	$(APPDIR)/Contents/$(SYS)
 FRAMEWORK=	$(APPDIR)/Frameworks/$(SYS)
 RESOURCE=	$(APPDIR)/Resources
 
-install:
-	@rm -f rsc/soundfont.conf
-	@rsc/mksf2db.sh --empty
+resources:
+	@cd rsc && ${MAKE} clean && ${MAKE}
+
+bintree: resources
 	@mkdir -p $(CONTENT) $(FRAMEWORK) $(RESOURCE)/etc/devd
 	@install -m 644 rsc/$(APP).conf $(RESOURCE)/etc/
 	@install -m 644 rsc/soundfont.conf $(RESOURCE)
@@ -50,6 +53,7 @@ install:
 	@utils/install_lib.sh -l $(FRAMEWORK) ./fluidsynth/build/src/libfluidsynth*so.*
 
 clean:
+	@rm -rf $(APPDIR)
 	for dir in $(MODULES); do \
 		(cd $$dir; $(MAKE) clean ; cd ..); \
 	done
