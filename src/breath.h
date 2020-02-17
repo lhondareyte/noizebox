@@ -28,6 +28,8 @@
  */
 
 #ifndef __BREATH_H__
+#define __BREATH_H__
+
 #define TABLE_SIZE	128
 
 /* Linear curve */
@@ -219,4 +221,4 @@ static const int f_curve[TABLE_SIZE] = {
 	115, 116, 118, 120, 121, 123, 125, 127 
 };
 
-#endif
+#endif /* __BREATH_H__ */
