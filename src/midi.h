@@ -115,6 +115,7 @@
 #define MIDI_GENPURP2_CTRL	0x11
 #define MIDI_GENPURP3_CTRL	0x12
 #define MIDI_GENPURP4_CTRL	0x13
+#define MIDI_BREATH_FINE_CTRL	0x22
 
 volatile uint8_t buffer;	// Buffer de reception MIDI
 volatile uint8_t status;

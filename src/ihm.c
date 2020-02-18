@@ -55,7 +55,7 @@ void NZ_shutdown(int rc) {
         endwin();
         NZ_save_synth_config();
         NZ_delete_synth();
-#ifndef __FLUIDSYNTH_MIDI_DRIVER__
+#if defined (__LEGACY_MIDI_PARSER__)
         pthread_kill(0,9);
 #endif
         NZ_close_mixer();

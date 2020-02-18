@@ -27,8 +27,7 @@
  *
  */
 
-#ifndef __FLUIDSYNTH_MIDI_DRIVER__
-#define __FLUIDSYNTH_MIDI_DRIVER__
+#if defined (__LEGACY_MIDI_PARSER__) 
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -165,7 +164,7 @@ void NZ_midi_analyze(uint8_t v) {
 
 					case MIDI_CTRLCHG_MSG : 
 						if ( NZ_midi_mode == EWI || NZ_midi_mode == WX5 ) {
-							if ( data1 == 2 || data1 == 34 ) {
+							if ( data1 == MIDI_BREATH_CTRL || data1 == MIDI_BREATH_FINE_CTRL ) {
 							/* Map breath control on volume for EWIs */
 								data1+=5;
 							/* Translate current breath curve */
@@ -246,4 +245,4 @@ int *NZ_midi_read( char *dev ) {
 	return(0);
 }
 
-#endif   // __FLUIDSYNTH_MIDI_DRIVER__
+#endif   // __LEGACY_MIDI_PARSER__

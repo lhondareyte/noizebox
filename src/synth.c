@@ -32,8 +32,9 @@
 #ifndef	REALTIME
  #define	REALTIME 1
 #endif
+#include "synth.h"
 
-#ifdef __FLUIDSYNTH_MIDI_DRIVER__
+#if !defined (__LEGACY_MIDI_PARSER__)
 
 int fluid_send_midi_event(void * data, fluid_midi_event_t* event) {
 	int chan = fluid_midi_event_get_channel(event);
@@ -43,7 +44,7 @@ int fluid_send_midi_event(void * data, fluid_midi_event_t* event) {
 			break;
 
 		case NOTE_ON:
-			int velocity=fluid_midi_event_get_velocity(event);
+			velocity=fluid_midi_event_get_velocity(event);
 			fluid_synth_noteon(synth, chan, fluid_midi_event_get_key(event),
 					velocity);
 			break;
@@ -119,7 +120,7 @@ void NZ_create_synth(void) {
 	synth_audio_driver = new_fluid_audio_driver(synth_settings, synth);
 	NZ_init_mixer();
 
-#ifdef __FLUIDSYNTH_MIDI_DRIVER__
+#if !defined (__LEGACY_MIDI_PARSER__)
 	fluid_settings_setstr(synth_settings, "midi.oss.device", "/dev/umidi0.0");
 	synth_midi_driver = new_fluid_midi_driver(synth_settings, fluid_send_midi_event, NULL);
 #endif
