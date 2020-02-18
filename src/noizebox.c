@@ -41,12 +41,29 @@ extern void NZ_delete_synth(void);
 
 struct sigaction shutdown_action;
 
-#ifndef __FLUIDSYNTH_MIDI_DRIVER__
-
+#if defined (__LEGACY_MIDI_PARSER__)
 extern void *NZ_midi_read();
+#endif
 
 int main(int argc, char *argv[]) {
 	FILE *conf;
+	if ( argc <= 1 ) {
+		printf("Error: You must specify a OSS midi device.\n");
+		exit (1);
+	}
+
+#if defined (__LEGACY_MIDI_PARSER__)
+	pthread_t threads[2];
+	/* One thread per MIDI device */
+	int c=1;
+	while ( c < argc ) {
+		if (pthread_create(&threads[c-1], NULL, NZ_midi_read, argv[c])) {
+			perror("Error: Cannot create MIDI thread");
+			exit (-1);
+		}
+		c++;
+	}
+#endif
 	NZDIR=getenv("NZDIR");
 	if ( ! NZDIR ) {
 		printf ("Error; NZDIR is not set!\n");
@@ -60,37 +77,14 @@ int main(int argc, char *argv[]) {
 	else fclose(conf);
 
 	sprintf(FONT_DB,"%s/Resources/soundfont.conf",NZDIR);
-
-	if ( argc <= 1 ) {
-		printf("Error: You must specify a OSS midi device.\n");
-		exit (1);
-	}
 	signal(SIGINT, NZ_shutdown);
 	signal(SIGTERM, NZ_shutdown);
-#else
-
-int main(void) {
-#endif
-
-	pthread_t threads[2];
 
 	setpriority(PRIO_PROCESS, getpid(), PRIO_MAX);
 	if ( NZ_load_synth_config() == -1) {
 		exit (1);
 	}
 
-#ifndef __FLUIDSYNTH_MIDI_DRIVER__
-
-	/* One thread per MIDI device */
-	int c=1;
-	while ( c < argc ) {
-		if (pthread_create(&threads[c-1], NULL, NZ_midi_read, argv[c])) {
-			perror("Error: Cannot create MIDI thread");
-			exit (-1);
-		}
-		c++;
-	}
-#endif
 	NZ_create_synth();
 	NZ_shutdown(NZ_main_menu());
 }

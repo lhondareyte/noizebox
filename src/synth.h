@@ -35,10 +35,13 @@
 fluid_synth_t* synth;
 fluid_settings_t* synth_settings;
 fluid_audio_driver_t* synth_audio_driver;
+fluid_midi_driver_t* synth_midi_driver;
+int fluid_send_midi_event(void *, fluid_midi_event_t*);
 
-#ifndef __FLUIDSYNTH_MIDI_DRIVER__
+#if defined ( __LEGACY_MIDI_PARSER__ )
   #include <pthread.h>
 #else
+int velocity;
 fluid_midi_driver_t* synth_midi_driver;
 #endif
 
