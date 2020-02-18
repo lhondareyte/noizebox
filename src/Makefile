@@ -7,6 +7,7 @@ CFLAGS	= -O2 -Wall -I/usr/include -I/usr/local/include -I../fluidsynth/include
 CFLAGS	+= -I ../fuildsynth/include -I ../fluidsynth/build/include 
 CFLAGS	+= -D __WITH_SQLITE__ -D SQLITE_TEMP_STORE=3
 CFLAGS	+= -D __WT11_COMPAT__
+CFLAGS  += -D __LEGACY_MIDI_PARSER__
 #CFLAGS	+= -D __SPDIF_ADAPTER__
 #CFLAGS  += -D __NOIZEBOX_DEBUG__
 
