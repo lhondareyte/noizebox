@@ -59,12 +59,6 @@ int NZ_load_synth_parameter(char * col, char * val) {
 int NZ_load_synth_config(void) {
 	int rc = 0;
 
-#ifdef __SPDIF_ADAPTER__
-	rc=NZ_load_synth_parameter("dsp","device");
-	if ( rc != -1 ) NZ_audio_device=rc;
-	else NZ_audio_device=DEFAULT_PCM_DEVICE;
-#endif
-
 	rc=NZ_load_synth_parameter("mixer","left");
 	if ( rc != -1 ) NZ_pcm_volume_left=rc;
 	else NZ_pcm_volume_left=100;
@@ -125,16 +119,6 @@ int NZ_save_synth_config(void) {
 
 	int v,r,l;
 
-#if defined (__SPDIF_ADAPTER__)
-	/*
-	 * Update Audio Device
-   	 */
-	if (NZ_save_synth_parameter("dsp", "device", NZ_audio_device) == -1) {
-		fprintf (stderr, "Error: Cannot update device information: %s\n", sqlite3_errmsg(db));
-		return -1;
-	}
-#endif
-	
 	/*
 	 * Update Volume
    	 */

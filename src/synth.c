@@ -81,7 +81,7 @@ int fluid_send_midi_event(void * data, fluid_midi_event_t* event) {
 void NZ_delete_synth(void) {
 	delete_fluid_synth(synth);
 	delete_fluid_settings(synth_settings);
-#ifdef __FLUIDSYNTH_MIDI_DRIVER__
+#if !defined (__LEGACY_MIDI_PARSER__)
 	delete_fluid_midi_driver(synth_midi_driver);
 #endif
 }
@@ -89,38 +89,19 @@ void NZ_delete_synth(void) {
 void NZ_create_synth(void) {
 	synth_settings = new_fluid_settings();
 	synth = new_fluid_synth(synth_settings);
-#if defined (__SPDIF_ADAPTER__)
-	switch (NZ_audio_device) {
-		case 0x00:
-			fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp0");
-			break;
-		case 0x01:
-			fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp1");
-			break;
-		case 0x02:
-			fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp2");
-			break;
-		case 0x03:
-			fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp3");
-			break;
-		default:
-			fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp");
-			break;
-	}
-#else
 	fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp");
 #endif
 
 #ifdef __NOIZEBOX_DEBUG__
 	fluid_settings_setint(synth_settings, "synth.verbose", TRUE);
 #endif
-	fluid_settings_setnum(synth_settings, "synth.polyphony", 64);
+	//@fluid_settings_setnum(synth_settings, "synth.polyphony", 64);
 	fluid_settings_setnum(synth_settings, "synth.gain", 1.0);
 	fluid_settings_setstr(synth_settings, "audio.driver", "oss");
 	synth_audio_driver = new_fluid_audio_driver(synth_settings, synth);
 	NZ_init_mixer();
 
-#if !defined (__LEGACY_MIDI_PARSER__)
+#if !defined (__LEGACY_MIDI_PARSER__) && !defined (__WITH_JACK__)
 	fluid_settings_setstr(synth_settings, "midi.oss.device", "/dev/umidi0.0");
 	synth_midi_driver = new_fluid_midi_driver(synth_settings, fluid_send_midi_event, NULL);
 #endif

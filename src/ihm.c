@@ -89,27 +89,6 @@ void NZ_refresh_midi_mode(void) {
 	NZ_refresh();
 }
 
-#if defined (__SPDIF_ADAPTER__)
-void NZ_refresh_audio_device(void) {
-
-	switch (NZ_audio_device) {
-		case 0x00:
-			mvprintw(1,20,"A=BK");
-			break;
-		case 0x01:
-			mvprintw(1,20,"A=AN");
-			break;
-		case 0x02:
-			mvprintw(1,20,"A=DI");
-			break;
-		case 0x03:
-			mvprintw(1,20,"A=HD");
-			break;
-	}
-	NZ_refresh();
-}
-#endif
-
 void NZ_refresh_font_name(void) {
 
 	mvprintw(0,0,"P=%-13s", current_font_name);
@@ -168,11 +147,7 @@ void NZ_refresh_main_menu(void) {
 	NZ_refresh_breath_curve();
 	NZ_refresh_transpose();
 	NZ_refresh_midi_mode();
-#if defined (__SPDIF_ADAPTER__)
-	NZ_refresh_audio_device();
-#else
 	mvprintw(1,20,"Info");
-#endif
 //	NZ_refresh();
 }
 
@@ -294,40 +269,6 @@ void NZ_control_volume(int k) {
 	NZ_refresh_volume();
 }
 
-#if defined (__SPDIF_ADAPTER__)
-void NZ_set_audio_device(void) {
-	move(1,22);
-	curs_set(1);
-	while (1) {
-		key=getch();
-		switch (key) {
-			case '-':
-				if (NZ_audio_device != 0x00 ) {
-					NZ_audio_device--;
-				}
-				break;
-			case '+':
-				if (NZ_audio_device != 0x03 ) {
-					NZ_audio_device++;
-				}
-				break;
-			case '4': 
-				curs_set(0);
-				NZ_refresh_audio_device();
-				NZ_refresh();
-				return;
-				break;
-			default:
-				NZ_control_volume(key);
-				break;
-		}
-		NZ_refresh_audio_device();
-		move(1,22);
-		NZ_refresh();
-	}
-}
-
-#else
 void NZ_info_menu(void) {
 	/*
          * No wait for keyboard
@@ -363,8 +304,6 @@ void NZ_info_menu(void) {
 		}
 	}
 }
-#endif
-
 
 int NZ_main_menu (void) {
 	/* Init curses */
@@ -408,11 +347,7 @@ int NZ_main_menu (void) {
 				NZ_set_midi_mode();
 				break;
 			case '4':
-#if defined (__SPDIF_ADAPTER__)
-				NZ_set_audio_device();
-#else
 				NZ_info_menu();
-#endif
 				NZ_refresh_main_menu();
 				break;
 			case '-':

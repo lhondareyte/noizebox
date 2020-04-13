@@ -64,10 +64,6 @@ int vol,NZ_pcm_volume_left,NZ_pcm_volume_right;
 
 #define INVALID -1
 
-#if defined (__SPDIF_ADAPTER__)
-int NZ_audio_device;
-#endif
-
 /*
  * MIDI Controllers
  */
