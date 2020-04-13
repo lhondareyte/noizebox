@@ -52,18 +52,6 @@ int main(int argc, char *argv[]) {
 		exit (1);
 	}
 
-#if defined (__LEGACY_MIDI_PARSER__)
-	pthread_t threads[2];
-	/* One thread per MIDI device */
-	int c=1;
-	while ( c < argc ) {
-		if (pthread_create(&threads[c-1], NULL, NZ_midi_read, argv[c])) {
-			perror("Error: Cannot create MIDI thread");
-			exit (-1);
-		}
-		c++;
-	}
-#endif
 	NZDIR=getenv("NZDIR");
 	if ( ! NZDIR ) {
 		printf ("Error; NZDIR is not set!\n");
@@ -86,5 +74,18 @@ int main(int argc, char *argv[]) {
 	}
 
 	NZ_create_synth();
+
+#if defined (__LEGACY_MIDI_PARSER__)
+	pthread_t threads[2];
+	/* One thread per MIDI device */
+	int c=1;
+	while ( c < argc ) {
+		if (pthread_create(&threads[c-1], NULL, NZ_midi_read, argv[c])) {
+			perror("Error: Cannot create MIDI thread");
+			exit (-1);
+		}
+		c++;
+	}
+#endif
 	NZ_shutdown(NZ_main_menu());
 }
