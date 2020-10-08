@@ -22,13 +22,14 @@ init-modules:
 modules:
 	@mkdir -p fluidsynth/build
 	@cd fluidsynth/build && cmake -DCMAKE_C_COMPILER=$(CC)  \
-                                     -Denable-ipv6=off .. \
-                                     -Denable-readline=off .. \
-                                     -Denable-dbus=off .. \
-                                     -Denable-libsndfile=off .. \
-                                     -Denable-jack=off .. \
-                                     -Denable-aufile=off .. \
-                                     && $(MAKE)
+                                      -Denable-ipv6=off \
+                                      -Denable-readline=off \
+                                      -Denable-dbus=off \
+                                      -Denable-libsndfile=off \
+                                      -Denable-jack=on \
+                                      -Denable-alsa=off \
+                                      -Denable-aufile=off .. \
+                                      && $(MAKE)
 
 OSNAME=		$(shell uname -s)
 ARCH=		$(shell uname -p)
