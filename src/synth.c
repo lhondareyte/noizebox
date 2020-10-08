@@ -50,7 +50,19 @@ int fluid_send_midi_event(void * data, fluid_midi_event_t* event) {
 			break;
 
 		case CONTROL_CHANGE:
-			fluid_synth_cc(synth, chan, fluid_midi_event_get_control(event),
+			if ( NZ_midi_mode == EWI || NZ_midi_mode == WX5 ) {
+				control=fluid_midi_event_get_control(event);
+				if ( control == BREATH_MSB ) {
+					/* Map breath control on volume for EWIs */
+					control+=5;
+				}
+				/* Translate current breath curve */
+				cvalue=fluid_midi_event_get_value(event);
+				cvalue=*(p_current_curve + cvalue);
+
+				fluid_synth_cc(synth, chan, control, cvalue);
+			}
+			else fluid_synth_cc(synth, chan, fluid_midi_event_get_control(event),
 					fluid_midi_event_get_value(event));
 			break;
 
@@ -79,40 +91,40 @@ int fluid_send_midi_event(void * data, fluid_midi_event_t* event) {
 #endif
 
 void NZ_delete_synth(void) {
-	delete_fluid_synth(synth);
-	delete_fluid_settings(synth_settings);
 #if !defined (__LEGACY_MIDI_PARSER__)
 	delete_fluid_midi_driver(synth_midi_driver);
 #endif
+	delete_fluid_synth(synth);
+	delete_fluid_settings(synth_settings);
 }
 
 void NZ_create_synth(void) {
 	synth_settings = new_fluid_settings();
 	synth = new_fluid_synth(synth_settings);
 	fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp");
-#endif
 
 #ifdef __NOIZEBOX_DEBUG__
 	fluid_settings_setint(synth_settings, "synth.verbose", TRUE);
 #endif
-	//@fluid_settings_setnum(synth_settings, "synth.polyphony", 64);
+	fluid_settings_setint(synth_settings, "synth.polyphony", 64);
 	fluid_settings_setnum(synth_settings, "synth.gain", 1.0);
-	fluid_settings_setstr(synth_settings, "audio.driver", "oss");
+#if defined (__WITH_JACK__)
+	fluid_settings_setstr(synth_settings, "audio.jack.id", "noizebox");
+	fluid_settings_setstr(synth_settings, "midi.jack.id", "noizebox");
+#endif
+	fluid_settings_setstr(synth_settings, "midi.driver", MIDI_DRIVER);
+	fluid_settings_setstr(synth_settings, "audio.driver", AUDIO_DRIVER);
 	synth_audio_driver = new_fluid_audio_driver(synth_settings, synth);
-	NZ_init_mixer();
 
 #if !defined (__LEGACY_MIDI_PARSER__) && !defined (__WITH_JACK__)
 	fluid_settings_setstr(synth_settings, "midi.oss.device", "/dev/umidi0.0");
-	synth_midi_driver = new_fluid_midi_driver(synth_settings, fluid_send_midi_event, NULL);
 #endif
-#ifndef __WITH_SQLITE__
-	current_font=0;
-	current_font_id=fluid_synth_sfload(synth, NZ_bank[current_font].file, TRUE);
-#else
+
+	synth_midi_driver = new_fluid_midi_driver(synth_settings, fluid_send_midi_event, NULL);
+	NZ_init_mixer();
 	NZ_load_bank();
 	current_font_id=0;
 	NZ_load_font(current_font);
-#endif
 }
 
 void NZ_synth_detune(int p) {
