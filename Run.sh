@@ -33,21 +33,28 @@ export LD_LIBRARY_PATH
 
 #
 # Run application with high priority
-RT="/usr/sbin/rtprio"
+if [ -x /usr/bin/rtprio ] ; then
+	RT="/usr/sbin/rtprio"
+fi
 if [ -x ${BIN} ] ; then
-	if [ -x ${RT} ] ; then
-		${RT} 0 ${BIN} ${MIDI} 2> $LOG
-		rc=$?
+	if [ "$1" == "--jack" ] ; then
+		${RT} ${BIN} ${MIDI} 2> $LOG &
 	else
-		${BIN} ${MIDI} 2> $LOG
-		rc=$?
+		${RT} ${BIN} ${MIDI} 2> $LOG
 	fi
+	rc=$?
 else
 	echo "Fatal error: ${BIN} not found!"
 	rc=42
 fi
 if [ "$rc" -ne 0 ]  && [ "$rc" -ne 42 ]; then
 	cat $LOG 
+	exit $rc
 fi
-#rm -f $LOG
-exit $rc
+
+if [ "$1" == "--jack" ] ; then
+	jack_umidi connect jack_connect usb-umidi0.0:midi.TX noizebox:midi_00
+	jack_connect noizebox:left system:playback_1
+	jack_connect noizebox:right system:playback_2
+fi
+rm -f $LOG
