@@ -1,9 +1,15 @@
 #
 #  $Id$
 # 
-MAKE=		gmake
-APP=		noizebox
-MODULES=	src rsc
+APP       = noizebox
+MODULES   = src rsc
+OSNAME    = $(shell uname -s)
+ARCH      = $(shell uname -p)
+SYS       = "$(OSNAME)/$(ARCH)"
+APPDIR    = ./Noizebox
+CONTENT   = $(APPDIR)/Contents/$(SYS)
+FRAMEWORK = $(APPDIR)/Frameworks/$(SYS)
+RESOURCE  = $(APPDIR)/Resources
 
 all: init-modules modules 
 	for dir in $(MODULES); do \
@@ -21,26 +27,19 @@ init-modules:
 
 modules:
 	@mkdir -p fluidsynth/build
-	@cd fluidsynth/build && cmake -DCMAKE_C_COMPILER=$(CC)  \
-                                      -Denable-ipv6=off \
-                                      -Denable-readline=off \
-                                      -Denable-dbus=off \
-                                      -Denable-libsndfile=off \
-                                      -Denable-jack=on \
-                                      -Denable-alsa=off \
-                                      -Denable-aufile=off .. \
-                                      && $(MAKE)
-
-OSNAME=		$(shell uname -s)
-ARCH=		$(shell uname -p)
-SYS=		"$(OSNAME)/$(ARCH)"
-APPDIR=		./Noizebox
-CONTENT=	$(APPDIR)/Contents/$(SYS)
-FRAMEWORK=	$(APPDIR)/Frameworks/$(SYS)
-RESOURCE=	$(APPDIR)/Resources
+	@cd fluidsynth/build && \
+		cmake -DCMAKE_C_COMPILER=$(CC)  \
+                      -Denable-ipv6=off \
+                      -Denable-readline=off \
+                      -Denable-dbus=off \
+                      -Denable-libsndfile=off \
+                      -Denable-jack=on \
+                      -Denable-alsa=off \
+                      -Denable-aufile=off .. \
+                      && make
 
 resources:
-	@cd rsc && ${MAKE} clean && ${MAKE}
+	@cd rsc && $(MAKE) clean && $(MAKE)
 
 bintree: resources
 	@mkdir -p $(CONTENT) $(FRAMEWORK) $(RESOURCE)/etc/devd
@@ -60,9 +59,9 @@ clean:
 	done
 
 tarball: clean
-	@cd .. && tar cvf noizebox.tgz noizebox/src \
-			               noizebox/rsc \
-			               noizebox/Makefile \
-			               noizebox/BSDmakefile \
-			               noizebox/utils \
-			               noizebox/Run.sh 
+	@cd .. && tar cvf noizebox.tgz \
+                    noizebox/src \
+		    noizebox/rsc \
+		    noizebox/Makefile \
+		    noizebox/utils \
+		    noizebox/Run.sh 
