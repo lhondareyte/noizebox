@@ -2,35 +2,28 @@
 #  $Id$
 # 
 
-PRG=noizebox
-CFLAGS	= -O2 -Wall -I/usr/include -I/usr/local/include -I../fluidsynth/include
-CFLAGS	+= -I ../fuildsynth/include -I ../fluidsynth/build/include 
-CFLAGS	+= -D SQLITE_TEMP_STORE=3
-CFLAGS	+= -D __WT11_COMPAT__
+PRG      = noizebox
+OSNAME   = $(shell uname)
+ARCH     = $(shell uname -m)
+HEADERS  = $(shell ls -S *.h)
+SOURCES  = bank.c conf.c hinv.c ihm.c midi.c mixer.c noizebox.c synth.c 
+OBJECTS  = bank.o conf.o hinv.o ihm.o midi.o mixer.o noizebox.o synth.o 
+
+CFLAGS	 = -O2 -Wall -I/usr/include -I/usr/local/include -I../fluidsynth/include
+CFLAGS	 += -I ../fuildsynth/include -I ../fluidsynth/build/include 
+CFLAGS	 += -D SQLITE_TEMP_STORE=3
+CFLAGS	 += -D __WT11_COMPAT__
+CFLAGS   += -D __WITH_JACK__
 #CFLAGS  += -D __LEGACY_MIDI_PARSER__
-CFLAGS  += -D __WITH_JACK__
 #CFLAGS  += -D __NOIZEBOX_DEBUG__
 
-LDFLAGS= -lsqlite3 -lncurses -lfluidsynth -L/usr/local/lib -pthread -I .
+LDFLAGS  = -lsqlite3 -lncurses -lfluidsynth -L/usr/local/lib -pthread -I .
 LDFLAGS  += -L ../fluidsynth/build/src
+CFLAGS	 += -DVERSION=\"$(GIT_VERSION)\"
+CFLAGS	 += -DYEAR=\"$(GIT_YEAR)\"
 
-HEADERS       = $(shell ls -S *.h)
-SOURCES       = $(shell ls -S *.c)
-OBJECTS       = ${SOURCES:.c=.o}
-
-OSNAME        = $(shell uname)
-ARCH          = $(shell uname -m)
-
-ifndef GIT_VERSION
-GIT_VERSION   = $(shell git describe --tags)
-endif
-
-ifndef GIT_YEAR
-GIT_YEAR      = $(shell git log -1 --format=%cd | cut -d' ' -f5)
-endif
-
-CFLAGS	      += -DVERSION=\"$(GIT_VERSION)\"
-CFLAGS	      += -DYEAR=\"$(GIT_YEAR)\"
+GIT_VER  = $(shell git describe --tags)
+GIT_YEAR = $(shell git log -1 --format=%cd | cut -d' ' -f5)
 
 $(PRG): $(OBJECTS)
 	@printf "Linking   $@:"
