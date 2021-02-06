@@ -3,8 +3,8 @@
 # 
 APP       = noizebox
 MODULES   = src rsc
-OSNAME    = $(shell uname -s)
-ARCH      = $(shell uname -p)
+OSNAME   != uname -s
+ARCH     != uname -p
 SYS       = "$(OSNAME)/$(ARCH)"
 APPDIR    = ./Noizebox
 CONTENT   = $(APPDIR)/Contents/$(SYS)
@@ -15,8 +15,6 @@ all: init-modules modules
 	for dir in $(MODULES); do \
 		(cd $$dir; $(MAKE) ; cd ..); \
 	done
-
-bintree: all
 
 init-modules:
 	@echo $(CC)
@@ -41,7 +39,7 @@ modules:
 resources:
 	@cd rsc && $(MAKE) clean && $(MAKE)
 
-bintree: resources
+bintree: resources all
 	@mkdir -p $(CONTENT) $(FRAMEWORK) $(RESOURCE)/etc/devd
 	@install -m 644 rsc/$(APP).conf $(RESOURCE)/etc/
 	@install -m 644 rsc/soundfont.conf $(RESOURCE)
