@@ -3,9 +3,8 @@
 # 
 
 PRG      = noizebox
-OSNAME   = $(shell uname)
-ARCH     = $(shell uname -m)
-HEADERS  = $(shell ls -S *.h)
+OSNAME  != uname
+ARCH    != uname -m
 SOURCES  = bank.c conf.c hinv.c ihm.c midi.c mixer.c noizebox.c synth.c 
 OBJECTS  = bank.o conf.o hinv.o ihm.o midi.o mixer.o noizebox.o synth.o 
 
