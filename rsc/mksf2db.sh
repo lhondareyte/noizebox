@@ -53,6 +53,7 @@ if [ "$1" == "--empty" ] ; then
 	rm -rf soundfont.conf
 	Exec "Creating empty database" CreateSF2DB soundfont.conf
 	sqlite3 soundfont.conf "insert into bank values('--NO-SOUND--', '/dev/null', 0, 0);"
+        rm -f $LOG
 	exit 0
 fi
 
