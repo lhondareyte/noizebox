@@ -1,5 +1,5 @@
 /*
- * Copyright (c)2013-2017, Luc Hondareyte
+ * Copyright (c)2013-2021, Luc Hondareyte
  * 
  * All rights reserved.
  * 
@@ -33,9 +33,20 @@
 #ifndef	REALTIME
  #define	REALTIME 1
 #endif
-#include "synth.h"
+
+#if defined (__WITH_JACK__)
+#define MIDI_DRIVER     "jack"
+#define AUDIO_DRIVER    "jack"
+#else
+#define MIDI_DRIVER     "oss"
+#define AUDIO_DRIVER    "oss"
+#endif
 
 #if !defined (__LEGACY_MIDI_PARSER__)
+
+int velocity;
+int control=0;  // Control change number
+int cvalue=0;   // Control change value
 
 int fluid_send_midi_event(void * data, fluid_midi_event_t* event) {
 	int chan = fluid_midi_event_get_channel(event);

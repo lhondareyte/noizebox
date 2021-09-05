@@ -1,5 +1,5 @@
 /*
- * Copyright (c)2013-2017, Luc Hondareyte
+ * Copyright (c)2013-2021, Luc Hondareyte
  * 
  * All rights reserved.
  * 
@@ -35,6 +35,7 @@
 #include <unistd.h>
 #include "noizebox.h"
 #include "functions.h"
+#include "synth.h"
 
 extern void NZ_create_synth(void);
 extern void NZ_delete_synth(void);

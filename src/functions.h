@@ -1,5 +1,5 @@
 /*
- * Copyright (c)2017, Luc Hondareyte
+ * Copyright (c)2017-2021, Luc Hondareyte
  * 
  * All rights reserved.
  * 
@@ -52,16 +52,6 @@ int NZ_save_synth_config(void);
 
 void NZ_load_bank(void);
 void NZ_load_font(int);
-
-/*
- * synth.c
- */
-
-void NZ_delete_synth(void);
-void NZ_create_synth(void);
-void NZ_load_next_font(void);
-void NZ_load_prev_font(void);
-void NZ_synth_detune(int);
 
 /*
  * mixer.c
