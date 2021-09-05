@@ -1,5 +1,5 @@
 /*
- * Copyright (c)2017-2021, Luc Hondareyte
+ * Copyright (c)2021, Luc Hondareyte
  * 
  * All rights reserved.
  * 
@@ -27,16 +27,10 @@
  *
  */
 
-#ifndef __NOIZEBOX2_FUNCTIONS_H__
-#define __NOIZEBOX2_FUNCTIONS_H__
+#ifndef __NOIZEBOX_HINV_H__
+#define __NOIZEBOX_HINV_H__
 
-/*
- * bank.c
- */
+float NZ_get_cpu_temperature(void);
+uint64_t NZ_get_free_memory(void);
 
-/*
-void NZ_load_bank(void);
-void NZ_load_font(int);
-*/
-
-#endif // NOIZEBOX2_FUNCTIONS_H__
+#endif // NOIZEBOX_HINV_H__
