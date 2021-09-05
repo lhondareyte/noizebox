@@ -34,9 +34,10 @@
 #include <fluidsynth.h>
 #include <math.h>
 
-#include "noizebox.h"
-#include "functions.h"
 #include "breath.h"
+#include "functions.h"
+#include "noizebox.h"
+#include "mixer.h"
 #include "synth.h"
 
 static WINDOW *screen;
