@@ -1,5 +1,5 @@
 /*
- * Copyright (c)2013, Luc Hondareyte
+ * Copyright (c)2013-2021, Luc Hondareyte
  * 
  * All rights reserved.
  * 
@@ -29,6 +29,7 @@
 
 #include "noizebox.h"
 #include "functions.h"
+#include "synth.h"
 #include <sqlite3.h>
 #include <sys/stat.h>
 

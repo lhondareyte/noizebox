@@ -1,5 +1,5 @@
 /*
- * Copyright (c)2013-2017, Luc Hondareyte
+ * Copyright (c)2013-2021, Luc Hondareyte
  * 
  * All rights reserved.
  * 
@@ -37,6 +37,7 @@
 #include "noizebox.h"
 #include "functions.h"
 #include "breath.h"
+#include "synth.h"
 
 static WINDOW *screen;
 int key;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c)2013-2017, Luc Hondareyte
+ * Copyright (c)2013-2021, Luc Hondareyte
  * 
  * All rights reserved.
  * 
@@ -32,14 +32,6 @@
 
 #include <fluidsynth.h>
 
-#ifndef BREATH_MSB
-#define BREATH_MSB 0x02
-#endif
-
-#ifndef BREATH_LSB
-#define BREATH_LSB 0x22
-#endif
-
 fluid_synth_t* synth;
 fluid_settings_t* synth_settings;
 fluid_audio_driver_t* synth_audio_driver;
@@ -48,21 +40,12 @@ int fluid_send_midi_event(void *, fluid_midi_event_t*);
 
 #if defined ( __LEGACY_MIDI_PARSER__ )
   #include <pthread.h>
-#else
-
-#if defined (__WITH_JACK__)
-#define MIDI_DRIVER     "jack"
-#define AUDIO_DRIVER    "jack"
-#else
-#define MIDI_DRIVER     "oss"
-#define AUDIO_DRIVER    "oss"
 #endif
 
-int velocity;
-int control=0;	// Control change number
-int cvalue=0;	// Control change value
-fluid_midi_driver_t* synth_midi_driver;
-
-#endif
+void NZ_delete_synth(void);
+void NZ_create_synth(void);
+void NZ_load_next_font(void);
+void NZ_load_prev_font(void);
+void NZ_synth_detune(int);
 
 #endif /* __NOIZEBOX_SYNTH_H__ */

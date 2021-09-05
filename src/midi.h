@@ -1,5 +1,5 @@
 /*
- * Copyright (c)2017, Luc Hondareyte
+ * Copyright (c)2017-2021, Luc Hondareyte
  * 
  * All rights reserved.
  * 
@@ -93,6 +93,14 @@
 #define  MIDI_GENPURP4_CTRL	0x13
 #define  MIDI_BREATH_FINE_CTRL	0x22
 
+#ifndef BREATH_MSB
+#define BREATH_MSB 0x02
+#endif
+#ifndef BREATH_LSB
+#define BREATH_LSB 0x22
+#endif
+
+#if defined (__LEGACY_MIDI_DRIVER__)
 volatile uint8_t buffer;	// Buffer de reception MIDI
 volatile uint8_t status;
 volatile uint8_t channel;	// Canal MIDI du message recu
@@ -104,6 +112,7 @@ volatile uint8_t ready;		// Message prêt ou non
 volatile uint8_t rsbuff;	// Buffer pour Running status
 uint8_t activechannel;		// Canal MIDI actif
 
+#endif
 
 /*
  * SysEx message buffer
