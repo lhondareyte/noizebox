@@ -29,7 +29,7 @@
 
 #include <sqlite3.h>
 #include <sys/types.h>
-#include "functions.h"
+
 #include "noizebox.h"
 #include "mixer.h"
 

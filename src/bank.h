@@ -27,16 +27,10 @@
  *
  */
 
-#ifndef __NOIZEBOX2_FUNCTIONS_H__
-#define __NOIZEBOX2_FUNCTIONS_H__
+#ifndef __NOIZEBOX_BANK_H__
+#define __NOIZEBOX_BANK_H__
 
-/*
- * bank.c
- */
-
-/*
 void NZ_load_bank(void);
 void NZ_load_font(int);
-*/
 
-#endif // NOIZEBOX2_FUNCTIONS_H__
+#endif // NOIZEBOX_BANK_H__

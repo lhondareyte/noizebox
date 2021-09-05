@@ -33,8 +33,10 @@
 #include <sys/types.h>
 #include <sys/resource.h>
 #include <unistd.h>
+
+#include "conf.h"
+#include "ihm.h"
 #include "noizebox.h"
-#include "functions.h"
 #include "synth.h"
 
 extern void NZ_create_synth(void);

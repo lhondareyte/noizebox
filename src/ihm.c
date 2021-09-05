@@ -34,8 +34,11 @@
 #include <fluidsynth.h>
 #include <math.h>
 
+#include "bank.h"
 #include "breath.h"
-#include "functions.h"
+#include "conf.h"
+#include "hinv.h"
+#include "ihm.h"
 #include "noizebox.h"
 #include "mixer.h"
 #include "synth.h"

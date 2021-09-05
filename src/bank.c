@@ -28,7 +28,6 @@
  */
 
 #include "noizebox.h"
-#include "functions.h"
 #include "synth.h"
 #include <sqlite3.h>
 #include <sys/stat.h>

@@ -27,10 +27,11 @@
  *
  */
 
-#include "noizebox.h"
-#include "functions.h"
+#include "bank.h"
 #include "midi.h"
 #include "mixer.h"
+#include "noizebox.h"
+
 #ifndef	REALTIME
  #define	REALTIME 1
 #endif

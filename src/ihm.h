@@ -27,16 +27,18 @@
  *
  */
 
-#ifndef __NOIZEBOX2_FUNCTIONS_H__
-#define __NOIZEBOX2_FUNCTIONS_H__
+#ifndef __NOIZEBOX_IHM_H__
+#define __NOIZEBOX_IHM_H__
 
 /*
- * bank.c
+ *  ihm.c
  */
+int  NZ_main_menu(void);
+void NZ_close_mixer(void);
+void NZ_shutdown(int);
+void NZ_set_breath_curve(void);
+void NZ_set_transpose(void);
+void NZ_set_midi_mode(void);
+void NZ_control_volume(int);
 
-/*
-void NZ_load_bank(void);
-void NZ_load_font(int);
-*/
-
-#endif // NOIZEBOX2_FUNCTIONS_H__
+#endif // NOIZEBOX_IHM_H__
