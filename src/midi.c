@@ -54,40 +54,40 @@ void NZ_midi_analyze(uint8_t v) {
 	// Traitement Status Byte
 	if (bit_is_set(buffer,7)) {
 		// Real Time messages
-		if ( buffer >= MIDI_SYSEX_MSG ) {
+		if ( buffer >= MIDI_SYSEX ) {
 			switch (buffer) {
-			case MIDI_SYSEX_MSG:
+				case MIDI_SYSEX:
 				rsbuff=status;
 				status = buffer;
 				next=MIDI_SYSEX_MSG;
 				break;
 				
-			case MIDI_QUARTER_MSG:
+				case MIDI_TIME_CODE:
 				rsbuff=status;
 				status = buffer;
 				next = MIDI_DATA1;
 				break;
 				
-			case MIDI_SONGPOS_MSG:
+				case MIDI_SONG_POSITION:
 				rsbuff=status;
 				status = buffer;
 				next = MIDI_DATA1;
 				break;
 			
-			case MIDI_SONGSEL_MSG:
+				case MIDI_SONG_SELECT:
 				rsbuff=status;
 				status = buffer;
 				next = MIDI_DATA1;
 				break;
 			
 #if defined ( __MIDI_RESET_ENABLE__ )
-			case MIDI_RESET_MSG:	
+				case MIDI_SYSTEM_RESET:
 				fluid_synth_system_reset (synth);
 				ready = MIDI_TRUE;
 				break;
 #endif
 
-			case MIDI_EOX_MSG:
+			case MIDI_EOX:
 				next=MIDI_UNKNOW_MSG;
 				ready=MIDI_TRUE;
 				break;
@@ -114,19 +114,19 @@ void NZ_midi_analyze(uint8_t v) {
 				data1=buffer;
 				next=MIDI_UNKNOW_MSG;
 				switch (status) {
-					case MIDI_PROGCH_MSG:
+					case MIDI_PROGRAM_CHANGE:
 						fluid_synth_program_change(synth, channel, data1);
 						break;
-					case MIDI_CHANAF_MSG:
+					case MIDI_CHANNEL_PRESSURE:
 						fluid_synth_program_change(synth, channel, data1);
 						break;
-					case MIDI_QUARTER_MSG:
+					case MIDI_TIME_CODE:
 						fluid_synth_program_change(synth, channel, data1);
 						break;
-					case MIDI_SONGPOS_MSG:
+					case MIDI_SONG_POSITION:
 						fluid_synth_program_change(synth, channel, data1);
 						break;
-					case MIDI_SONGSEL_MSG:
+					case MIDI_SONG_SELECT:
 						fluid_synth_program_change(synth, channel, data1);
 						break;
 					default:
@@ -139,7 +139,7 @@ void NZ_midi_analyze(uint8_t v) {
 			case MIDI_DATA2: 
 				data2=buffer;
 				switch (status) {
-					case MIDI_NOTEON_MSG : 
+					case MIDI_NOTE_ON:
 						k = data1 + font_key_offset ;
 						if ( k < 0 || k > 127 ) break ;
 						else data1 = k;
@@ -152,19 +152,19 @@ void NZ_midi_analyze(uint8_t v) {
 						}
 						break;
 
-					case MIDI_NOTOFF_MSG : 
+					case MIDI_NOTE_OFF: 
 						k = data1 + font_key_offset ;
 						if ( k < 0 || k > 127 ) break ;
 						else data1 = k;
 						fluid_synth_noteoff(synth, channel, data1);
 						break;
 
-					case MIDI_POLYAF_MSG : 
+					case MIDI_KEY_PRESSURE: 
 						break;
 
-					case MIDI_CTRLCHG_MSG : 
+					case MIDI_CONTROL_CHANGE: 
 						if ( NZ_midi_mode == EWI || NZ_midi_mode == WX5 ) {
-							if ( data1 == MIDI_BREATH_CTRL || data1 == MIDI_BREATH_FINE_CTRL ) {
+							if ( data1 == MIDI_BREATH_CONTROL || data1 == MIDI_BREATH_FINE_CONTROL ) {
 							/* Map breath control on volume for EWIs */
 								data1+=5;
 							/* Translate current breath curve */
@@ -174,12 +174,12 @@ void NZ_midi_analyze(uint8_t v) {
 						fluid_synth_cc(synth, channel, data1, data2);
 						break;
 
-					case MIDI_PITCHB_MSG : 
+					case MIDI_PITCH_BEND: 
 						// Warning, possible problem with pitchbend
 						fluid_synth_pitch_bend(synth, channel, data1);
 						break;
 
-					case MIDI_SONGPOS_MSG :
+					case MIDI_SONG_POSITION:
 						break;
 
 					// You should not arrive here
@@ -194,20 +194,20 @@ void NZ_midi_analyze(uint8_t v) {
 				ready=TRUE;
 				break;
 
-			case MIDI_SYSEX_MSG :
+			case MIDI_SYSEX:
 				#if defined (MIDI_MANUFACTURER_ID)
 
 				#endif
-				next=MIDI_SYSEX_MSG;
+				next=MIDI_SYSEX;
 				break;
 
 			// Running status
 			case MIDI_UNKNOW_MSG :
-				if (rsbuff < MIDI_SYSEX_MSG) {
+				if (rsbuff < MIDI_SYSEX) {
 					status=rsbuff;
 					data1=buffer;
 					next=MIDI_DATA2;
-					if (rsbuff == MIDI_PROGCH_MSG || rsbuff == MIDI_CHANAF_MSG ) {
+					if (rsbuff == MIDI_PROGRAM_CHANGE || rsbuff == MIDI_CHANNEL_PRESSURE ) {
 						next=MIDI_UNKNOW_MSG;
 						ready=MIDI_TRUE;
 					}

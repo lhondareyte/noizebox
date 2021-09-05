@@ -50,72 +50,48 @@
 #define MIDI_DATA1		1
 #define MIDI_DATA2		2
 
-/*
- *  Channel messages
- */
-
-#define MIDI_UNKNOW_MSG		0xFF
-#define MIDI_NOTOFF_MSG		0x80
-#define MIDI_NOTEON_MSG		0x90		
-#define MIDI_POLYAF_MSG		0xA0		
-#define MIDI_CTRLCHG_MSG	0xB0
-#define MIDI_MODECHG_MSG	0xB0
-#define MIDI_PROGCH_MSG		0xC0
-#define MIDI_CHANAF_MSG		0xD0
-#define MIDI_PITCHB_MSG		0xE0
-
-/*
- *  System common messages
- */
-
-#define MIDI_SYSEX_MSG		0xF0
-#define MIDI_QUARTER_MSG	0xF1
-#define MIDI_SONGPOS_MSG	0xF2
-#define MIDI_SONGSEL_MSG	0xF3
-
-/*
- *  One-byte System common messages
- */
-
-#define MIDI_UNDEF1_MSG		0xF4
-#define MIDI_UNDEF2_MSG		0xF5
-#define MIDI_TUNERQ_MSG		0xF6
-#define MIDI_EOX_MSG		0xF7
-
-/*
- *  System Real Time messages 
- */
-
-#define MIDI_TIMECLK_MSG	0xF8
-#define MIDI_UNDEF3_MSG		0xF9
-#define MIDI_START_MSG		0xFA
-#define MIDI_CONTINUE_MSG	0xFB
-#define MIDI_STOP_MSG		0xFC
-#define MIDI_UNDEF4_MSG		0xFD
-#define MIDI_ACTIVE_MSG		0xFE
-#define MIDI_RESET_MSG		0xFF
-
-/*
- *  MIDI Controller Numbers
- */
-
-#define MIDI_BANKSEL_CTRL	0x00
-#define MIDI_MODWHEEL_CTRL	0x01
-#define MIDI_BREATH_CTRL	0x02
-#define MIDI_FOOT_CTRL		0x04
-#define MIDI_PORTMTO_CTRL	0x05
-#define MIDI_DATAENTRY_CTRL	0x06
-#define MIDI_VOLUME_CTRL	0x07
-#define MIDI_BALANCE_CTRL	0x08
-#define MIDI_PAN_CTRL		0x0A
-#define MIDI_EXPRESSION_CTRL	0x0B
-#define MIDI_EFFECT1_CTRL	0x0C
-#define MIDI_EFFECT2_CTRL	0x0D
-#define MIDI_GENPURP1_CTRL	0x10
-#define MIDI_GENPURP2_CTRL	0x11
-#define MIDI_GENPURP3_CTRL	0x12
-#define MIDI_GENPURP4_CTRL	0x13
-#define MIDI_BREATH_FINE_CTRL	0x22
+  /* channel messages */
+#define  MIDI_NOTE_OFF          0x80
+#define  MIDI_NOTE_ON           0x90
+#define  MIDI_KEY_PRESSURE      0xa0
+#define  MIDI_CONTROL_CHANGE    0xb0
+#define  MIDI_PROGRAM_CHANGE    0xc0
+#define  MIDI_CHANNEL_PRESSURE  0xd0
+#define  MIDI_PITCH_BEND        0xe0
+  /* system exclusive */
+#define  MIDI_SYSEX             0xf0
+  /* system common - never in midi files */
+#define  MIDI_TIME_CODE         0xf1
+#define  MIDI_SONG_POSITION     0xf2
+#define  MIDI_SONG_SELECT       0xf3
+#define  MIDI_TUNE_REQUEST      0xf6
+#define  MIDI_EOX               0xf7
+  /* system real-time - never in midi files */
+#define  MIDI_SYNC              0xf8
+#define  MIDI_TICK              0xf9
+#define  MIDI_START             0xfa
+#define  MIDI_CONTINUE          0xfb
+#define  MIDI_STOP              0xfc
+#define  MIDI_ACTIVE_SENSING    0xfe
+#define  MIDI_SYSTEM_RESET      0xff
+  /* MIDI Controller Numbers */
+#define  MIDI_BANKSEL_CTRL	0x00
+#define  MIDI_MODWHEEL_CTRL	0x01
+#define  MIDI_BREATH_CTRL	0x02
+#define  MIDI_FOOT_CTRL		0x04
+#define  MIDI_PORTMTO_CTRL	0x05
+#define  MIDI_DATAENTRY_CTRL	0x06
+#define  MIDI_VOLUME_CTRL	0x07
+#define  MIDI_BALANCE_CTRL	0x08
+#define  MIDI_PAN_CTRL		0x0A
+#define  MIDI_EXPRESSION_CTRL	0x0B
+#define  MIDI_EFFECT1_CTRL	0x0C
+#define  MIDI_EFFECT2_CTRL	0x0D
+#define  MIDI_GENPURP1_CTRL	0x10
+#define  MIDI_GENPURP2_CTRL	0x11
+#define  MIDI_GENPURP3_CTRL	0x12
+#define  MIDI_GENPURP4_CTRL	0x13
+#define  MIDI_BREATH_FINE_CTRL	0x22
 
 volatile uint8_t buffer;	// Buffer de reception MIDI
 volatile uint8_t status;
@@ -124,7 +100,7 @@ volatile uint8_t next;		// Prochaine valeur attendue
 volatile int     k;	
 volatile uint8_t data1;	
 volatile uint8_t data2;
-volatile uint8_t ready;		// Message prêt ou non 
+volatile uint8_t ready;		// Message prÃªt ou non 
 volatile uint8_t rsbuff;	// Buffer pour Running status
 uint8_t activechannel;		// Canal MIDI actif
 
