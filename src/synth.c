@@ -30,6 +30,7 @@
 #include "noizebox.h"
 #include "functions.h"
 #include "midi.h"
+#include "mixer.h"
 #ifndef	REALTIME
  #define	REALTIME 1
 #endif

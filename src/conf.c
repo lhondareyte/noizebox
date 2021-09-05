@@ -1,5 +1,5 @@
 /*
- * Copyright (c)2013-2017, Luc Hondareyte
+ * Copyright (c)2013-2021, Luc Hondareyte
  * 
  * All rights reserved.
  * 
@@ -28,8 +28,10 @@
  */
 
 #include <sqlite3.h>
-#include "noizebox.h"
+#include <sys/types.h>
 #include "functions.h"
+#include "noizebox.h"
+#include "mixer.h"
 
 int NZ_load_synth_parameter(char * col, char * val) {
 	int rc=0;
