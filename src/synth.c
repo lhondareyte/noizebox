@@ -29,6 +29,7 @@
 
 #include "noizebox.h"
 #include "functions.h"
+#include "midi.h"
 #ifndef	REALTIME
  #define	REALTIME 1
 #endif
@@ -39,17 +40,17 @@
 int fluid_send_midi_event(void * data, fluid_midi_event_t* event) {
 	int chan = fluid_midi_event_get_channel(event);
 	switch (fluid_midi_event_get_type(event)) {
-		case NOTE_OFF:
+		case MIDI_NOTE_OFF:
 			fluid_synth_noteoff(synth, chan, fluid_midi_event_get_key(event));
 			break;
 
-		case NOTE_ON:
+		case MIDI_NOTE_ON:
 			velocity=fluid_midi_event_get_velocity(event);
 			fluid_synth_noteon(synth, chan, fluid_midi_event_get_key(event),
 					velocity);
 			break;
 
-		case CONTROL_CHANGE:
+		case MIDI_CONTROL_CHANGE:
 			if ( NZ_midi_mode == EWI || NZ_midi_mode == WX5 ) {
 				control=fluid_midi_event_get_control(event);
 				if ( control == BREATH_MSB ) {
@@ -66,15 +67,15 @@ int fluid_send_midi_event(void * data, fluid_midi_event_t* event) {
 					fluid_midi_event_get_value(event));
 			break;
 
-		case PROGRAM_CHANGE:
+		case MIDI_PROGRAM_CHANGE:
 			fluid_synth_program_change(synth, chan, fluid_midi_event_get_program(event));
 			break;
 
-		case PITCH_BEND:
+		case MIDI_PITCH_BEND:
 			fluid_synth_pitch_bend(synth, chan, fluid_midi_event_get_pitch(event));
 			break;
 
-		case CHANNEL_PRESSURE:
+		case MIDI_CHANNEL_PRESSURE:
 			fluid_synth_channel_pressure(synth, chan, fluid_midi_event_get_value(event));
 			break;
 
