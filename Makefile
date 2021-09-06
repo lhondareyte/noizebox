@@ -31,7 +31,7 @@ modules:
                       -Denable-readline=off \
                       -Denable-dbus=off \
                       -Denable-libsndfile=off \
-                      -Denable-jack=on \
+                      -Denable-jack=off \
                       -Denable-alsa=off \
                       -Denable-aufile=off .. \
                       && make
@@ -39,7 +39,7 @@ modules:
 resources:
 	@cd rsc && $(MAKE) clean && $(MAKE)
 
-bintree: resources all
+bintree: resources 
 	@mkdir -p $(CONTENT) $(FRAMEWORK) $(RESOURCE)/etc/devd
 	@install -m 644 rsc/$(APP).conf $(RESOURCE)/etc/
 	@install -m 644 rsc/soundfont.conf $(RESOURCE)
@@ -51,7 +51,7 @@ bintree: resources all
 	@utils/install_lib.sh -l $(FRAMEWORK) ./fluidsynth/build/src/libfluidsynth*so.*
 
 clean:
-	@rm -rf $(APPDIR)
+	@rm -rf $(APPDIR) fluidsynth
 	for dir in $(MODULES); do \
 		(cd $$dir; $(MAKE) clean ; cd ..); \
 	done
