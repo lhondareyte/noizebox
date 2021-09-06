@@ -31,6 +31,7 @@
 #define __BREATH_H__
 
 #define TABLE_SIZE	128
+#define MAX_BREATH_MODE         6
 
 /* Linear curve */
 static const int a_curve[TABLE_SIZE] = {

@@ -33,7 +33,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "noizebox.h"
+#include "global.h"
 #include "midi.h"
 #include "breath.h"
 

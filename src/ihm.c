@@ -27,24 +27,27 @@
  *
  */
 
+#include <math.h>
 #include <ncurses.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #include <unistd.h>
-#include <fluidsynth.h>
-#include <math.h>
 
 #include "bank.h"
 #include "breath.h"
 #include "conf.h"
 #include "hinv.h"
 #include "ihm.h"
-#include "noizebox.h"
+#include "global.h"
 #include "mixer.h"
 #include "synth.h"
 
+#define MAX_MIDI_MODE	3
+
 static WINDOW *screen;
 int key;
+extern int prev_v;
 extern int max_font_in_bank;
 
 void NZ_refresh(void) {

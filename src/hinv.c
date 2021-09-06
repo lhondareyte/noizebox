@@ -30,7 +30,8 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #include <unistd.h>
-#include "noizebox.h"
+
+#include "global.h"
 
 uint64_t NZ_get_free_memory(void) {
 #ifdef __FreeBSD__
