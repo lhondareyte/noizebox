@@ -27,12 +27,16 @@
  *
  */
 
-#include "noizebox.h"
-#include "synth.h"
+#include <stdlib.h>
+#include <string.h>
 #include <sqlite3.h>
 #include <sys/stat.h>
 
+#include "global.h"
+#include "synth.h"
+
 int max_font_in_bank;
+extern char FONT_DB[256];
 
 void NZ_load_bank(void) {
 	char * sql;

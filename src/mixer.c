@@ -27,17 +27,22 @@
  *
  */
 
-#include <sys/ioctl.h>
+#include <errno.h>
 #include <fcntl.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/ioctl.h>
 #include <sys/soundcard.h>
-#include "noizebox.h"
+#include <unistd.h>
 
+#include "global.h"
 
 #define NZ_shutdown_mixer() close()
 #define NOIZEBOX_MIN_LEVEL	0
 #define NOIZEBOX_MAX_LEVEL	100
 
 int mixer;
+int prev_v; // previous volume level
 
 void NZ_close_mixer(void)
 {

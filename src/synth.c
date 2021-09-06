@@ -30,7 +30,7 @@
 #include "bank.h"
 #include "midi.h"
 #include "mixer.h"
-#include "noizebox.h"
+#include "global.h"
 
 #ifndef	REALTIME
  #define	REALTIME 1

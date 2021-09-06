@@ -27,10 +27,13 @@
  *
  */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sqlite3.h>
 #include <sys/types.h>
 
-#include "noizebox.h"
+#include "global.h"
 #include "mixer.h"
 
 int NZ_load_synth_parameter(char * col, char * val) {
