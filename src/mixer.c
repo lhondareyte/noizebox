@@ -49,13 +49,15 @@ void NZ_close_mixer(void)
 	close(mixer);
 }
 
-int NZ_get_pcm_volume(void) {
+int NZ_get_pcm_volume(void)
+{
 	int v;
 	ioctl(mixer, MIXER_READ(SOUND_MIXER_PCM),&v);
 	return v;
 }
 
-int NZ_init_mixer(void) {
+int NZ_init_mixer(void)
+{
 	int16_t v;
 	v = NOIZEBOX_MAX_LEVEL;
 	v = (v << 8) + NOIZEBOX_MAX_LEVEL;
@@ -70,18 +72,21 @@ int NZ_init_mixer(void) {
 }
 
 #ifdef __NOIZEBOX_DEBUG__
-void NZ_maximize_pcm_volume(void) {
+void NZ_maximize_pcm_volume(void)
+{
 	int v=0x6464;
 	ioctl(mixer, MIXER_WRITE(SOUND_MIXER_PCM),&v);
 }
 
-void NZ_mute_pcm_volume(void) {
+void NZ_mute_pcm_volume(void)
+{
 	int v=0x0000;
 	ioctl(mixer, MIXER_WRITE(SOUND_MIXER_PCM),&v);
 }
 #endif
 
-void NZ_increment_pcm_volume(void) {
+void NZ_increment_pcm_volume(void)
+{
 	int v, r, l;
 	v = NZ_get_pcm_volume();
 	l = v & 0xFF;
@@ -93,7 +98,8 @@ void NZ_increment_pcm_volume(void) {
 	}
 }
 
-void NZ_decrement_pcm_volume(void) {
+void NZ_decrement_pcm_volume(void)
+{
 	int v, r, l;
 	v = NZ_get_pcm_volume();
 	l = v & 0xFF;
@@ -107,16 +113,16 @@ void NZ_decrement_pcm_volume(void) {
 
 /* Balance management */
 /* Up to the left is same as down to the right */
-void NZ_increment_right_pcm_volume(void) {
+void NZ_increment_right_pcm_volume(void)
+{
 	int v, r, l;
 	v = NZ_get_pcm_volume();
 	l = v & 0xFF;
 	r = v >> 8;
-	if ( r > l ) {
-		if ( l < NOIZEBOX_MAX_LEVEL) v+=0x0001; }
-	else {
+	if ( r > l )
+		if ( l < NOIZEBOX_MAX_LEVEL) v+=0x0001;
+	else 
 		if ( r > NOIZEBOX_MIN_LEVEL) v-=0x0100;
-	}
 	ioctl(mixer, MIXER_WRITE(SOUND_MIXER_PCM),&v);
 }
 
@@ -127,11 +133,9 @@ void NZ_increment_left_pcm_volume(void)
 	v = NZ_get_pcm_volume();
 	l = v & 0xFF;
 	r = v >> 8;
-	if ( l > r ) {
+	if ( l > r ) 
 		if ( r < NOIZEBOX_MAX_LEVEL) v+=0x0100;
-	}
-	else {
+	else
 		if ( l > NOIZEBOX_MIN_LEVEL) v-=0x0001;
-	}
 	ioctl(mixer, MIXER_WRITE(SOUND_MIXER_PCM),&v);
 }

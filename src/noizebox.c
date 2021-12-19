@@ -48,7 +48,8 @@ struct sigaction shutdown_action;
 extern void *NZ_midi_read();
 #endif
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 	FILE *conf;
 	if ( argc <= 1 ) {
 		printf("Error: You must specify a OSS midi device.\n");
@@ -62,19 +63,18 @@ int main(int argc, char *argv[]) {
 	}
 	sprintf(CONF_DB,"%s/Resources/noizebox.conf",NZDIR);
 	conf = fopen (CONF_DB, "r" ) ;
-	if ( conf == NULL ) {
+	if ( conf == NULL )
 		sprintf(CONF_DB,"/etc/noizebox.conf");
-	}
-	else fclose(conf);
+	else
+		fclose(conf);
 
 	sprintf(FONT_DB,"%s/Resources/soundfont.conf",NZDIR);
 	signal(SIGINT, NZ_shutdown);
 	signal(SIGTERM, NZ_shutdown);
 
 	setpriority(PRIO_PROCESS, getpid(), PRIO_MAX);
-	if ( NZ_load_synth_config() == -1) {
+	if ( NZ_load_synth_config() == -1)
 		exit (1);
-	}
 
 	NZ_create_synth();
 

@@ -33,7 +33,8 @@
 
 #include "global.h"
 
-uint64_t NZ_get_free_memory(void) {
+uint64_t NZ_get_free_memory(void)
+{
 #ifdef __FreeBSD__
         int pagesize=0;
         int free=0;
@@ -49,7 +50,8 @@ uint64_t NZ_get_free_memory(void) {
 	return 0;
 }
 
-float NZ_get_cpu_temperature(void) {
+float NZ_get_cpu_temperature(void)
+{
 #ifdef __FreeBSD__
         size_t size;
         int buf;
@@ -58,7 +60,7 @@ float NZ_get_cpu_temperature(void) {
 	return 0.0;
 	;
 	/*
-	 * Conversion Kelvin -> Centigrade
+	 * Conversion Kelvin -> Celsius
 	 */
 	return ((float)buf-2732)/10;
 #endif

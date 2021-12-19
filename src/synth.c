@@ -50,7 +50,8 @@ int velocity;
 int control=0;  // Control change number
 int cvalue=0;   // Control change value
 
-int fluid_send_midi_event(void * data, fluid_midi_event_t* event) {
+int fluid_send_midi_event(void * data, fluid_midi_event_t* event)
+{
 	int chan = fluid_midi_event_get_channel(event);
 	switch (fluid_midi_event_get_type(event)) {
 		case MIDI_NOTE_OFF:
@@ -59,24 +60,23 @@ int fluid_send_midi_event(void * data, fluid_midi_event_t* event) {
 
 		case MIDI_NOTE_ON:
 			velocity=fluid_midi_event_get_velocity(event);
-			fluid_synth_noteon(synth, chan, fluid_midi_event_get_key(event),
-					velocity);
+			fluid_synth_noteon(synth, chan, fluid_midi_event_get_key(event), velocity);
 			break;
 
 		case MIDI_CONTROL_CHANGE:
 			if ( NZ_midi_mode == EWI || NZ_midi_mode == WX5 ) {
 				control=fluid_midi_event_get_control(event);
-				if ( control == BREATH_MSB ) {
-					/* Map breath control on volume for EWIs */
+				/* Map breath control on volume for EWIs */
+				if ( control == BREATH_MSB )
 					control+=5;
-				}
 				/* Translate current breath curve */
 				cvalue=fluid_midi_event_get_value(event);
 				cvalue=*(p_current_curve + cvalue);
 
 				fluid_synth_cc(synth, chan, control, cvalue);
 			}
-			else fluid_synth_cc(synth, chan, fluid_midi_event_get_control(event),
+			else
+				fluid_synth_cc(synth, chan, fluid_midi_event_get_control(event),
 					fluid_midi_event_get_value(event));
 			break;
 
@@ -98,13 +98,13 @@ int fluid_send_midi_event(void * data, fluid_midi_event_t* event) {
 
 		default:  
 			return FLUID_FAILED;
-
 	}
 	return 0;
 }
 #endif
 
-void NZ_delete_synth(void) {
+void NZ_delete_synth(void)
+{
 #if !defined (__LEGACY_MIDI_PARSER__)
 	delete_fluid_midi_driver(synth_midi_driver);
 #endif
@@ -112,7 +112,8 @@ void NZ_delete_synth(void) {
 	delete_fluid_settings(synth_settings);
 }
 
-void NZ_create_synth(void) {
+void NZ_create_synth(void)
+{
 	synth_settings = new_fluid_settings();
 	synth = new_fluid_synth(synth_settings);
 	fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp");
@@ -141,7 +142,8 @@ void NZ_create_synth(void) {
 	NZ_load_font(current_font);
 }
 
-void NZ_synth_detune(int p) {
+void NZ_synth_detune(int p)
+{
 	int key;
 	double pitch;
 	for (key=0; key<=127; key++) {
