@@ -34,7 +34,6 @@
  *  ihm.c
  */
 int  NZ_main_menu(void);
-void NZ_close_mixer(void);
 void NZ_shutdown(int);
 void NZ_set_breath_curve(void);
 void NZ_set_transpose(void);

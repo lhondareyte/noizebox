@@ -32,6 +32,7 @@
 
 int  NZ_init_mixer(void);
 int  NZ_get_pcm_volume(void);
+void NZ_close_mixer(void);
 void NZ_mute_pcm_volume(void);
 void NZ_maximize_pcm_volume(void);
 void NZ_increment_pcm_volume(void);
