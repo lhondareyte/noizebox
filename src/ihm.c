@@ -50,15 +50,18 @@ int key;
 extern int prev_v;
 extern int max_font_in_bank;
 
-void NZ_refresh(void) {
+void NZ_refresh(void)
+{
 	/* workaround for tinyVT */
 	//usleep (25000);
 	refresh();
 }
 
-void NZ_shutdown(int rc) {
+void NZ_shutdown(int rc)
+{
         clear();
-        if ( rc == 0 ) mvprintw(0,0,"  Shutdown in progress\n      Please wait...  ");
+        if ( rc == 0 )
+		mvprintw(0,0,"  Shutdown in progress\n      Please wait...  ");
         NZ_refresh();
         endwin();
         NZ_save_synth_config();
@@ -71,7 +74,8 @@ void NZ_shutdown(int rc) {
 
 }
 
-void NZ_refresh_volume(void) {
+void NZ_refresh_volume(void)
+{
 	int16_t v;
 	v=NZ_get_pcm_volume();
 	if ( prev_v != v ) {
@@ -80,7 +84,8 @@ void NZ_refresh_volume(void) {
 	}
 }
 
-void NZ_refresh_midi_mode(void) {
+void NZ_refresh_midi_mode(void) 
+{
 	char * current_midi_mode_name = "";
 	switch (NZ_midi_mode) {
 		case 0x01:
@@ -97,14 +102,14 @@ void NZ_refresh_midi_mode(void) {
 	NZ_refresh();
 }
 
-void NZ_refresh_font_name(void) {
-
+void NZ_refresh_font_name(void)
+{
 	mvprintw(0,0,"P=%-13s", current_font_name);
 	NZ_refresh();
 }
 
-void NZ_refresh_breath_curve() {
-
+void NZ_refresh_breath_curve()
+{
 	switch (NZ_breath_curve) {
 		case 0x01:
 			p_current_curve = a_curve;
@@ -130,24 +135,24 @@ void NZ_refresh_breath_curve() {
 	NZ_refresh();
 }
 
-void NZ_refresh_transpose() {
-
+void NZ_refresh_transpose()
+{
 	float f;
-
-	if ( NZ_pitch_detune == 0) {
+	if ( NZ_pitch_detune == 0)
 		mvprintw(1,5,"T=000.0");
-	}
 	else {
 		f= (float)NZ_pitch_detune /10;
-		if ( f < 0.0 ) mvprintw(1,5,"T=-%04.1f", fabs(f));
-		else mvprintw(1,5,"T=+%04.1f", f);
+		if ( f < 0.0 )
+			mvprintw(1,5,"T=-%04.1f", fabs(f));
+		else
+			mvprintw(1,5,"T=+%04.1f", f);
 	}
 	move(1,9);
 	NZ_refresh();
 }
 
-void NZ_refresh_main_menu(void) {
-
+void NZ_refresh_main_menu(void)
+{
 	clear();
 	NZ_refresh_font_name();
 	NZ_refresh_volume();
@@ -156,10 +161,10 @@ void NZ_refresh_main_menu(void) {
 	NZ_refresh_transpose();
 	NZ_refresh_midi_mode();
 	mvprintw(1,20,"Info");
-//	NZ_refresh();
 }
 
-void NZ_set_breath_curve(void) {
+void NZ_set_breath_curve(void)
+{
 	move(1,3);
 	curs_set(1);
 	while (1) {
@@ -187,7 +192,8 @@ void NZ_set_breath_curve(void) {
 	}
 }
 
-void NZ_set_transpose(void) {
+void NZ_set_transpose(void)
+{
 	move(1,9);
 	curs_set(1);
 	while (1) {
@@ -217,8 +223,8 @@ void NZ_set_transpose(void) {
 	}
 }
 
-void NZ_set_midi_mode(void) {
-
+void NZ_set_midi_mode(void)
+{
 	move(1,17);
 	curs_set(1);
 	while (1) {
@@ -248,8 +254,8 @@ void NZ_set_midi_mode(void) {
 	}
 }
 
-void NZ_control_volume(int k) {
-
+void NZ_control_volume(int k)
+{
 	switch (k) {
 		/* Master Volume */
 		case 'A':
@@ -277,7 +283,8 @@ void NZ_control_volume(int k) {
 	NZ_refresh_volume();
 }
 
-void NZ_info_menu(void) {
+void NZ_info_menu(void)
+{
 	/*
          * No wait for keyboard
 	 */
@@ -297,7 +304,6 @@ void NZ_info_menu(void) {
 		mvprintw(1,0,"Free=%dK",mem); 
 		NZ_refresh();
 		usleep (400000);
-		
 		key=getch();
 		switch (key) {
 			case '1': case '2': case '3': 
@@ -313,7 +319,8 @@ void NZ_info_menu(void) {
 	}
 }
 
-int NZ_main_menu (void) {
+int NZ_main_menu (void)
+{
 	/* Init curses */
 	screen=initscr();
 	noecho();
@@ -325,24 +332,18 @@ int NZ_main_menu (void) {
 	NZ_refresh();
 
 	/* Splash screen */
-
 	mvprintw(0,0,"     Noizebox %s     \n  (c)%s L Hondareyte  ", VERSION, YEAR);
 	NZ_refresh();
 	sleep(1);
 
-	/*
-	 * Main menu
-	 */
+	/* Main menu */
 	prev_v = INVALID;
 	NZ_refresh_main_menu();
 
-	/* 
-	 * Loop for key pressed
-	 */
+	/* Loop for key pressed */
 	while (1) {
-		if ( key == 'Q' ) {
+		if ( key == 'Q' )
 			NZ_shutdown(42);
-		}
 		key=getch();
 		switch (key) {
 			case '1':

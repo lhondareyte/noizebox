@@ -49,9 +49,10 @@
  #define bit_is_set(var,pos) ((var) & (1<<(pos)))
 #endif
 
-void NZ_midi_analyze(uint8_t v) {
+void NZ_midi_analyze(uint8_t v)
+{
 	buffer=v;
-	// Traitement Status Byte
+	// Check Status Byte
 	if (bit_is_set(buffer,7)) {
 		// Real Time messages
 		if ( buffer >= MIDI_SYSEX ) {
@@ -143,9 +144,8 @@ void NZ_midi_analyze(uint8_t v) {
 						k = data1 + font_key_offset ;
 						if ( k < 0 || k > 127 ) break ;
 						else data1 = k;
-						if ( data2 == 0 ) {
+						if ( data2 == 0 )
 							fluid_synth_noteoff(synth, channel, data1);
-						}
 						else {
 							if ( NZ_midi_mode == WX5 ) data2=100;
 							fluid_synth_noteon(synth, channel, data1,  data2);
@@ -225,7 +225,8 @@ void NZ_midi_analyze(uint8_t v) {
 	}
 }
 
-int *NZ_midi_read( char *dev ) {
+int *NZ_midi_read( char *dev )
+{
 	FILE *fp;
 	uint8_t c;
 	while (( fp=fopen(dev,"r")) == NULL ) {

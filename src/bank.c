@@ -38,7 +38,8 @@
 int max_font_in_bank;
 extern char FONT_DB[256];
 
-void NZ_load_bank(void) {
+void NZ_load_bank(void)
+{
 	char * sql;
 	sqlite3 *bank;
 	sqlite3_stmt *stmt;
@@ -64,7 +65,8 @@ void NZ_load_bank(void) {
 	sqlite3_shutdown();
 }
 
-void NZ_load_font(int font) {
+void NZ_load_font(int font)
+{
 	int  i;
         char sql[80];
         sqlite3 *bank;
@@ -77,9 +79,8 @@ void NZ_load_font(int font) {
 		fluid_synth_deactivate_tuning(synth, i, FALSE);
 	}
 
-	if ( current_font_id != 0 ) {
+	if ( current_font_id != 0 )
 		fluid_synth_sfunload(synth,current_font_id,1);
-	}
 	if (current_font == 0 ) current_font=max_font_in_bank;
 	if (current_font == max_font_in_bank + 1) current_font=1;
         
@@ -98,7 +99,6 @@ void NZ_load_font(int font) {
 			font_key_offset=sqlite3_column_int(stmt,2);
                 	sqlite3_finalize(stmt);
 		}
-		
         }
         else {
                 fprintf (stderr, "Error: Failed to prepare database: %s\n",sqlite3_errmsg(bank));
@@ -107,7 +107,6 @@ void NZ_load_font(int font) {
 
         sqlite3_close(bank);
         sqlite3_shutdown();
-
 	fluid_synth_system_reset(synth);
 
 	if (stat(ramdisk_font_path, &st) == 0) {
