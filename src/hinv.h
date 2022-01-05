@@ -30,6 +30,7 @@
 #ifndef __NOIZEBOX_HINV_H__
 #define __NOIZEBOX_HINV_H__
 
+int NZ_get_vcpus(void);
 float NZ_get_cpu_temperature(void);
 uint64_t NZ_get_free_memory(void);
 

@@ -32,6 +32,17 @@
 #include <unistd.h>
 
 #include "global.h"
+#include "hinv.h"
+
+int NZ_get_vcpus(void)
+{
+#ifdef __FreeBSD__
+	int vcpus=1;
+	size_t size = sizeof vcpus;
+        sysctlbyname("hw.ncpus", &vcpus, &size, NULL, 0);
+#endif
+	return(vcpus);
+}
 
 uint64_t NZ_get_free_memory(void)
 {
@@ -55,14 +66,14 @@ float NZ_get_cpu_temperature(void)
 #ifdef __FreeBSD__
         size_t size;
         int buf;
+	float temp = 20.0;
         size = sizeof buf;
-        if (sysctlbyname("hw.acpi.thermal.tz0.temperature", &buf, &size, NULL, 0) == -1 )
-	return 0.0;
-	;
-	/*
-	 * Conversion Kelvin -> Celsius
-	 */
-	return ((float)buf-2732)/10;
+        if (sysctlbyname("hw.acpi.thermal.tz0.temperature", &buf, &size, NULL, 0) == 0)
+		/* deci-Kelvin -> Celsius */
+		temp = ((float)buf-2732)/10;
+	else if (sysctlbyname("dev.cpu.0.temperature", &buf, &size, NULL, 0) == 0) {
+		temp = ((float)buf-2732)/10;
+	}
 #endif
-	return 0.0;
+	return temp;
 }
