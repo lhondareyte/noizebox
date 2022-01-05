@@ -105,8 +105,8 @@ void NZ_load_font(int font)
                 exit (1);
         }
 
-        sqlite3_close(bank);
-        sqlite3_shutdown();
+	sqlite3_close(bank);
+	sqlite3_shutdown();
 	fluid_synth_system_reset(synth);
 
 	if (stat(ramdisk_font_path, &st) == 0) {
