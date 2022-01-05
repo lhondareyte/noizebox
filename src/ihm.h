@@ -30,9 +30,6 @@
 #ifndef __NOIZEBOX_IHM_H__
 #define __NOIZEBOX_IHM_H__
 
-/*
- *  ihm.c
- */
 int  NZ_main_menu(void);
 void NZ_shutdown(int);
 void NZ_set_breath_curve(void);

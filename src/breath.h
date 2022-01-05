@@ -159,7 +159,6 @@ static const int c_curve[TABLE_SIZE] = {
 	124, 124, 124, 125, 125, 125, 126, 126
 };
 
-/* See README file  */
 static const int d_curve[TABLE_SIZE] = {
 
 	0, 3, 6, 9, 12, 15, 18, 21, 
@@ -180,7 +179,6 @@ static const int d_curve[TABLE_SIZE] = {
 	124, 125, 125, 125, 126, 126, 127, 127
 };
 
-/* See README file */
 static const int e_curve[TABLE_SIZE] = {
 
 	0, 1, 1, 1, 1, 2, 2, 3, 
