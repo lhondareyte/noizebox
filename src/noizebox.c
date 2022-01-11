@@ -39,9 +39,6 @@
 #include "noizebox.h"
 #include "synth.h"
 
-extern void NZ_create_synth(void);
-extern void NZ_delete_synth(void);
-
 struct sigaction shutdown_action;
 
 #if defined (__LEGACY_MIDI_PARSER__)
@@ -53,13 +50,13 @@ int main(int argc, char *argv[])
 	FILE *conf;
 	if ( argc <= 1 ) {
 		printf("Error: You must specify a OSS midi device.\n");
-		exit (1);
+		goto error;
 	}
 
 	NZDIR=getenv("NZDIR");
 	if ( ! NZDIR ) {
 		printf ("Error; NZDIR is not set!\n");
-		exit (1);
+		goto error;
 	}
 	sprintf(CONF_DB,"%s/Resources/noizebox.conf",NZDIR);
 	conf = fopen (CONF_DB, "r" ) ;
@@ -74,7 +71,7 @@ int main(int argc, char *argv[])
 
 	setpriority(PRIO_PROCESS, getpid(), PRIO_MAX);
 	if ( NZ_load_synth_config() == -1)
-		exit (1);
+		goto error;
 
 	NZ_create_synth();
 
@@ -85,10 +82,13 @@ int main(int argc, char *argv[])
 	while ( c < argc ) {
 		if (pthread_create(&threads[c-1], NULL, NZ_midi_read, argv[c])) {
 			perror("Error: Cannot create MIDI thread");
-			exit (-1);
+			goto error;
 		}
 		c++;
 	}
 #endif
 	NZ_shutdown(NZ_main_menu());
+
+error:
+	exit (1);
 }

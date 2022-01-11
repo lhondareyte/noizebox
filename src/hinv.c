@@ -48,10 +48,10 @@ uint64_t NZ_get_free_memory(void)
 {
 #ifdef __FreeBSD__
         int pagesize=0;
-        int free=0;
         int inactive=0;
-        size_t size;
-        size = sizeof free;
+        int free=0;
+        size_t size = sizeof free;
+
         sysctlbyname("vm.stats.vm.v_free_count", &free, &size, NULL, 0);
         sysctlbyname("vm.stats.vm.v_inactive_count", &inactive, &size, NULL, 0);
         size = sizeof pagesize;
@@ -64,10 +64,10 @@ uint64_t NZ_get_free_memory(void)
 float NZ_get_cpu_temperature(void)
 {
 #ifdef __FreeBSD__
-        size_t size;
-        int buf;
 	float temp = 20.0;
-        size = sizeof buf;
+        int buf;
+        size_t size = sizeof buf;
+
         if (sysctlbyname("hw.acpi.thermal.tz0.temperature", &buf, &size, NULL, 0) == 0)
 		/* deci-Kelvin -> Celsius */
 		temp = ((float)buf-2732)/10;
