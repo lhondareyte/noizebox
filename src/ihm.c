@@ -71,7 +71,6 @@ void NZ_shutdown(int rc)
 #endif
         NZ_close_mixer();
         exit (rc);
-
 }
 
 void NZ_refresh_volume(void)
