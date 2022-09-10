@@ -36,8 +36,8 @@
 
 int NZ_get_vcpus(void)
 {
-#ifdef __FreeBSD__
 	int vcpus=1;
+#ifdef __FreeBSD__
 	size_t size = sizeof vcpus;
         sysctlbyname("hw.ncpus", &vcpus, &size, NULL, 0);
 #endif
@@ -63,8 +63,8 @@ uint64_t NZ_get_free_memory(void)
 
 float NZ_get_cpu_temperature(void)
 {
-#ifdef __FreeBSD__
 	float temp = 20.0;
+#ifdef __FreeBSD__
         int buf;
         size_t size = sizeof buf;
 
