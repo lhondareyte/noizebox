@@ -51,6 +51,8 @@
 #define MIDI_DATA2		2
 
   /* channel messages */
+#define  MIDI_UNKNOWN           0x00
+
 #define  MIDI_NOTE_OFF          0x80
 #define  MIDI_NOTE_ON           0x90
 #define  MIDI_KEY_PRESSURE      0xa0
@@ -100,7 +102,7 @@
 #define BREATH_LSB 0x22
 #endif
 
-#if defined (__LEGACY_MIDI_DRIVER__)
+#if defined (__LEGACY_MIDI_PARSER__)
 volatile uint8_t buffer;	// Buffer de reception MIDI
 volatile uint8_t status;
 volatile uint8_t channel;	// Canal MIDI du message recu

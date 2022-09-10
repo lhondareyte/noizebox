@@ -60,7 +60,7 @@ void NZ_midi_analyze(uint8_t v)
 				case MIDI_SYSEX:
 				rsbuff=status;
 				status = buffer;
-				next=MIDI_SYSEX_MSG;
+				next=MIDI_SYSEX;
 				break;
 				
 				case MIDI_TIME_CODE:
@@ -89,7 +89,7 @@ void NZ_midi_analyze(uint8_t v)
 #endif
 
 			case MIDI_EOX:
-				next=MIDI_UNKNOW_MSG;
+				next=MIDI_UNKNOWN;
 				ready=MIDI_TRUE;
 				break;
 
@@ -113,7 +113,7 @@ void NZ_midi_analyze(uint8_t v)
 		switch (next) {
 			case MIDI_DATA1: 
 				data1=buffer;
-				next=MIDI_UNKNOW_MSG;
+				next=MIDI_UNKNOWN;
 				switch (status) {
 					case MIDI_PROGRAM_CHANGE:
 						fluid_synth_program_change(synth, channel, data1);
@@ -184,13 +184,13 @@ void NZ_midi_analyze(uint8_t v)
 
 					// You should not arrive here
 					default: 
-						status=MIDI_UNKNOW_MSG;
-						next=MIDI_UNKNOW_MSG;
+						status=MIDI_UNKNOWN;
+						next=MIDI_UNKNOWN;
 						ready=FALSE;
 						fluid_synth_system_reset(synth);
 						break;
 				}
-				next=MIDI_UNKNOW_MSG;
+				next=MIDI_UNKNOWN;
 				ready=TRUE;
 				break;
 
@@ -202,13 +202,13 @@ void NZ_midi_analyze(uint8_t v)
 				break;
 
 			// Running status
-			case MIDI_UNKNOW_MSG :
+			case MIDI_UNKNOWN :
 				if (rsbuff < MIDI_SYSEX) {
 					status=rsbuff;
 					data1=buffer;
 					next=MIDI_DATA2;
 					if (rsbuff == MIDI_PROGRAM_CHANGE || rsbuff == MIDI_CHANNEL_PRESSURE ) {
-						next=MIDI_UNKNOW_MSG;
+						next=MIDI_UNKNOWN;
 						ready=MIDI_TRUE;
 					}
 				}
