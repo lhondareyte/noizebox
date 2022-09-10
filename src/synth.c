@@ -133,9 +133,8 @@ void NZ_create_synth(void)
 
 #if !defined (__LEGACY_MIDI_PARSER__) && !defined (__WITH_JACK__)
 	fluid_settings_setstr(synth_settings, "midi.oss.device", "/dev/umidi0.0");
-#endif
-
 	synth_midi_driver = new_fluid_midi_driver(synth_settings, fluid_send_midi_event, NULL);
+#endif
 	NZ_init_mixer();
 	NZ_load_bank();
 	current_font_id=0;
