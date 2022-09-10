@@ -2,7 +2,7 @@
 #
 # This file is part of the Noizebox Project.
 #
-# Copyright (c)2016,  Luc Hondareyte 
+# Copyright (c)2016-2022,  Luc Hondareyte 
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -49,7 +49,7 @@ CreateSF2DB() {
 	sqlite3 $DB "create table bank ( name varchar(12), file varchar(50) , key_offset smallint, pitch_offset smallint);"
 }
 
-if [ "$1" == "--empty" ] ; then
+if [ "$1" = "--empty" ] ; then
 	rm -rf soundfont.conf
 	Exec "Creating empty database" CreateSF2DB soundfont.conf
 	sqlite3 soundfont.conf "insert into bank values('--NO-SOUND--', '/dev/null', 0, 0);"
