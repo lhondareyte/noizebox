@@ -1,5 +1,5 @@
 /*
- * Copyright (c)2013-2017, Luc Hondareyte
+ * Copyright (c)2013-2022, Luc Hondareyte
  * 
  * All rights reserved.
  * 
@@ -32,6 +32,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef __linux__
+#include <stdint.h>
+#endif
 
 #include "global.h"
 #include "midi.h"
