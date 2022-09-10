@@ -31,6 +31,9 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
+#ifdef __linux__
+#include <stdint.h>
+#endif
 #include <sys/ioctl.h>
 #include <sys/soundcard.h>
 #include <unistd.h>

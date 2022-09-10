@@ -1,5 +1,5 @@
 /*
- * Copyright (c)2013-2021, Luc Hondareyte
+ * Copyright (c)2013-2022, Luc Hondareyte
  * 
  * All rights reserved.
  * 
@@ -31,8 +31,13 @@
 #include <ncurses.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#ifdef __linux__
+#include <stdint.h>
+#endif
 #include <sys/sysctl.h>
 #include <unistd.h>
+#include <pthread.h>
+#include <signal.h>
 
 #include "bank.h"
 #include "breath.h"
