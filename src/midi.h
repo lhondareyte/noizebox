@@ -102,20 +102,6 @@
 #define BREATH_LSB 0x22
 #endif
 
-#if defined (__LEGACY_MIDI_PARSER__)
-volatile uint8_t buffer;	// Buffer de reception MIDI
-volatile uint8_t status;
-volatile uint8_t channel;	// Canal MIDI du message recu
-volatile uint8_t next;		// Prochaine valeur attendue
-volatile int     k;	
-volatile uint8_t data1;	
-volatile uint8_t data2;
-volatile uint8_t ready;		// Message prêt ou non 
-volatile uint8_t rsbuff;	// Buffer pour Running status
-uint8_t activechannel;		// Canal MIDI actif
-
-#endif
-
 /*
  * SysEx message buffer
  */
@@ -128,8 +114,8 @@ uint8_t activechannel;		// Canal MIDI actif
  */
  
 #define	MIDI_SetRcvChannel(c)	activechannel=c
-#define	MIDI_Ack()		ready=MIDI_FALSE;data1=data2=status=MIDI_UNKNOW_MSG
-#define	MIDI_Init(c)		status=data1=data2=rsbuff=MIDI_UNKNOW_MSG;activechannel=c;
+#define	MIDI_Ack()		ready=MIDI_FALSE;data1=data2=status=MIDI_UNKNOWN
+#define	MIDI_Init(c)		status=data1=data2=rsbuff=MIDI_UNKNOWN;activechannel=c;
 #define	MIDI_MsgIsReady()	ready==MIDI_TRUE
 
 #endif /* __NOIZEBOX_MIDI_H__ */
