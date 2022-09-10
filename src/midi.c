@@ -49,6 +49,17 @@
  #define bit_is_set(var,pos) ((var) & (1<<(pos)))
 #endif
 
+volatile uint8_t buffer;
+volatile uint8_t status;
+volatile uint8_t channel;       // MIDI channel from current message
+volatile uint8_t next;          // Next value expected
+volatile int     k;
+volatile uint8_t data1;
+volatile uint8_t data2;
+volatile uint8_t ready;         // Message ready or not
+volatile uint8_t rsbuff;        // Running status buffer
+uint8_t activechannel;          // MIDI Active channel
+
 void NZ_midi_analyze(uint8_t v)
 {
 	buffer=v;
@@ -164,7 +175,7 @@ void NZ_midi_analyze(uint8_t v)
 
 					case MIDI_CONTROL_CHANGE: 
 						if ( NZ_midi_mode == EWI || NZ_midi_mode == WX5 ) {
-							if ( data1 == MIDI_BREATH_CONTROL || data1 == MIDI_BREATH_FINE_CONTROL ) {
+							if ( data1 == MIDI_BREATH_CTRL || data1 == MIDI_BREATH_FINE_CTRL ) {
 							/* Map breath control on volume for EWIs */
 								data1+=5;
 							/* Translate current breath curve */
