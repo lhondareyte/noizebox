@@ -4,7 +4,7 @@
 APP       = noizebox
 MODULES   = src rsc
 OSNAME   != uname -s
-ARCH     != uname -p
+ARCH     != uname -m
 SYS       = "$(OSNAME)/$(ARCH)"
 APPDIR    = ./Noizebox
 CONTENT   = $(APPDIR)/Contents/$(SYS)
