@@ -6,14 +6,14 @@ if [ $ID -ne 0 ] ; then
 	echo "You must be root to run this script."
 	exit 1
 fi
-if [ "$1" == "--local" ] ; then
+if [ "$1" = "--local" ] ; then
 	export DIR="/Applications/Noizebox"
 else
 	export DIR="./Noizebox"
 fi
 
 HOST=$(uname -s)
-ARCH=$(uname -p)
+ARCH=$(uname -m)
 APP=noizebox
 PLATFORM="${HOST}/${ARCH}"
 BIN="${DIR}/Contents/${PLATFORM}/${APP}"
@@ -37,7 +37,7 @@ if [ -x /usr/bin/rtprio ] ; then
 	RT="/usr/sbin/rtprio"
 fi
 if [ -x ${BIN} ] ; then
-	if [ "$1" == "--jack" ] ; then
+	if [ "$1" = "--jack" ] ; then
 		${RT} ${BIN} ${MIDI} 2> $LOG &
 	else
 		${RT} ${BIN} ${MIDI} 2> $LOG
@@ -52,7 +52,7 @@ if [ "$rc" -ne 0 ]  && [ "$rc" -ne 42 ]; then
 	exit $rc
 fi
 
-if [ "$1" == "--jack" ] ; then
+if [ "$1" = "--jack" ] ; then
 	jack_umidi connect jack_connect usb-umidi0.0:midi.TX noizebox:midi_00
 	jack_connect noizebox:left system:playback_1
 	jack_connect noizebox:right system:playback_2

@@ -34,7 +34,9 @@
 #ifdef __linux__
 #include <stdint.h>
 #endif
+#ifdef __FreeBSD__
 #include <sys/sysctl.h>
+#endif
 #include <unistd.h>
 #include <pthread.h>
 #include <signal.h>

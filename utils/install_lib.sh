@@ -54,7 +54,7 @@ Extra_lib () {
 	done
 }
 
-if [ $1 == "-l" ] ; then
+if [ $1 = "-l" ] ; then
 	shift
 	ARG1=$1
 	shift
