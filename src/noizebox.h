@@ -45,8 +45,8 @@
 #include <curses.h>
 #include <fluidsynth.h>
 
-int current_font;
-volatile int current_font_id;
+int startup_font = 1;
+volatile int current_font;
 char current_font_name[14];
 char current_font_path[256];
 char ramdisk_font_path[256];

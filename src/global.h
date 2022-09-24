@@ -59,12 +59,12 @@ extern char CONF_DB[256];
 
   /* fonts */
 extern char FONT_DB[256];
-extern int current_font;
+extern int startup_font;          // font id store in noizebox.conf
 extern int font_key_offset;
 extern char current_font_name[];
 extern char current_font_path[];
 extern char ramdisk_font_path[];
-extern volatile int current_font_id;
+extern volatile int current_font; // current font id
 
 extern int NZ_pitch_detune;
 
