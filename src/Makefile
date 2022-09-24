@@ -8,7 +8,7 @@ ARCH    != uname -m
 SOURCES  = bank.c conf.c hinv.c ihm.c midi.c mixer.c noizebox.c synth.c 
 OBJECTS  = bank.o conf.o hinv.o ihm.o midi.o mixer.o noizebox.o synth.o 
 
-CFLAGS	 = -O2 -Wall -Wextra -Wpedantic
+CFLAGS	 = -O2  -Wall -Wextra -Wpedantic
 CFLAGS	 += -I /usr/include -I /usr/local/include -I .
 CFLAGS	 += -I ../fluidsynth/include -I ../fluidsynth/build/include 
 CFLAGS	 += -D SQLITE_TEMP_STORE=3
@@ -19,7 +19,7 @@ CFLAGS  += -D __LEGACY_MIDI_PARSER__
 CFLAGS	 += -DVERSION=\"$(GIT_VERSION)\"
 CFLAGS	 += -DYEAR=\"$(GIT_YEAR)\"
 
-LDFLAGS  = -lsqlite3 -lncurses -lfluidsynth -pthread
+LDFLAGS  = -s -lsqlite3 -lncurses -lfluidsynth -pthread
 LDFLAGS  += -L ../fluidsynth/build/src
 LDFLAGS  += -L /usr/local/lib
 LDFLAGS  += -L /usr/lib/$(ARCH)-linux-gnu

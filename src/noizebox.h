@@ -70,8 +70,6 @@ fluid_midi_router_t* router;
 fluid_settings_t* synth_settings;
 fluid_audio_driver_t* synth_audio_driver;
 
-char * env;	// NZDIR, NZPATH
-
 #if defined (__LEGACY_MIDI_PARSER__)
   #include <pthread.h>
 #else

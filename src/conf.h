@@ -1,5 +1,5 @@
 /*
- * Copyright (c)2021, Luc Hondareyte
+ * Copyright (c)2021-2022, Luc Hondareyte
  * 
  * All rights reserved.
  * 
@@ -32,5 +32,7 @@
 
 int NZ_load_synth_config(void);
 int NZ_save_synth_config(void);
+int NZ_load_parameter(char *, char *, char *, char *);
+int NZ_save_parameter(char *, char *, char *, int);
 
 #endif // NOIZEBOX_CONF_H__
