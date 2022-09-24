@@ -32,7 +32,6 @@
 
 app=noizebox
 appdir=/Applications/Noizebox
-libdir=/Library/Noizebox
 osname=$(uname -s)
 arch=$(uname -p)
 platform="${osname}/${arch}"
@@ -75,7 +74,7 @@ make_ramdisk () {
 	mount -t ufs /dev/$MD /Ramdisk
 	mkdir -p /Ramdisk/SF2
 	cd /Ramdisk/SF2
-	for f in $(ls -S ${libdir}/Resources/SF2/*.sf2)
+	for f in $(ls -S ${appdir}/Resources/SF2/*.sf2)
 	do
 		_f=$(basename $f)
        		quiet cp "$f" "${_f}.$$"

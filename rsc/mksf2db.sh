@@ -29,7 +29,7 @@
 # SUCH DAMAGE.
 #
 LOG="/tmp/$(basename $0).$$"
-FONTSDIR="/Library/Noizebox/SF2/"
+FONTSDIR="/Applications/Noizebox/Resources/SF2/"
 FONTS="${FONTSDIR}/*.lst"
 SF2DB="/Applications/Noizebox/Resources/soundfont.conf"
 
