@@ -49,7 +49,7 @@ int NZ_load_parameter(char * database, char * table, char * param, char * str)
 	sprintf (sql, "select val from %s where param=\'%s\'", table, param);
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) {
 		if (  sqlite3_step(stmt) == SQLITE_ROW ) {
-			if ( str == NULL ) {
+			if ( ! str ) {
 				rc=sqlite3_column_int(stmt,0);
 			}
 			else {
