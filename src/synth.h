@@ -36,8 +36,6 @@
 
 void NZ_delete_synth(void);
 void NZ_create_synth(void);
-void NZ_load_next_font(void);
-void NZ_load_prev_font(void);
 void NZ_synth_detune(int);
 
 #endif /* __NOIZEBOX_SYNTH_H__ */

@@ -80,9 +80,9 @@ int NZ_load_synth_config(void)
 
 	rc=NZ_load_synth_parameter("soundfont","last_id");
 	if ( rc > 0 )
-		current_font=rc;
+		startup_font=rc;
 	else
-		current_font=1;
+		startup_font=1;
 
 	rc=NZ_load_synth_parameter("midi","mode");
 	if ( rc > 0 )
@@ -152,7 +152,7 @@ int NZ_save_synth_config(void)
 	}
 
 	/* Update SoundFont configuration */
-	if (NZ_save_synth_parameter("soundfont", "last_id", current_font) == -1) {
+	if (NZ_save_synth_parameter("soundfont", "last_id", startup_font) == -1) {
 		fprintf (stderr, "Error: Cannot save soundfont configuration!\n");
 		return -1;
 	}

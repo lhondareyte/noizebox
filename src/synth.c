@@ -137,8 +137,7 @@ void NZ_create_synth(void)
 #endif
 	NZ_init_mixer();
 	NZ_load_bank();
-	current_font_id=0;
-	NZ_load_font(current_font);
+	NZ_load_font(startup_font);
 }
 
 void NZ_synth_detune(int p)
