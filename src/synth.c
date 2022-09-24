@@ -116,6 +116,9 @@ void NZ_create_synth(void)
 {
 	synth_settings = new_fluid_settings();
 	synth = new_fluid_synth(synth_settings);
+
+	fluid_set_log_function(FLUID_WARN, NULL, NULL);
+
 	fluid_settings_setstr(synth_settings, "audio.oss.device", "/dev/dsp");
 
 #ifdef __NOIZEBOX_DEBUG__
