@@ -86,7 +86,8 @@ int NZ_load_font(int font)
 		fluid_synth_deactivate_tuning(synth, i, FALSE);
 	}
 
-	if ( current_font != 0 ) {
+	if ( fluid_synth_sfcount (synth) > 0 ) {
+		fprintf (stderr,"Unloading SF2 (id %d)\n", current_font);
 		fluid_synth_sfunload(synth,current_font,1);
 	}
 
