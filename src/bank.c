@@ -32,6 +32,7 @@
 #include <sqlite3.h>
 #include <sys/stat.h>
 
+#include "conf.h"
 #include "global.h"
 #include "synth.h"
 
@@ -72,6 +73,12 @@ int NZ_load_font(int font)
 	sqlite3 *bank;
 	sqlite3_stmt *stmt;
 
+	char sf2_ramdisk[256];
+	char sf2_library[256];
+
+	NZ_load_parameter(CONF_DB, "paths", "sf2_ramdisk_path", sf2_ramdisk );
+	NZ_load_parameter(CONF_DB, "paths", "sf2_library_path", sf2_library );
+
 	struct stat st;
 
 	/* Reset tuning for all channels */
@@ -96,8 +103,8 @@ int NZ_load_font(int font)
 	if ( sqlite3_prepare_v2(bank,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) {
 		if ( sqlite3_step(stmt) == SQLITE_ROW ) {
 			sprintf(current_font_name,"%s",sqlite3_column_text(stmt,0));
-			sprintf(current_font_path,"%s/SF2/%s",NZDIR,sqlite3_column_text(stmt,1));
-			sprintf(ramdisk_font_path,"/Ramdisk/SF2/%s",sqlite3_column_text(stmt,1));
+			sprintf(current_font_path,"%s/%s",sf2_library,sqlite3_column_text(stmt,1));
+			sprintf(ramdisk_font_path,"%s/%s",sf2_ramdisk,sqlite3_column_text(stmt,1));
 			font_key_offset=sqlite3_column_int(stmt,2);
 			sqlite3_finalize(stmt);
 		}

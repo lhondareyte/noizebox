@@ -1,5 +1,5 @@
 /*
- * Copyright (c)2013-2021, Luc Hondareyte
+ * Copyright (c)2013-2022, Luc Hondareyte
  * 
  * All rights reserved.
  * 
@@ -36,20 +36,25 @@
 #include "global.h"
 #include "mixer.h"
 
-int NZ_load_synth_parameter(char * col, char * val)
+int NZ_load_parameter(char * database, char * table, char * param, char * str)
 {
 	int rc=0;
-	char sql[80];
+	char sql[256];
 	sqlite3 *db;
 	sqlite3_stmt *stmt;
-	if ( sqlite3_open(CONF_DB, &db) != SQLITE_OK ) {
-		fprintf (stderr, "Error: Cannot open configuration file (%s)\n", CONF_DB);
+	if ( sqlite3_open(database, &db) != SQLITE_OK ) {
+		fprintf (stderr, "Error: Cannot open configuration file (%s)\n", database);
 		return -1;
 	}
-	sprintf (sql, "select val from %s where param=\'%s\'", col, val);
+	sprintf (sql, "select val from %s where param=\'%s\'", table, param);
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) {
 		if (  sqlite3_step(stmt) == SQLITE_ROW ) {
-			rc=sqlite3_column_int(stmt,0);
+			if ( str == NULL ) {
+				rc=sqlite3_column_int(stmt,0);
+			}
+			else {
+				sprintf(str,"%s",sqlite3_column_text(stmt,0));
+			}
 			sqlite3_finalize(stmt);
 		}
 		else sqlite3_reset(stmt);
@@ -62,61 +67,18 @@ int NZ_load_synth_parameter(char * col, char * val)
 	return rc; 
 }
 
-int NZ_load_synth_config(void)
-{
-	int rc = 0;
-
-	rc=NZ_load_synth_parameter("mixer","left");
-	if ( rc != -1 )
-		NZ_pcm_volume_left=rc;
-	else
-		NZ_pcm_volume_left=100;
-
-	rc=NZ_load_synth_parameter("mixer","right");
-	if ( rc != -1 )
-		NZ_pcm_volume_right=rc;
-	else
-		NZ_pcm_volume_right=100;
-
-	rc=NZ_load_synth_parameter("soundfont","last_id");
-	if ( rc > 0 )
-		startup_font=rc;
-	else
-		startup_font=1;
-
-	rc=NZ_load_synth_parameter("midi","mode");
-	if ( rc > 0 )
-		NZ_midi_mode=rc;
-	else
-		NZ_midi_mode=1;
-
-	rc=NZ_load_synth_parameter("midi","breath_curve");
-	if ( rc > 0 )
-		NZ_breath_curve=rc;
-	else
-		NZ_breath_curve=1;
-
-	rc=NZ_load_synth_parameter("synth","detune");
-	if ( rc != -1 )
-		NZ_pitch_detune=rc;
-	else
-		NZ_pitch_detune=0;
-
-	return 0;
-}
-
-int NZ_save_synth_parameter(char * tab, char * col, int val)
+int NZ_save_parameter(char * database, char * table, char * param, int val)
 {
 	int rc;
-	char sql[80];
+	char sql[256];
 	sqlite3 *db;
 	sqlite3_stmt *stmt;
 
-	if ( sqlite3_open(CONF_DB, &db) != SQLITE_OK ) {
+	if ( sqlite3_open(database, &db) != SQLITE_OK ) {
 		fprintf (stderr, "Error: Cannot open configuration file\n");
 		return -1;
 	}
-	sprintf (sql, "update %s set val=%d where param=\'%s\'", tab, val, col);
+	sprintf (sql, "update %s set val=%d where param=\'%s\'", table, val, param);
 	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) {
 		sqlite3_step(stmt);
 		sqlite3_finalize(stmt);
@@ -127,10 +89,52 @@ int NZ_save_synth_parameter(char * tab, char * col, int val)
 	}
 	rc=sqlite3_close(db);
 	if ( rc != SQLITE_OK )
-		fprintf (stderr,
-				"Error: cannot save configuration file: %s\n",
+		fprintf (stderr, "Error: cannot save configuration file: %s\n",
 				sqlite3_errmsg(db));
 	return rc;
+}
+
+int NZ_load_synth_config(void)
+{
+	int rc = 0;
+
+	rc=NZ_load_parameter(CONF_DB, "mixer", "left", NULL);
+	if ( rc != -1 )
+		NZ_pcm_volume_left=rc;
+	else
+		NZ_pcm_volume_left=100;
+
+	rc=NZ_load_parameter(CONF_DB, "mixer", "right", NULL);
+	if ( rc != -1 )
+		NZ_pcm_volume_right=rc;
+	else
+		NZ_pcm_volume_right=100;
+
+	rc=NZ_load_parameter(CONF_DB, "soundfont", "last_id", NULL);
+	if ( rc > 0 )
+		startup_font=rc;
+	else
+		startup_font=1;
+
+	rc=NZ_load_parameter(CONF_DB, "midi", "mode", NULL);
+	if ( rc > 0 )
+		NZ_midi_mode=rc;
+	else
+		NZ_midi_mode=1;
+
+	rc=NZ_load_parameter(CONF_DB, "midi", "breath_curve", NULL);
+	if ( rc > 0 )
+		NZ_breath_curve=rc;
+	else
+		NZ_breath_curve=1;
+
+	rc=NZ_load_parameter(CONF_DB, "synth","detune", NULL);
+	if ( rc != -1 )
+		NZ_pitch_detune=rc;
+	else
+		NZ_pitch_detune=0;
+
+	return 0;
 }
 
 int NZ_save_synth_config(void)
@@ -141,35 +145,35 @@ int NZ_save_synth_config(void)
 	v=NZ_get_pcm_volume();
 	l = v & 0xff;
 	r = v >> 8;
-	if (NZ_save_synth_parameter("mixer", "left", l) == -1) {
+	if (NZ_save_parameter(CONF_DB, "mixer", "left", l) == -1) {
 		fprintf (stderr, "Error: Cannot save volume (l) configuration!\n"); 
 		return -1;
 	}
 
-	if (NZ_save_synth_parameter("mixer", "right", r) == -1) {
+	if (NZ_save_parameter(CONF_DB, "mixer", "right", r) == -1) {
 		fprintf (stderr, "Error: Cannot save volume (r) configuration!\n");
 		return -1;
 	}
 
 	/* Update SoundFont configuration */
-	if (NZ_save_synth_parameter("soundfont", "last_id", startup_font) == -1) {
+	if (NZ_save_parameter(CONF_DB, "soundfont", "last_id", startup_font) == -1) {
 		fprintf (stderr, "Error: Cannot save soundfont configuration!\n");
 		return -1;
 	}
 
 	/* Update MIDI configuration */
-	if (NZ_save_synth_parameter("midi", "mode", NZ_midi_mode) == -1) {
+	if (NZ_save_parameter(CONF_DB, "midi", "mode", NZ_midi_mode) == -1) {
 		fprintf (stderr, "Error: Cannot save MIDI mode configuration!\n");
 		return -1;
 	}
 
-	if (NZ_save_synth_parameter("midi", "breath_curve", NZ_breath_curve) == -1) {
+	if (NZ_save_parameter(CONF_DB, "midi", "breath_curve", NZ_breath_curve) == -1) {
 		fprintf (stderr, "Error: Cannot save breath mode configuration!\n");
 		return -1;
 	}
 
 	/* Update SYNTH configuration */
-	if (NZ_save_synth_parameter("synth", "detune", NZ_pitch_detune) == -1) {
+	if (NZ_save_parameter(CONF_DB, "synth", "detune", NZ_pitch_detune) == -1) {
 		fprintf (stderr, "Error: Cannot save detune configuration!\n");
 		return -1;
 	}
