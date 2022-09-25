@@ -34,6 +34,8 @@ modules:
                       -Denable-jack=off \
                       -Denable-alsa=off \
                       -Denable-aufile=off .. \
+                      -Denable-pulseaudio=off .. \
+                      -Denable-oboe=off .. \
                       && make
 
 resources:
