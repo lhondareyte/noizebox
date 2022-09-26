@@ -1,5 +1,5 @@
 /*
- * Copyright (c)2013-2021, Luc Hondareyte
+ * Copyright (c)2013-2022, Luc Hondareyte
  * 
  * All rights reserved.
  * 
@@ -112,7 +112,7 @@ void NZ_delete_synth(void)
 	delete_fluid_settings(synth_settings);
 }
 
-void NZ_create_synth(void)
+int NZ_create_synth(void)
 {
 	synth_settings = new_fluid_settings();
 	synth = new_fluid_synth(synth_settings);
@@ -133,14 +133,19 @@ void NZ_create_synth(void)
 	fluid_settings_setstr(synth_settings, "midi.driver", MIDI_DRIVER);
 	fluid_settings_setstr(synth_settings, "audio.driver", AUDIO_DRIVER);
 	synth_audio_driver = new_fluid_audio_driver(synth_settings, synth);
+	if (! synth_audio_driver) {
+		return -1;
+	}
 
 #if !defined (__LEGACY_MIDI_PARSER__) && !defined (__WITH_JACK__)
 	fluid_settings_setstr(synth_settings, "midi.oss.device", "/dev/umidi0.0");
 	synth_midi_driver = new_fluid_midi_driver(synth_settings, fluid_send_midi_event, NULL);
+	if (! synth_midi_driver) {
+		return -1;
+	}
+
 #endif
-	NZ_init_mixer();
-	NZ_load_bank();
-	NZ_load_font(startup_font);
+	return 0;
 }
 
 void NZ_synth_detune(int p)

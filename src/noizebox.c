@@ -1,5 +1,5 @@
 /*
- * Copyright (c)2013-2021, Luc Hondareyte
+ * Copyright (c)2013-2022, Luc Hondareyte
  * 
  * All rights reserved.
  * 
@@ -34,8 +34,10 @@
 #include <sys/resource.h>
 #include <unistd.h>
 
+#include "bank.h"
 #include "conf.h"
 #include "ihm.h"
+#include "mixer.h"
 #include "noizebox.h"
 #include "synth.h"
 
@@ -65,15 +67,24 @@ int main(int argc, char *argv[])
 	else
 		fclose(conf);
 
-	sprintf(FONT_DB,"%s/Resources/soundfont.conf",NZDIR);
 	signal(SIGINT, NZ_shutdown);
 	signal(SIGTERM, NZ_shutdown);
-
 	setpriority(PRIO_PROCESS, getpid(), PRIO_MAX);
-	if ( NZ_load_synth_config() == -1)
+
+	sprintf(FONT_DB,"%s/Resources/soundfont.conf",NZDIR);
+	if (NZ_load_synth_config() == -1)
 		goto error;
 
-	NZ_create_synth();
+	if (NZ_create_synth() == -1) {
+		goto error;
+	}
+
+        if (NZ_init_mixer() == -1) {
+		goto error;
+	}
+
+        NZ_load_bank();
+        NZ_load_font(startup_font);
 
 #if defined (__LEGACY_MIDI_PARSER__)
 	pthread_t threads[2];
