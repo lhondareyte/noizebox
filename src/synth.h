@@ -1,5 +1,5 @@
 /*
- * Copyright (c)2013-2021, Luc Hondareyte
+ * Copyright (c)2013-2022, Luc Hondareyte
  * 
  * All rights reserved.
  * 
@@ -34,8 +34,8 @@
   #include <pthread.h>
 #endif
 
+int  NZ_create_synth(void);
 void NZ_delete_synth(void);
-void NZ_create_synth(void);
 void NZ_synth_detune(int);
 
 #endif /* __NOIZEBOX_SYNTH_H__ */
