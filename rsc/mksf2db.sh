@@ -30,7 +30,7 @@
 #
 LOG="/tmp/$(basename $0).$$"
 FONTSDIR="/Library/Noizebox/SF2/"
-FONTS="${FONTSDIR}/*.lst"
+FONTSLIST="${FONTSDIR}/*.lst"
 SF2DB="/Applications/Noizebox/Resources/soundfont.conf"
 
 Exec() {
@@ -50,23 +50,24 @@ CreateSF2DB() {
 }
 
 if [ "$1" = "--empty" ] ; then
-	rm -rf soundfont.conf
 	Exec "Creating empty database" CreateSF2DB soundfont.conf
-	sqlite3 soundfont.conf "insert into bank values('--NO-SOUND--', '/dev/null', 0, 0);"
+	sqlite3 soundfont.conf "insert into bank values('--NO-SOUND--', 'null', 0, 0);"
         rm -f $LOG
-	exit 0
-fi
-
-ls $FONTS > /dev/null 2>&1
-if [ $? -ne 0 ] ; then
-	echo "No soundfont to register."
 	exit 0
 fi
 
 Exec "Deleting $SF2DB" rm -f $SF2DB
 Exec "Creating $SF2DB" CreateSF2DB $SF2DB
 
-for FONT in $FONTS
+
+ls $FONTSLIST > /dev/null 2>&1
+if [ $? -ne 0 ] ; then
+	sqlite3 $SF2DB "insert into bank values('--NO-SOUND--', 'null', 0, 0);"
+	echo "No soundfont to register."
+	exit 0
+fi
+
+for FONT in $FONTSLIST
 do
 	grep -v ^# $FONT | while read n f k p junk
 	do
