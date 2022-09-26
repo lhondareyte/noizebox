@@ -2,7 +2,7 @@
 #
 # This file is part of the Noizebox Project.
 #
-# Copyright (c)2016-2017,  Luc Hondareyte
+# Copyright (c)2016-2022,  Luc Hondareyte
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -34,19 +34,36 @@ app=noizebox
 appdir=/Applications/Noizebox
 libdir=/Library/Noizebox
 osname=$(uname -s)
-arch=$(uname -p)
+arch=$(uname -m)
 platform="${osname}/${arch}"
 app_bin=$appdir/Contents/$platform/$app
 export PATH=$appdir:$PATH
 ramdisk=YES
 export NZDIR=$appdir
-
+script=$(basename $0)
 rc=1	
 
-_pid=$(pgrep $app)
+pid=$(pgrep $app)
 
 quiet () {
-	$* > /dev/null 2>&1 ; return $?
+	$* > /dev/null 2>&1 ; rc=$?
+	if [ $rc -ne 0 ] ; then
+		echo "Error : $1 failed."
+		exit $rc
+	fi
+}
+
+CheckId () {
+	id=$(id -u)
+	if [ $id -ne 0 ] ; then
+		echo "You need to be root to run this script."
+		exit 1
+	fi
+}
+
+usage () {
+	printf "\tusage : $script [start|stop|status]\n"
+	exit 0
 }
 
 save_config () {
@@ -97,7 +114,7 @@ delete_ramdisk () {
 
 
 app_start () {
-	if [ ! -z "$_pid" ] ; then
+	if [ ! -z "$pid" ] ; then
 		# App is already running
 		return 1
 	fi
@@ -106,7 +123,6 @@ app_start () {
 	fi
 	make_ramdisk &
 	export LD_LIBRARY_PATH=${appdir}/Frameworks/${platform}
-	echo $LD_LIBRARY_PATH
 	if [ -x /usr/sbin/rtprio ] ; then
 		/usr/sbin/rtprio 0 $app_bin $(ls /dev/umidi* 2> /dev/null) 2> /tmp/noizebox.log
 	else
@@ -118,10 +134,10 @@ app_start () {
 }
 
 app_stop () {
-	if [ -z "$_pid" ] ; then
+	if [ -z "$pid" ] ; then
 		return 0
 	fi
-	for p in $_pid 
+	for p in $pid 
 	do
 		kill $p
 	done
@@ -132,17 +148,24 @@ app_stop () {
 
 case $1 in
 	'start')
+		CheckId
 		app_start
 		rc=$?
 		;;
 	'stop')
+		CheckId
 		app_stop 
 		rc=$?
 		;;
 	'status')
-		if [ ! -z $_pid ] ; then
-			rc=0
+		if [ -z $pid ] ; then
+			printf "$script is not running.\n"
+		else
+			printf "$script is running (pid=$pid).\n"
 		fi
+		;;
+	*)
+		usage
 		;;
 esac
 exit $rc
