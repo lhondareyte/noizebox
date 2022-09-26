@@ -27,21 +27,26 @@ modules:
 	@mkdir -p fluidsynth/build
 	@cd fluidsynth/build && \
 		cmake -DCMAKE_C_COMPILER=$(CC)  \
-                      -Denable-ipv6=off \
-                      -Denable-readline=off \
-                      -Denable-dbus=off \
-                      -Denable-libsndfile=off \
-                      -Denable-jack=off \
                       -Denable-alsa=off \
-                      -Denable-aufile=off .. \
-                      -Denable-pulseaudio=off .. \
-                      -Denable-oboe=off .. \
-                      && make
+                      -Denable-aufile=off \
+                      -Denable-dbus=off \
+                      -Denable-ipv6=off \
+                      -Denable-jack=off \
+                      -Denable-ladspa=off \
+                      -Denable-lash=off \
+                      -Denable-libinstpatch=off \
+                      -Denable-libsndfile=off \
+                      -Denable-oboe=off \
+                      -Denable-pulseaudio=off \
+                      -Denable-readline=off \
+                      -Denable-systemd=off \
+                      .. && make
 
 resources:
 	@cd rsc && $(MAKE) clean && $(MAKE)
 
 bintree: resources 
+	@rm -rf $(CONTENT) $(FRAMEWORK) $(RESOURCE)
 	@mkdir -p $(CONTENT) $(FRAMEWORK) $(RESOURCE)/etc/devd
 	@install -m 644 rsc/$(APP).conf $(RESOURCE)/etc/
 	@install -m 644 rsc/soundfont.conf $(RESOURCE)
