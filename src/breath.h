@@ -1,5 +1,5 @@
 /*
- * Copyright (c)2014-2017, Luc Hondareyte
+ * Copyright (c)2014-2022, Luc Hondareyte
  * 
  * All rights reserved.
  * 
