@@ -18,14 +18,14 @@
 #include "global.h"
 #include "hinv.h"
 
-int NZ_get_vcpus(void)
+int NZ_get_ncpus(void)
 {
-	int vcpus=1;
+	int ncpus=1;
 #ifdef __FreeBSD__
 	size_t size = sizeof vcpus;
-        sysctlbyname("hw.ncpus", &vcpus, &size, NULL, 0);
+        sysctlbyname("hw.ncpu", &ncpus, &size, NULL, 0);
 #endif
-	return(vcpus);
+	return ncpus;
 }
 
 uint64_t NZ_get_free_memory(void)
