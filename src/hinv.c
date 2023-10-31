@@ -22,7 +22,7 @@ int NZ_get_ncpus(void)
 {
 	int ncpus=1;
 #ifdef __FreeBSD__
-	size_t size = sizeof vcpus;
+	size_t size = sizeof ncpus;
         sysctlbyname("hw.ncpu", &ncpus, &size, NULL, 0);
 #endif
 	return ncpus;
