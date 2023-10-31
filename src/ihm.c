@@ -286,7 +286,7 @@ void NZ_info_menu(void)
 		mem=NZ_get_free_memory();
 		load=fluid_synth_get_cpu_load(synth);
 		mvprintw(0,0,"Idle=%02.2f%%  Temp=%04.1fC", 100 - load, temp);
-		mvprintw(1,0,"Free=%dK",mem); 
+		mvprintw(1,0,"Free=%dM",mem/1024); 
 		NZ_refresh();
 		usleep (400000);
 		key=getch();
@@ -298,7 +298,7 @@ void NZ_info_menu(void)
 			case '4':
 				nodelay(screen,FALSE);
 				key='Q';
-				return ;
+				return;
 				break;
 		}
 	}
