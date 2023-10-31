@@ -9,7 +9,7 @@ CFG   = noizebox.conf
 SQL   = noizebox.sql
 SF2DB = soundfont.conf
 
-all: nzconf sf2conf
+all: clean nzconf sf2conf
 
 sf2conf:
 	@ ./mksf2db.sh --empty
