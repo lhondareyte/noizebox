@@ -226,7 +226,7 @@ int *NZ_midi_read( char *dev )
 #ifdef __NOIZEBOX_DEBUG__
 		fprintf(stderr,"Warning: %s: %s\n",dev,strerror(errno));
 #endif
-		return(0);
+		return 0;
 	}
 #ifdef __NOIZEBOX_DEBUG__
 	fprintf(stderr,"Opening %s OK\n", dev);
@@ -236,7 +236,7 @@ int *NZ_midi_read( char *dev )
 		NZ_midi_analyze(c);
 	}
 	fclose(fp);
-	return(0);
+	return 0;
 }
 
 #endif   // __LEGACY_MIDI_PARSER__
