@@ -11,7 +11,7 @@ CONTENT   = $(APPDIR)/Contents/$(SYS)
 FRAMEWORK = $(APPDIR)/Frameworks/$(SYS)
 RESOURCE  = $(APPDIR)/Resources
 
-all: init-modules modules 
+all: modules 
 	for dir in $(MODULES); do \
 		(cd $$dir; $(MAKE) ; cd ..); \
 	done
