@@ -93,7 +93,7 @@ void NZ_refresh_font_name(void)
 	NZ_refresh();
 }
 
-void NZ_refresh_breath_curve()
+void NZ_refresh_breath_curve(void)
 {
 	switch (NZ_breath_curve) {
 		case 0x01:
@@ -120,7 +120,7 @@ void NZ_refresh_breath_curve()
 	NZ_refresh();
 }
 
-void NZ_refresh_transpose()
+void NZ_refresh_transpose(void)
 {
 	float f;
 	if ( NZ_pitch_detune == 0)

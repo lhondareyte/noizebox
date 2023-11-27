@@ -23,7 +23,7 @@
 struct sigaction shutdown_action;
 
 #if defined (__LEGACY_MIDI_PARSER__)
-extern void *NZ_midi_read();
+extern void *NZ_midi_read(void *);
 #endif
 
 int main(int argc, char *argv[])
@@ -78,7 +78,6 @@ int main(int argc, char *argv[])
 	}
 #endif
 	NZ_shutdown(NZ_main_menu());
-
 error:
 	exit (1);
 }
