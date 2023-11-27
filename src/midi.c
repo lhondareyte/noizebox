@@ -218,7 +218,7 @@ void NZ_midi_analyze(uint8_t v)
 	}
 }
 
-int *NZ_midi_read( char *dev )
+void *NZ_midi_read( void *dev )
 {
 	FILE *fp;
 	uint8_t c;
