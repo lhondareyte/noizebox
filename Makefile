@@ -57,6 +57,9 @@ bintree: resources
 	@utils/install_lib.sh $(FRAMEWORK) src/$(APP)
 	@utils/install_lib.sh -l $(FRAMEWORK) ./fluidsynth/build/src/libfluidsynth*so.*
 
+Run:
+	@./Run.sh
+	
 clean:
 	@rm -rf $(APPDIR) fluidsynth
 	for dir in $(MODULES); do \
