@@ -156,12 +156,18 @@ void NZ_set_breath_curve(void)
 		key=getch();
 		switch (key) {
 			case '-':
-				if (NZ_breath_curve > 1 ) 
+				if (NZ_breath_curve > 1 )  {
 					NZ_breath_curve--;
+				} else {
+					NZ_breath_curve=MAX_BREATH_MODE;
+				}
 				break;
 			case '+':
-				if (NZ_breath_curve < MAX_BREATH_MODE ) 
+				if (NZ_breath_curve < MAX_BREATH_MODE ) {
 					NZ_breath_curve++;
+				} else {
+					NZ_breath_curve=1;
+				}
 				break;
 			case '1': 
 				curs_set(0);
@@ -216,12 +222,19 @@ void NZ_set_midi_mode(void)
 		key=getch();
 		switch (key) {
 			case '-':
-				if ( NZ_midi_mode > 1 )
+				if ( NZ_midi_mode > 1 ) {
 					NZ_midi_mode--;
+				} else {
+					NZ_midi_mode=MAX_MIDI_MODE;
+				}
 				break;
 			case '+':
-				if ( NZ_midi_mode < MAX_MIDI_MODE )
+				if ( NZ_midi_mode < MAX_MIDI_MODE ) {
+
 					NZ_midi_mode++;
+				} else {
+					NZ_midi_mode=1;
+				}
 				break;
 			case '3': 
 				NZ_refresh_midi_mode();
