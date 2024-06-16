@@ -37,8 +37,10 @@ modules:
                       -Denable-libinstpatch=off \
                       -Denable-libsndfile=off \
                       -Denable-oboe=off \
+                      -Denable-pipewire=off \
                       -Denable-pulseaudio=off \
                       -Denable-readline=off \
+                      -Denable-sdl2=off \
                       -Denable-systemd=off \
                       .. && make
 
