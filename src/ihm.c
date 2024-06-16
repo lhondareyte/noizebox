@@ -56,7 +56,7 @@ void NZ_shutdown(int rc)
         pthread_kill(0,9);
 #endif
         NZ_close_mixer();
-        exit (rc);
+	exit (rc);
 }
 
 void NZ_refresh_volume(void)
@@ -146,6 +146,7 @@ void NZ_refresh_main_menu(void)
 	NZ_refresh_transpose();
 	NZ_refresh_midi_mode();
 	mvprintw(1,20,"Info");
+	curs_set(0);
 }
 
 void NZ_set_breath_curve(void)
@@ -156,7 +157,7 @@ void NZ_set_breath_curve(void)
 		key=getch();
 		switch (key) {
 			case '-':
-				if (NZ_breath_curve > 1 )  {
+				if (NZ_breath_curve > 1 ) {
 					NZ_breath_curve--;
 				} else {
 					NZ_breath_curve=MAX_BREATH_MODE;
@@ -301,7 +302,7 @@ void NZ_info_menu(void)
 		mvprintw(0,0,"Idle=%02.2f%%  Temp=%04.1fC", 100 - load, temp);
 		mvprintw(1,0,"Free=%dM",mem/1024); 
 		NZ_refresh();
-		usleep (400000);
+		usleep (800000);
 		key=getch();
 		switch (key) {
 			case '1': case '2': case '3': 
