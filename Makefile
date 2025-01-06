@@ -12,9 +12,12 @@ FRAMEWORK = $(APPDIR)/Frameworks/$(SYS)
 RESOURCE  = $(APPDIR)/Resources
 
 all: init-modules modules 
+
+build: modules
 	for dir in $(MODULES); do \
 		(cd $$dir; $(MAKE) ; cd ..); \
 	done
+
 
 init-modules:
 	@echo $(CC)
