@@ -5,10 +5,11 @@ ARG="${1}"
 SUDO=""
 ID=$(id -u)
 if [ $ID -ne 0 ] ; then
-	SUDO="sudo"
+	export SUDO="sudo -E"
 fi
 if [ "${ARG}" = "--local" ] ; then
 	NZDIR="/Applications/Noizebox"
+	shift
 else
 	NZDIR="./Noizebox"
 fi
@@ -16,14 +17,15 @@ fi
 HOST="$(uname -s)"
 ARCH="$(uname -m)"
 APP="noizebox"
-PLATFORM="${HOST}/${ARCH}"
-BIN="${NZDIR}/Contents/${PLATFORM}/${APP}"
-LOG="/tmp/nz.log"
-rm -f ${LOG}
+export NZDIR
+export PLATFORM="${HOST}/${ARCH}"
+export BIN="${NZDIR}/Contents/${PLATFORM}/${APP}"
+export LOG="/tmp/nz.log"
+${SUDO} rm -f ${LOG}
 
 for i in /dev/umidi[0-9].[0-9]
 do
-	MIDI="${MIDI} ${i} "
+	export MIDI="${MIDI} ${i} "
 done
 
 #
@@ -37,21 +39,19 @@ fi
 
 #
 # Run application with high priority
-if [ -x /usr/bin/rtprio ] ; then
-	RT="/usr/sbin/rtprio"
+if kldstat -qm mac_priority ; then
+	export RT="/usr/sbin/rtprio 0"
 fi
+
 if [ -x ${BIN} ] ; then
-	CMD="${SUDO} \
-		LD_LIBRARY_PATH=${LD_LIBRARY_PATH} \
-		NZDIR=${NZDIR} \
-		LOG=${LOG} \
-		${RT} ${BIN} ${MIDI} 2> ${LOG}"
 	if [ "$1" = "--jack" ] ; then
-		${CMD} &
+		${SUDO} LD_LIBRARY_PATH=${LD_LIBRARY_PATH}\
+			 ${RT} ${BIN} ${MIDI} 2> ${LOG} &
 	else
-		${CMD}
+		${SUDO} LD_LIBRARY_PATH=${LD_LIBRARY_PATH} \
+			 ${RT} ${BIN} ${MIDI} 2> ${LOG}
+		rc=${?}
 	fi
-	rc=${?}
 else
 	echo "Fatal error: ${BIN} not found!"
 	rc="42"
@@ -66,4 +66,4 @@ if [ "${ARG}" = "--jack" ] ; then
 	jack_connect noizebox:left system:playback_1
 	jack_connect noizebox:right system:playback_2
 fi
-rm -f $LOG
+${SUDO} rm -f $LOG
