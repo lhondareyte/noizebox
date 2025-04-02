@@ -90,7 +90,6 @@ delete_ramdisk () {
 	quiet mdconfig -d -u ${MD} 
 }
 
-
 app_start () {
 	if [ ! -z "$pid" ] ; then
 		# App is already running
@@ -101,11 +100,10 @@ app_start () {
 	fi
 	make_ramdisk &
 	export LD_LIBRARY_PATH=${appdir}/Frameworks/${platform}
-	if [ -x /usr/sbin/rtprio ] ; then
-		/usr/sbin/rtprio 0 $app_bin $(ls /dev/umidi* 2> /dev/null) 2> /tmp/noizebox.log
-	else
-		$app_bin $(ls /dev/umidi* 2> /dev/null) 2>/dev/null
+	if kldstat -qm mac_priority ; then
+		rt="/usr/sbin/rtprio 0"
 	fi
+	$rt $app_bin $(ls /dev/umidi* 2> /dev/null)
 	# wait for make_ramdisk
 	wait
 	delete_ramdisk
