@@ -66,7 +66,7 @@ Run:
 	
 clean:
 	@rm -rf $(APPDIR) fluidsynth
-	for dir in $(SOURCES) fluidsynth; do \
+	for dir in $(SOURCES); do \
 		(cd $$dir; $(MAKE) clean ; cd ..); \
 	done
 
