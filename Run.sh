@@ -1,6 +1,5 @@
 #!/bin/sh
 #
-#
 ARG="${1}"
 SUDO=""
 ID=$(id -u)
@@ -14,6 +13,7 @@ else
 	NZDIR="./Noizebox"
 fi
 
+OSTYPE="$(uname)"
 HOST="$(uname -s)"
 ARCH="$(uname -m)"
 APP="noizebox"
@@ -23,7 +23,23 @@ export BIN="${NZDIR}/Contents/${PLATFORM}/${APP}"
 export LOG="/tmp/nz.log"
 ${SUDO} rm -f ${LOG}
 
-for i in /dev/umidi[0-9].[0-9]
+if [ "${OSTYPE}" = "FreeBSD" } ; then
+	MIDIDEVS="/dev/umidi[0-9].[0-9]"
+	# Run application with high priority
+	if kldstat -qm mac_priority ; then
+		export RT="/usr/sbin/rtprio 0"
+	fi
+elif [ "${OSTYPE}" = "NetBSD" ] ; then
+	MIDIDEVS="/dev/rmidi[1-9]"
+elif [ "${OSTYPE}" = "Linux" ] ; then
+	if ! grep -qw snd_rawmidi /proc/modules ; then
+		echo "Error: snd_rawmidi kernel module not loaded."
+		exit 1
+	fi
+	MIDIDEVS="/dev/midi[1-9]"
+fi
+
+for i in ${MIDIDEVS}
 do
 	export MIDI="${MIDI} ${i} "
 done
@@ -35,12 +51,6 @@ LD_LIBRARY_PATH="${NZDIR}/Frameworks/${PLATFORM}"
 if [ ! -d ${LD_LIBRARY_PATH} ] ; then
 	echo "Error : cannot find ${LD_LIBRARY_PATH}"
 	exit 1
-fi
-
-#
-# Run application with high priority
-if kldstat -qm mac_priority ; then
-	export RT="/usr/sbin/rtprio 0"
 fi
 
 if [ -x ${BIN} ] ; then
