@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: BSD-2-Clause
  * 
- * Copyright (c)2013-2022, Luc Hondareyte
+ * Copyright (c)2013-2025, Luc Hondareyte
  * All rights reserved.
  * 
  */
@@ -43,14 +43,14 @@ int fluid_send_midi_event(void * data, fluid_midi_event_t* event)
 			break;
 
 		case MIDI_CONTROL_CHANGE:
-			if ( NZ_midi_mode == EWI || NZ_midi_mode == WX5 ) {
+			if (NZ_midi_mode == EWI || NZ_midi_mode == WX5) {
 				control=fluid_midi_event_get_control(event);
 				/* Map breath control on volume for EWIs */
-				if ( control == BREATH_MSB )
+				if (control == BREATH_MSB)
 					control+=5;
 				/* Translate current breath curve */
-				cvalue=fluid_midi_event_get_value(event);
-				cvalue=*(p_current_curve + cvalue);
+				cvalue = fluid_midi_event_get_value(event);
+				cvalue =* (p_current_curve + cvalue);
 
 				fluid_synth_cc(synth, chan, control, cvalue);
 			}

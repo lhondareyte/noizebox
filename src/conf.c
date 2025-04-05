@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: BSD-2-Clause
  *
- * Copyright (c)2013-2022, Luc Hondareyte
+ * Copyright (c)2013-2025, Luc Hondareyte
  * All rights reserved.
  *
  */
@@ -17,17 +17,17 @@
 
 int NZ_load_parameter(char * database, char * table, char * param, char * str)
 {
-	int rc=0;
+	int rc = 0;
 	char sql[256];
 	sqlite3 *db;
 	sqlite3_stmt *stmt;
-	if ( sqlite3_open(database, &db) != SQLITE_OK ) {
+	if (sqlite3_open(database, &db) != SQLITE_OK) {
 		fprintf (stderr, "Error: Cannot open configuration file (%s)\n", database);
 		return -1;
 	}
 	sprintf (sql, "select val from %s where param=\'%s\'", table, param);
-	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) {
-		if (  sqlite3_step(stmt) == SQLITE_ROW ) {
+	if (sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK) {
+		if (sqlite3_step(stmt) == SQLITE_ROW) {
 			if ( ! str ) {
 				rc=sqlite3_column_int(stmt,0);
 			}
@@ -53,12 +53,12 @@ int NZ_save_parameter(char * database, char * table, char * param, int val)
 	sqlite3 *db;
 	sqlite3_stmt *stmt;
 
-	if ( sqlite3_open(database, &db) != SQLITE_OK ) {
+	if (sqlite3_open(database, &db) != SQLITE_OK) {
 		fprintf (stderr, "Error: Cannot open configuration file\n");
 		return -1;
 	}
 	sprintf (sql, "update %s set val=%d where param=\'%s\'", table, val, param);
-	if ( sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) {
+	if (sqlite3_prepare_v2(db,sql,strlen(sql),&stmt,NULL) == SQLITE_OK) {
 		sqlite3_step(stmt);
 		sqlite3_finalize(stmt);
 	}
@@ -67,53 +67,50 @@ int NZ_save_parameter(char * database, char * table, char * param, int val)
 		return -1;
 	}
 	rc=sqlite3_close(db);
-	if ( rc != SQLITE_OK )
+	if (rc != SQLITE_OK)
 		fprintf (stderr, "Error: cannot save configuration file: %s\n",
 				sqlite3_errmsg(db));
 	return rc;
 }
 
-int NZ_load_synth_config(void)
+void NZ_load_synth_config(void)
 {
 	int rc = 0;
-
-	rc=NZ_load_parameter(CONF_DB, "mixer", "left", NULL);
-	if ( rc != -1 )
-		NZ_pcm_volume_left=rc;
+	rc = NZ_load_parameter(CONF_DB, "mixer", "left", NULL);
+	if (rc == -1)
+		NZ_pcm_volume_left = rc;
 	else
-		NZ_pcm_volume_left=100;
+		NZ_pcm_volume_left = 100;
 
-	rc=NZ_load_parameter(CONF_DB, "mixer", "right", NULL);
-	if ( rc != -1 )
-		NZ_pcm_volume_right=rc;
+	rc = NZ_load_parameter(CONF_DB, "mixer", "right", NULL);
+	if (rc != -1)
+		NZ_pcm_volume_right = rc;
 	else
-		NZ_pcm_volume_right=100;
+		NZ_pcm_volume_right = 100;
 
-	rc=NZ_load_parameter(CONF_DB, "soundfont", "last_id", NULL);
-	if ( rc > 0 )
+	rc = NZ_load_parameter(CONF_DB, "soundfont", "last_id", NULL);
+	if (rc > 0)
 		startup_font=rc;
 	else
 		startup_font=1;
 
-	rc=NZ_load_parameter(CONF_DB, "midi", "mode", NULL);
-	if ( rc > 0 )
+	rc = NZ_load_parameter(CONF_DB, "midi", "mode", NULL);
+	if (rc > 0)
 		NZ_midi_mode=rc;
 	else
 		NZ_midi_mode=1;
 
-	rc=NZ_load_parameter(CONF_DB, "midi", "breath_curve", NULL);
-	if ( rc > 0 )
+	rc = NZ_load_parameter(CONF_DB, "midi", "breath_curve", NULL);
+	if (rc > 0)
 		NZ_breath_curve=rc;
 	else
 		NZ_breath_curve=1;
 
-	rc=NZ_load_parameter(CONF_DB, "synth","detune", NULL);
-	if ( rc != -1 )
+	rc = NZ_load_parameter(CONF_DB, "synth","detune", NULL);
+	if (rc != -1)
 		NZ_pitch_detune=rc;
 	else
 		NZ_pitch_detune=0;
-
-	return 0;
 }
 
 int NZ_save_synth_config(void)

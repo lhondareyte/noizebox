@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: BSD-2-Clause
  *
- * Copyright (c)2013-2022, Luc Hondareyte
+ * Copyright (c)2013-2025, Luc Hondareyte
  * All rights reserved.
  * 
  */
@@ -20,7 +20,7 @@
 
 int NZ_get_ncpus(void)
 {
-	int ncpus=1;
+	int ncpus = 1;
 #ifdef __FreeBSD__
 	size_t size = sizeof ncpus;
         sysctlbyname("hw.ncpu", &ncpus, &size, NULL, 0);
@@ -31,9 +31,9 @@ int NZ_get_ncpus(void)
 uint64_t NZ_get_free_memory(void)
 {
 #ifdef __FreeBSD__
-        int pagesize=0;
-        uint64_t inactive=0;
-        uint64_t free=0;
+        int pagesize = 0;
+        uint64_t inactive = 0;
+        uint64_t free = 0;
         size_t size = sizeof free;
 
         sysctlbyname("vm.stats.vm.v_free_count", &free, &size, NULL, 0);
@@ -54,9 +54,9 @@ float NZ_get_cpu_temperature(void)
 
         if (sysctlbyname("hw.acpi.thermal.tz0.temperature", &buf, &size, NULL, 0) == 0)
 		/* deci-Kelvin -> Celsius */
-		temp = ((float)buf-2732)/10;
+		temp = ((float)buf - 2732) / 10;
 	else if (sysctlbyname("dev.cpu.0.temperature", &buf, &size, NULL, 0) == 0) {
-		temp = ((float)buf-2732)/10;
+		temp = ((float)buf - 2732) / 10;
 	}
 #endif
 	return temp;
