@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: BSD-2-Clause
  *
- * Copyright (c)2013-2017, Luc Hondareyte
+ * Copyright (c)2013-2025, Luc Hondareyte
  * All rights reserved.
  * 
  */
@@ -55,13 +55,13 @@ int NZ_init_mixer(void)
 #ifdef __NOIZEBOX_DEBUG__
 void NZ_maximize_pcm_volume(void)
 {
-	int v=0x6464;
+	int v = 0x6464;
 	ioctl(mixer, MIXER_WRITE(SOUND_MIXER_PCM), &v);
 }
 
 void NZ_mute_pcm_volume(void)
 {
-	int v=0x0000;
+	int v = 0x0000;
 	ioctl(mixer, MIXER_WRITE(SOUND_MIXER_PCM), &v);
 }
 #endif
@@ -73,8 +73,8 @@ void NZ_increment_pcm_volume(void)
 	l = v & 0xFF;
 	r = v >> 8;
 	if ((l < NOIZEBOX_MAX_LEVEL) && (r < NOIZEBOX_MAX_LEVEL)) {
-		prev_v=v;
-		v+= 0x0101;
+		prev_v = v;
+		v += 0x0101;
 		ioctl(mixer, MIXER_WRITE(SOUND_MIXER_PCM), &v);
 	}
 }
@@ -86,8 +86,8 @@ void NZ_decrement_pcm_volume(void)
 	l = v & 0xFF;
 	r = v >> 8;
 	if ((l > NOIZEBOX_MIN_LEVEL) && (r > NOIZEBOX_MIN_LEVEL)) {
-		prev_v=v;
-		v-= 0x0101;
+		prev_v = v;
+		v -= 0x0101;
 		ioctl(mixer, MIXER_WRITE(SOUND_MIXER_PCM), &v);
 	}
 }
@@ -100,15 +100,14 @@ void NZ_increment_right_pcm_volume(void)
 	v = NZ_get_pcm_volume();
 	l = v & 0xFF;
 	r = v >> 8;
-	if ( r > l ) {
+	if (r > l) {
 		if (l < NOIZEBOX_MAX_LEVEL)
-			v+=0x0001;
+			v += 0x0001;
 	}
 	else {
 		if (r > NOIZEBOX_MIN_LEVEL)
-			v-=0x0100;
+			v -= 0x0100;
 	}
-
 	ioctl(mixer, MIXER_WRITE(SOUND_MIXER_PCM), &v);
 }
 
@@ -119,13 +118,14 @@ void NZ_increment_left_pcm_volume(void)
 	v = NZ_get_pcm_volume();
 	l = v & 0xFF;
 	r = v >> 8;
-	if ( l > r ) {
+	if (l > r) {
 		if (r < NOIZEBOX_MAX_LEVEL)
-			v+=0x0100;
+			v += 0x0100;
 	}
 	else {
 		if (l > NOIZEBOX_MIN_LEVEL)
-			v-=0x0001;
+			v -= 0x0001;
 	}
 	ioctl(mixer, MIXER_WRITE(SOUND_MIXER_PCM), &v);
 }
+

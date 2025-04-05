@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: BSD-2-Clause
  * 
- * Copyright (c)2013-2022, Luc Hondareyte
+ * Copyright (c)2013-2025, Luc Hondareyte
  * All rights reserved.
  * 
  */
@@ -25,14 +25,14 @@ void NZ_load_bank(void)
 	sqlite3_stmt *stmt;
 
 	sqlite3_initialize();
-	if ( sqlite3_open_v2(FONT_DB, &bank, \
-				SQLITE_OPEN_READONLY, NULL) != SQLITE_OK ) {
+	if (sqlite3_open_v2(FONT_DB, &bank, \
+				SQLITE_OPEN_READONLY, NULL) != SQLITE_OK) {
 		fprintf (stderr, "Error: Cannot open SF2 configuration file (%s)\n",FONT_DB);
 		exit (1);
 	}
 	sql = "select count(rowid) from bank" ;
-	if ( sqlite3_prepare_v2(bank,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) {
-		if (  sqlite3_step(stmt) == SQLITE_ROW ) {
+	if (sqlite3_prepare_v2(bank,sql,strlen(sql),&stmt,NULL) == SQLITE_OK) {
+		if (sqlite3_step(stmt) == SQLITE_ROW) {
 			max_font=sqlite3_column_int(stmt,0);
 			sqlite3_finalize(stmt);
 		}
@@ -47,7 +47,7 @@ void NZ_load_bank(void)
 
 int NZ_load_font(int font)
 {
-	int  i;
+	int i;
 	char sql[80];
 	sqlite3 *bank;
 	sqlite3_stmt *stmt;
@@ -61,16 +61,16 @@ int NZ_load_font(int font)
 	struct stat st;
 
 	/* Reset tuning for all channels */
-	for ( i=0; i<= 15; i++ ) {
+	for (i=0; i<= 15; i++) {
 		fluid_synth_deactivate_tuning(synth, i, FALSE);
 	}
 
-	if ( fluid_synth_sfcount (synth) > 0 ) {
+	if (fluid_synth_sfcount (synth) > 0) {
 		fprintf (stderr,"Unloading SF2 (id %d)\n", current_font);
 		fluid_synth_sfunload(synth,current_font,1);
 	}
 
-	if (( font > max_font ) || (font < 0)) {
+	if ((font > max_font) || (font < 0)) {
 		font = 1;
 	}
 	sqlite3_initialize();
@@ -80,12 +80,12 @@ int NZ_load_font(int font)
 	}
 
 	sprintf (sql, "select name, file, key_offset from bank where rowid='%d'", font);
-	if ( sqlite3_prepare_v2(bank,sql,strlen(sql),&stmt,NULL) == SQLITE_OK ) {
-		if ( sqlite3_step(stmt) == SQLITE_ROW ) {
+	if (sqlite3_prepare_v2(bank,sql,strlen(sql),&stmt,NULL) == SQLITE_OK) {
+		if (sqlite3_step(stmt) == SQLITE_ROW) {
 			sprintf(current_font_name,"%s",sqlite3_column_text(stmt,0));
 			sprintf(current_font_path,"%s/%s",sf2_library,sqlite3_column_text(stmt,1));
 			sprintf(ramdisk_font_path,"%s/%s",sf2_ramdisk,sqlite3_column_text(stmt,1));
-			font_key_offset=sqlite3_column_int(stmt,2);
+			font_key_offset = sqlite3_column_int(stmt,2);
 			sqlite3_finalize(stmt);
 		}
 		else {
@@ -118,7 +118,7 @@ int NZ_load_font(int font)
 	}
 
 	/* turn on tuning for all channels */
-	for ( i=0; i<= 15; i++) {
+	for (i=0; i<= 15; i++) {
 		fluid_synth_activate_tuning(synth, i, 1, 1, FALSE);
 	}
 	/* Restore current tuning */
