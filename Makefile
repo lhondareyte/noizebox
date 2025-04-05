@@ -2,7 +2,7 @@
 #  $Id$
 # 
 APP       = noizebox
-MODULES   = src rsc
+SOURCES   = src rsc
 OSNAME   != uname -s
 ARCH     != uname -m
 SYS       = "$(OSNAME)/$(ARCH)"
@@ -11,13 +11,12 @@ CONTENT   = $(APPDIR)/Contents/$(SYS)
 FRAMEWORK = $(APPDIR)/Frameworks/$(SYS)
 RESOURCE  = $(APPDIR)/Resources
 
-all: init-modules modules 
+all: init-modules modules build
 
 build: modules
-	for dir in $(MODULES); do \
+	for dir in $(SOURCES); do \
 		(cd $$dir; $(MAKE) ; cd ..); \
 	done
-
 
 init-modules:
 	@echo $(CC)
@@ -67,7 +66,7 @@ Run:
 	
 clean:
 	@rm -rf $(APPDIR) fluidsynth
-	for dir in $(MODULES); do \
+	for dir in $(SOURCES) fluidsynth; do \
 		(cd $$dir; $(MAKE) clean ; cd ..); \
 	done
 
