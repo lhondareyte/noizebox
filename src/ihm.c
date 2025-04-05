@@ -1,20 +1,22 @@
 /*
  * SPDX-License-Identifier: BSD-2-Clause
  *
- * Copyright (c)2013-2022, Luc Hondareyte
+ * Copyright (c)2013-2024, Luc Hondareyte
  * All rights reserved.
  * 
  */
 
 #include <math.h>
+#include <curses.h>
 #include <ncurses.h>
+#include <term.h>
 #include <stdlib.h>
 #include <sys/types.h>
-#ifdef __linux__
-#include <stdint.h>
-#endif
 #ifdef __FreeBSD__
 #include <sys/sysctl.h>
+#endif
+#ifdef __linux__
+#include <stdint.h>
 #endif
 #include <unistd.h>
 #include <pthread.h>
@@ -36,7 +38,7 @@ int key;
 extern int prev_v;
 extern int max_font;
 
-void NZ_refresh(void)
+static inline void NZ_refresh(void)
 {
 	/* workaround for tinyVT */
 	//usleep (25000);
@@ -45,17 +47,17 @@ void NZ_refresh(void)
 
 void NZ_shutdown(int rc)
 {
-        clear();
-        if ( rc == 0 )
+	clear();
+	if ( rc == 0 )
 		mvprintw(0,0,"  Shutdown in progress\n      Please wait...  ");
-        NZ_refresh();
-        endwin();
-        NZ_save_synth_config();
-        NZ_delete_synth();
+	NZ_refresh();
+	endwin();
+	NZ_save_synth_config();
+	NZ_delete_synth();
 #if defined (__LEGACY_MIDI_PARSER__)
-        pthread_kill(0,9);
+	pthread_kill(0,9);
 #endif
-        NZ_close_mixer();
+	NZ_close_mixer();
 	exit (rc);
 }
 
@@ -141,7 +143,6 @@ void NZ_refresh_main_menu(void)
 	clear();
 	NZ_refresh_font_name();
 	NZ_refresh_volume();
-	NZ_refresh();
 	NZ_refresh_breath_curve();
 	NZ_refresh_transpose();
 	NZ_refresh_midi_mode();
@@ -170,7 +171,7 @@ void NZ_set_breath_curve(void)
 					NZ_breath_curve=1;
 				}
 				break;
-			case '1': 
+			case KEY_F(1): 
 				curs_set(0);
 				NZ_refresh_breath_curve();
 				NZ_refresh();
@@ -203,7 +204,7 @@ void NZ_set_transpose(void)
 					NZ_synth_detune(NZ_pitch_detune);
 				}
 				break;
-			case '2': 
+			case KEY_F(2): 
 				curs_set(0);
 				return;
 				break;
@@ -237,7 +238,7 @@ void NZ_set_midi_mode(void)
 					NZ_midi_mode=1;
 				}
 				break;
-			case '3': 
+			case KEY_F(3): 
 				NZ_refresh_midi_mode();
 				curs_set(0);
 				NZ_refresh();
@@ -263,7 +264,7 @@ void NZ_control_volume(int k)
 		case 'B':
 			NZ_decrement_pcm_volume();
 			break;
-		/* Balance */
+			/* Balance */
 		case 'D':
 			NZ_increment_right_pcm_volume();
 			break;
@@ -285,7 +286,7 @@ void NZ_control_volume(int k)
 void NZ_info_menu(void)
 {
 	/*
-         * No wait for keyboard
+	 * No wait for keyboard
 	 */
 	nodelay(screen,TRUE);
 	double load;
@@ -300,18 +301,18 @@ void NZ_info_menu(void)
 		mem=NZ_get_free_memory();
 		load=fluid_synth_get_cpu_load(synth);
 		mvprintw(0,0,"Idle=%02.2f%%  Temp=%04.1fC", 100 - load, temp);
-		mvprintw(1,0,"Free=%dM",mem/1024); 
+		mvprintw(1,0,"Free=%dM",(int)mem/1024); 
 		NZ_refresh();
 		usleep (800000);
 		key=getch();
 		switch (key) {
-			case '1': case '2': case '3': 
-				nodelay(screen,FALSE);
-				return;
-				break;
-			case '4':
+			case KEY_F(4): 
 				nodelay(screen,FALSE);
 				key='Q';
+				return;
+				break;
+			default:
+				nodelay(screen,FALSE);
 				return;
 				break;
 		}
@@ -345,16 +346,16 @@ int NZ_main_menu (void)
 			NZ_shutdown(42);
 		key=getch();
 		switch (key) {
-			case '1':
+			case KEY_F(1):
 				NZ_set_breath_curve();
 				break;
-			case '2':
+			case KEY_F(2):
 				NZ_set_transpose();
 				break;
-			case '3':
+			case KEY_F(3):
 				NZ_set_midi_mode();
 				break;
-			case '4':
+			case KEY_F(4):
 				NZ_info_menu();
 				NZ_refresh_main_menu();
 				break;
