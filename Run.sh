@@ -17,28 +17,30 @@ Error() {
 	exit 1
 }
 
+APP="noizebox"
 HOST="$(uname -s)"
 ARCH="$(uname -m)"
-APP="noizebox"
 export NZDIR
 export PLATFORM="${HOST}/${ARCH}"
 export BIN="${NZDIR}/Contents/${PLATFORM}/${APP}"
 export LOG="/tmp/nz.log"
 ${SUDO} rm -f ${LOG}
 
-if [ "${OSTYPE}" = "FreeBSD" ] ; then
+if [ "${HOST}" = "FreeBSD" ] ; then
 	MIDIDEVS="/dev/umidi[0-9].[0-9]"
 	# Run application with high priority
 	if kldstat -qm mac_priority ; then
 		export RT="/usr/sbin/rtprio 0"
 	fi
-elif [ "${OSTYPE}" = "NetBSD" ] ; then
-	MIDIDEVS="/dev/rmidi[1-9]"
-elif [ "${OSTYPE}" = "Linux" ] ; then
+elif [ "${HOST}" = "Linux" ] ; then
 	if ! grep -qw snd_rawmidi /proc/modules ; then
 		Error "snd_rawmidi kernel module not loaded"
 	fi
 	MIDIDEVS="/dev/midi[1-9]"
+elif [ "${HOST}" = "NetBSD" ] ; then
+	MIDIDEVS="/dev/rmidi[1-9]"
+elif [ "${HOST}" = "OpenBSD" ] ; then
+	MIDIDEVS="/dev/rmidi[0-9]"
 else
 	Error "unsupported operating system"
 fi
