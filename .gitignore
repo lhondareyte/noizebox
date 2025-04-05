@@ -2,6 +2,7 @@ soundfont.conf
 noizebox.conf
 Noizebox/
 *.o
+*.old
 .depend*
 noizebox/
 port
