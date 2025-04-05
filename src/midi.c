@@ -183,6 +183,7 @@ void NZ_midi_analyze(uint8_t v)
 			}
 			next = MIDI_UNKNOWN;
 			ready = TRUE;
+			break;
 
 		case MIDI_SYSEX:
 			next = MIDI_SYSEX;
