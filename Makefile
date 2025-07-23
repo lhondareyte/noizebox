@@ -2,7 +2,7 @@
 #  $Id$
 # 
 APP       = noizebox
-SOURCES   = src rsc
+MODULES   = src rsc
 OSNAME   != uname -s
 ARCH     != uname -m
 SYS       = "$(OSNAME)/$(ARCH)"
@@ -11,12 +11,7 @@ CONTENT   = $(APPDIR)/Contents/$(SYS)
 FRAMEWORK = $(APPDIR)/Frameworks/$(SYS)
 RESOURCE  = $(APPDIR)/Resources
 
-all: init-modules modules build
-
-build: modules
-	for dir in $(SOURCES); do \
-		(cd $$dir; $(MAKE) ; cd ..); \
-	done
+all: init-modules modules
 
 init-modules:
 	@echo $(CC)
@@ -39,15 +34,13 @@ modules:
                       -Denable-libinstpatch=off \
                       -Denable-libsndfile=off \
                       -Denable-oboe=off \
-                      -Denable-pipewire=off \
                       -Denable-pulseaudio=off \
                       -Denable-readline=off \
-                      -Denable-sdl2=off \
                       -Denable-systemd=off \
                       .. && make
-
-resources:
-	@cd rsc && $(MAKE) clean && $(MAKE)
+	for dir in $(MODULES); do \
+		(cd $$dir; $(MAKE) ; cd ..); \
+	done
 
 bintree: resources 
 	@rm -rf $(CONTENT) $(FRAMEWORK) $(RESOURCE)
@@ -61,12 +54,9 @@ bintree: resources
 	@utils/install_lib.sh $(FRAMEWORK) src/$(APP)
 	@utils/install_lib.sh -l $(FRAMEWORK) ./fluidsynth/build/src/libfluidsynth*so.*
 
-Run:
-	@./Run.sh
-	
 clean:
 	@rm -rf $(APPDIR) fluidsynth
-	for dir in $(SOURCES); do \
+	for dir in $(MODULES); do \
 		(cd $$dir; $(MAKE) clean ; cd ..); \
 	done
 
