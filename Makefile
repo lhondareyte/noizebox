@@ -42,7 +42,7 @@ modules:
 		(cd $$dir; $(MAKE) ; cd ..); \
 	done
 
-bintree: resources 
+bintree: modules
 	@rm -rf $(CONTENT) $(FRAMEWORK) $(RESOURCE)
 	@mkdir -p $(CONTENT) $(FRAMEWORK) $(RESOURCE)/etc/devd
 	@install -m 644 rsc/$(APP).conf $(RESOURCE)/etc/
