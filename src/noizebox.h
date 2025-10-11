@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: BSD-2-Clause
  *
- * Copyright (c)2013-2022, Luc Hondareyte
+ * Copyright (c)2013-2025, Luc Hondareyte
  * All rights reserved.
  * 
  */
@@ -50,7 +50,7 @@ fluid_settings_t* synth_settings;
 fluid_audio_driver_t* synth_audio_driver;
 
 #if defined (__LEGACY_MIDI_PARSER__)
-  #include <pthread.h>
+#include <pthread.h>
 #else
 fluid_midi_driver_t* synth_midi_driver;
 #endif
