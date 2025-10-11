@@ -12,7 +12,7 @@
 #include "global.h"
 
 #ifndef	REALTIME
- #define	REALTIME 1
+#define	REALTIME 1
 #endif
 
 #if defined (__WITH_JACK__)
@@ -33,50 +33,50 @@ int fluid_send_midi_event(void * data, fluid_midi_event_t* event)
 {
 	int chan = fluid_midi_event_get_channel(event);
 	switch (fluid_midi_event_get_type(event)) {
-		case MIDI_NOTE_OFF:
-			fluid_synth_noteoff(synth, chan, fluid_midi_event_get_key(event));
+	case MIDI_NOTE_OFF:
+		fluid_synth_noteoff(synth, chan, fluid_midi_event_get_key(event));
+		break;
+
+	case MIDI_NOTE_ON:
+		velocity=fluid_midi_event_get_velocity(event);
+		fluid_synth_noteon(synth, chan, fluid_midi_event_get_key(event), velocity);
+		break;
+
+	case MIDI_CONTROL_CHANGE:
+		if (NZ_midi_mode == EWI || NZ_midi_mode == WX5) {
+			control=fluid_midi_event_get_control(event);
+			/* Map breath control on volume for EWIs */
+			if (control == BREATH_MSB)
+				control+=5;
+			/* Translate current breath curve */
+			cvalue = fluid_midi_event_get_value(event);
+			cvalue =* (p_current_curve + cvalue);
+
+			fluid_synth_cc(synth, chan, control, cvalue);
+		}
+		else
+			fluid_synth_cc(synth, chan, fluid_midi_event_get_control(event),
+				fluid_midi_event_get_value(event));
 			break;
 
-		case MIDI_NOTE_ON:
-			velocity=fluid_midi_event_get_velocity(event);
-			fluid_synth_noteon(synth, chan, fluid_midi_event_get_key(event), velocity);
-			break;
+	case MIDI_PROGRAM_CHANGE:
+		fluid_synth_program_change(synth, chan, fluid_midi_event_get_program(event));
+		break;
 
-		case MIDI_CONTROL_CHANGE:
-			if (NZ_midi_mode == EWI || NZ_midi_mode == WX5) {
-				control=fluid_midi_event_get_control(event);
-				/* Map breath control on volume for EWIs */
-				if (control == BREATH_MSB)
-					control+=5;
-				/* Translate current breath curve */
-				cvalue = fluid_midi_event_get_value(event);
-				cvalue =* (p_current_curve + cvalue);
+	case MIDI_PITCH_BEND:
+		fluid_synth_pitch_bend(synth, chan, fluid_midi_event_get_pitch(event));
+		break;
 
-				fluid_synth_cc(synth, chan, control, cvalue);
-			}
-			else
-				fluid_synth_cc(synth, chan, fluid_midi_event_get_control(event),
-					fluid_midi_event_get_value(event));
-			break;
+	case MIDI_CHANNEL_PRESSURE:
+		fluid_synth_channel_pressure(synth, chan, fluid_midi_event_get_value(event));
+		break;
 
-		case MIDI_PROGRAM_CHANGE:
-			fluid_synth_program_change(synth, chan, fluid_midi_event_get_program(event));
-			break;
+	case MIDI_SYSTEM_RESET:
+		fluid_synth_system_reset(synth);
+		break;
 
-		case MIDI_PITCH_BEND:
-			fluid_synth_pitch_bend(synth, chan, fluid_midi_event_get_pitch(event));
-			break;
-
-		case MIDI_CHANNEL_PRESSURE:
-			fluid_synth_channel_pressure(synth, chan, fluid_midi_event_get_value(event));
-			break;
-
-		case MIDI_SYSTEM_RESET:
-			fluid_synth_system_reset(synth);
-			break;
-
-		default:  
-			return FLUID_FAILED;
+	default:  
+		return FLUID_FAILED;
 	}
 	return 0;
 }
@@ -136,4 +136,3 @@ void NZ_synth_detune(int p)
 		fluid_synth_tune_notes(synth,1,1,1,&key,&pitch,TRUE);
 	}
 }
-
