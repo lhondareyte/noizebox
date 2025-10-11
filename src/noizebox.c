@@ -41,29 +41,30 @@ int main(int argc, char *argv[])
 	}
 	sprintf(CONF_DB,"%s/Resources/noizebox.conf",NZDIR);
 	conf = fopen (CONF_DB, "r" ) ;
-	if ( conf == NULL )
+	if ( conf == NULL ) {
 		sprintf(CONF_DB,"/etc/noizebox.conf");
-	else
-		fclose(conf);
+	}
+	fclose(conf);
 
 	signal(SIGINT, NZ_shutdown);
 	signal(SIGTERM, NZ_shutdown);
 	setpriority(PRIO_PROCESS, getpid(), PRIO_MAX);
 
 	sprintf(FONT_DB,"%s/Resources/soundfont.conf",NZDIR);
-	if (NZ_load_synth_config() == -1)
+	if (NZ_load_synth_config() == -1){
 		goto error;
+	}
 
 	if (NZ_create_synth() == -1) {
 		goto error;
 	}
 
-        if (NZ_init_mixer() == -1) {
+	if (NZ_init_mixer() == -1) {
 		goto error;
 	}
 
-        NZ_load_bank();
-        NZ_load_font(startup_font);
+	NZ_load_bank();
+	NZ_load_font(startup_font);
 
 #if defined (__LEGACY_MIDI_PARSER__)
 	pthread_t threads[2];
