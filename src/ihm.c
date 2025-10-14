@@ -298,7 +298,6 @@ void NZ_info_menu(void)
 		mvprintw(0,0,"Idle=%02.2f%%  Temp=%04.1fC", 100 - load, temp);
 		mvprintw(1,0,"Free=%dM",(int)mem/1024); 
 		NZ_refresh();
-		usleep (800000);
 		key = getch();
 		switch (key) {
 		case KEY_F(4): 
@@ -307,6 +306,7 @@ void NZ_info_menu(void)
 			return;
 			break;
 		default:
+			usleep (2000000);
 			nodelay(screen,FALSE);
 			return;
 			break;
