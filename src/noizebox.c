@@ -44,7 +44,9 @@ int main(int argc, char *argv[])
 	if ( conf == NULL ) {
 		sprintf(CONF_DB,"/etc/noizebox.conf");
 	}
-	fclose(conf);
+	else {
+		fclose(conf);
+	}
 
 	signal(SIGINT, NZ_shutdown);
 	signal(SIGTERM, NZ_shutdown);
