@@ -290,12 +290,13 @@ void NZ_info_menu(void)
 	extern fluid_synth_t* synth;
 
 	clear();
-	mvprintw(1,20,"Exit");
+	mvprintw(1, 21,"Exit");
 	while (1) {
 		temp = NZ_get_cpu_temperature();
 		mem = NZ_get_free_memory();
 		load = fluid_synth_get_cpu_load(synth);
-		mvprintw(0,0,"Idle=%02.2f%%  Temp=%04.1fC", 100 - load, temp);
+		mvprintw(0,0,"Idle=%02.2f%%", 100 - load);
+		mvprintw(0,15,"Temp=%04.1fC", temp);
 		mvprintw(1,0,"Free=%dM",(int)mem/1024); 
 		NZ_refresh();
 		key = getch();
@@ -306,9 +307,11 @@ void NZ_info_menu(void)
 			return;
 			break;
 		default:
-			usleep (2000000);
-			nodelay(screen,FALSE);
-			return;
+			usleep (800000);
+			if ( key != -1 ) {
+				nodelay(screen,FALSE);
+				return;
+			}
 			break;
 		}
 	}
@@ -337,8 +340,9 @@ int NZ_main_menu (void)
 
 	/* Loop for key pressed */
 	while (1) {
-		if (key == 'Q')
-			NZ_shutdown(42);
+		if (key == 'Q' || key == 'q') {
+			NZ_shutdown(0);
+		}
 		key=getch();
 		switch (key) {
 		case KEY_F(1):
@@ -365,9 +369,6 @@ int NZ_main_menu (void)
 			;NZ_refresh();
 			NZ_load_next_font();
 			NZ_refresh_font_name();
-			break;
-		case 'q':
-			NZ_shutdown(0);
 			break;
 		default:
 			NZ_control_volume(key);
