@@ -24,6 +24,7 @@ modules:
 	@mkdir -p fluidsynth/build
 	@cd fluidsynth/build && \
 		cmake -DCMAKE_C_COMPILER=$(CC)  \
+                      -Dosal=cpp11 \
                       -Denable-alsa=off \
                       -Denable-aufile=off \
                       -Denable-dbus=off \
