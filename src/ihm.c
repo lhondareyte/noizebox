@@ -29,6 +29,7 @@
 #include "ihm.h"
 #include "global.h"
 #include "mixer.h"
+#include "version.h"
 #include "synth.h"
 
 #define MAX_MIDI_MODE	3
