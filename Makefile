@@ -43,7 +43,7 @@ modules:
 		(cd $$dir; $(MAKE) ; cd ..); \
 	done
 
-bintree: modules
+bintree: 
 	@rm -rf $(CONTENT) $(FRAMEWORK) $(RESOURCE)
 	@mkdir -p $(CONTENT) $(FRAMEWORK) $(RESOURCE)/etc/devd
 	@install -m 644 rsc/$(APP).conf $(RESOURCE)/etc/
@@ -52,8 +52,9 @@ bintree: modules
 	@install -m 755 rsc/mksf2db.sh $(RESOURCE)
 	@install -m 755 rsc/$(APP).sh $(APPDIR)/$(APP)
 	@install -m 755 src/$(APP) $(CONTENT)
+	@install -m 755 ./fluidsynth/build/src/libfluidsynth*so.* ${FRAMEWORK}
 	@utils/install_lib.sh $(FRAMEWORK) src/$(APP)
-	@utils/install_lib.sh -l $(FRAMEWORK) ./fluidsynth/build/src/libfluidsynth*so.*
+	@utils/install_lib.sh $(FRAMEWORK) ./fluidsynth/build/src/libfluidsynth*so.*
 
 clean:
 	@rm -rf $(APPDIR) fluidsynth

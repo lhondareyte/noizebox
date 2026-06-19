@@ -3,62 +3,28 @@
 #  $Id$
 # 
 Exec () { 
-	printf "$1 ... "
-	shift 
 	$* 
 	if [ $? -ne 0 ] ; then
 		echo "failed!"
 		exit 1
 	else
-		echo "done."
+		echo " done."
 	fi
 }
 
-Cp_lib () {
-	APP=$2
-	FRAMEWORK=$1
-	ldd $APP | awk '!/not found/ && /=>/ {print $3}' | while read lib 
+Install_lib () {
+	_app=$2
+	_framework=$1
+	ldd -a ${_app} | awk '!/not found/ && /=>/ {print $3}' | while read lib 
 	do 
-		if [ ! -f "${FRAMEWORK}/$(basename $lib)" ] ; then
-			Exec "Installing $(basename $lib)" cp $lib ${FRAMEWORK}/ 
+		_lib=$(basename ${lib})
+		if ([ -f "${lib}" ] && [ ! -f "${_framework}/${_lib}" ])  ; then
+			printf "Installing $(basename $lib)" 
+			Exec install -m 755 "${lib}" "${_framework}/"
 		fi
+		unset _lib
 	done
+	unset _app _framework 
 }
 
-Extra_lib () {
-	FRAMEWORK=$1
-	shift
-	EXTRALIBS=$*
-	# Adding extra libraries
-	for LIB in $EXTRALIBS
-	do
-		for lib in $LIB
-		do
-			if [ -L $lib ] ; then
-				l_dest=$(ls -l $lib | awk '{print $NF}')
-				cd $FRAMEWORK
-				ln -s $l_dest $(basename $lib)
-				cd -
-			elif [ -f $lib ] ; then
-				if [ ! -f ${FRAMEWORK}/$(basename $lib) ] ; then
-					Exec "Installing $(basename $lib)" install -m 755 $lib ${FRAMEWORK}
-				fi
-			fi
-		done
-		ldd $LIB | awk '!/not found/ && /=>/ {print $3}' | while read lib
-		do
-			if [ ! -f ${FRAMEWORK}/$(basename $lib) ] ; then
-				Exec "Installing $(basename $lib)" install -m 755 $lib ${FRAMEWORK}/
-			fi
-		done
-	done
-}
-
-if [ $1 = "-l" ] ; then
-	shift
-	ARG1=$1
-	shift
-	Extra_lib "$ARG1" "$*"
-else
-	Cp_lib "$1" "$2"
-fi
+Install_lib "$1" "$2"
