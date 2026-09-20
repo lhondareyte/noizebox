@@ -23,8 +23,7 @@ init-modules:
 modules:
 	@mkdir -p fluidsynth/build
 	@cd fluidsynth/build && \
-		cmake -DCMAKE_C_COMPILER=$(CC)  \
-                      -Dosal=cpp11 \
+		cmake  \
                       -Denable-alsa=off \
                       -Denable-aufile=off \
                       -Denable-dbus=off \
@@ -39,6 +38,7 @@ modules:
                       -Denable-pulseaudio=off \
                       -Denable-readline=off \
                       -Denable-systemd=off \
+                      -Denable-signalsmith=off \
                       .. && make
 	for dir in $(MODULES); do \
 		(cd $$dir; $(MAKE) ; cd ..); \
