@@ -29,12 +29,13 @@ modules:
                       -Denable-aufile=off \
                       -Denable-dbus=off \
                       -Denable-ipv6=off \
-                      -Denable-jack=off \
+                      -Denable-jack=on \
                       -Denable-ladspa=off \
                       -Denable-lash=off \
-                      -Denable-libinstpatch=off \
                       -Denable-libsndfile=off \
+                      -Denable-network=off \
                       -Denable-oboe=off \
+                      -Denable-oss=on \
                       -Denable-pulseaudio=off \
                       -Denable-readline=off \
                       -Denable-systemd=off \
