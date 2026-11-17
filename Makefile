@@ -11,6 +11,9 @@ CONTENT   = $(APPDIR)/Contents/$(SYS)
 FRAMEWORK = $(APPDIR)/Frameworks/$(SYS)
 RESOURCE  = $(APPDIR)/Resources
 
+FLUID_API = 3
+FLUID_VERSION = 3.6.1
+
 all: init-modules modules
 
 init-modules:
@@ -53,7 +56,9 @@ bintree:
 	@install -m 755 rsc/mksf2db.sh $(RESOURCE)
 	@install -m 755 rsc/$(APP).sh $(APPDIR)/$(APP)
 	@install -m 755 src/$(APP) $(CONTENT)
-	@install -m 755 ./fluidsynth/build/src/libfluidsynth*so.* ${FRAMEWORK}
+	@install -m 755 ./fluidsynth/build/src/libfluidsynth.so.$(FLUID_VERSION) $(FRAMEWORK)
+	@(cd $(FRAMEWORK) && install -l s libfluidsynth.so.$(FLUID_VERSION) libfluidsynth.so )
+	@(cd $(FRAMEWORK) && install -l s libfluidsynth.so.$(FLUID_VERSION) libfluidsynth.so.$(FLUID_API) )
 	@utils/install_lib.sh $(FRAMEWORK) src/$(APP)
 	@utils/install_lib.sh $(FRAMEWORK) ./fluidsynth/build/src/libfluidsynth*so.*
 
